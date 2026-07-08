@@ -83,8 +83,11 @@ Comparte lo siguiente sobre tu socio:
 Su jefe les pide construir un **filtro de spam** corporativo.
 
 - ¿Cómo lo harían?
-- ¿Qué reglas escribirían?
-- ¿Cuántas reglas creen que necesitarían?
+- ¿Qué reglas escribirían y cuántas necesitarían?
+
+::: {style="font-size: 0.65em; border-left: 4px solid #3a86c8; padding: 6px 12px; background: #f0f7ff; margin-top: 15px;"}
+👥 **Actividad en Equipos (5 min):** Reúnanse en sus grupos de trabajo y propongan su aproximación inicial.
+:::
 
 
 ## La Aproximación Tradicional
@@ -110,7 +113,7 @@ Escribieron reglas para "4U", "gratis", "crédito fácil". Pero ahora escriben *
 - ¿Y si el problema es detectar **fraude bancario** o **tumores en imágenes**?
 
 ::: {style="font-size: 0.65em; border-left: 4px solid #3a86c8; padding: 6px 12px; background: #f0f7ff; margin-top: 15px;"}
-👥 **Actividad (3 min):** 🧠 1 min individual en silencio $\rightarrow$ 💬 2 min en parejas para consensuar.
+💬 **Discusión:** Analicemos en detalle por qué las reglas manuales fallan en problemas del mundo real.
 :::
 ## Problemas que desbordan las reglas
 
@@ -353,7 +356,7 @@ Un estudiante se memoriza el examen de práctica **palabra por palabra** y saca 
 - ¿Cómo se llama este fenómeno en Machine Learning?
 
 ::: {style="font-size: 0.65em; border-left: 4px solid #3a86c8; padding: 6px 12px; background: #f0f7ff; margin-top: 15px;"}
-👥 **Actividad (3 min):** 🧠 1 min individual en silencio $\rightarrow$ 💬 2 min en parejas para consensuar.
+💬 **Discusión:** Analicemos en detalle el concepto de generalización vs. memorización.
 :::
 ## Overfitting y Underfitting
 
@@ -560,7 +563,7 @@ Si un modelo de ML decide **negar un crédito**, **rechazar un CV**, o **diagnos
 - ¿Quién es responsable si se equivoca? ¿El programador/a? ¿La empresa? ¿El modelo?
 
 ::: {style="font-size: 0.65em; border-left: 4px solid #3a86c8; padding: 6px 12px; background: #f0f7ff; margin-top: 15px;"}
-👥 **Actividad (3 min):** 🧠 1 min individual en silencio $\rightarrow$ 💬 2 min en parejas para consensuar.
+💬 **Discusión:** Analicemos en detalle las implicaciones de la responsabilidad ética en sistemas automatizados.
 :::
 
 
