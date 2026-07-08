@@ -1,0 +1,5 @@
+old/
+reference/
+.quarto/
+*_files/
+.ipynb_checkpoints/

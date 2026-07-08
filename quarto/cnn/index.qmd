@@ -1,0 +1,192 @@
+---
+title: "Visión por Computador Profunda con CNNs"
+subtitle: "Redes Neuronales Convolucionales"
+author: "Oscar Bustos"
+format:
+  revealjs:
+    embed-resources: true
+    theme: default
+    slide-number: true
+    show-slide-number: all
+    transition: slide
+    chalkboard: false
+    width: 1050
+    height: 700
+bibliography: references.bib
+---
+
+
+
+
+# Introducción a la Corteza Visual
+
+
+
+## La Arquitectura de la Corteza Visual
+
+
+![](assets/visual_cortex.png){width="70%"}
+
+
+- Experimentos de Hubel y Wiesel (1958) en gatos y monos.
+- Muchas neuronas tienen un **campo receptivo local** pequeño (solo reaccionan a estímulos en una región limitada).
+- Las neuronas de nivel superior se basan en salidas de neuronas de nivel inferior para detectar patrones complejos.
+- Inspiró la arquitectura **LeNet-5** (1998) introducida por Yann LeCun.
+
+
+
+
+# Componentes de una CNN
+
+
+
+## Capas Convolucionales
+
+
+![](assets/conv_layer.png){width="60%"}
+
+
+- Las neuronas no están conectadas a todos los píxeles, solo a los de su campo receptivo.
+- Permite concentrarse en características de bajo nivel y luego ensamblarlas en características de alto nivel.
+- **Zero padding:** Añadir ceros alrededor de los bordes para mantener dimensiones.
+- **Stride (Paso):** Distancia entre campos receptivos consecutivos para reducir la dimensionalidad.
+
+
+
+
+## Filtros y Mapas de Características
+
+
+![](assets/filters.png){width="60%"}
+
+
+- Los pesos de una neurona se representan como un pequeño **filtro** o **kernel**.
+- Una capa completa aplicando el mismo filtro produce un **Mapa de Características** (Feature Map).
+- Una capa convolucional aplica múltiples filtros simultáneamente, detectando múltiples características (ej. líneas, bordes, texturas).
+
+
+
+
+## Capas de Agrupación (Pooling)
+
+
+![](assets/max_pooling.png){width="70%"}
+
+
+- **Objetivo:** Submuestrear la imagen para reducir la carga computacional, la memoria y los parámetros.
+- Funciona con un kernel y un stride, pero no tiene pesos. Aplica una función de agregación.
+- **Max Pooling:** Mantiene solo el valor máximo. Introduce invarianza a pequeñas traslaciones.
+- **Global Average Pooling:** Calcula la media de cada mapa de características entero.
+
+
+
+
+# Arquitecturas Famosas de CNN
+
+
+
+## Evolución de las Arquitecturas CNN
+
+- **LeNet-5 (1998):** Utilizada para reconocimiento de dígitos manuscritos. Usa convoluciones y average pooling.
+- **AlexNet (2012):** Ganadora de ILSVRC. Red mucho más grande y profunda, introdujo apilamiento directo de capas convolucionales y *Data Augmentation*.
+- **GoogLeNet (2014):** Introdujo módulos *Inception* con capas de cuello de botella (kernels 1x1) para eficiencia de parámetros.
+- **ResNet (2015):** *Residual Networks* de hasta 152 capas. Utiliza **conexiones de salto (skip connections)** para evitar el desvanecimiento del gradiente.
+
+
+
+
+## Conexiones Residuales (ResNet)
+
+
+![](assets/residual_learning.png){width="50%"}
+
+
+- Se añade la entrada $x$ a la salida de la capa: el modelo aprende $f(x) = h(x) - x$.
+- Facilita el entrenamiento de redes extremadamente profundas al permitir que la señal fluya directamente.
+
+
+
+
+# Implementación con Keras
+
+
+
+## Ejemplo de Código: Capas Convolucionales en Keras
+
+\begin{lstlisting}[language=Python, style=mystyle]
+import tensorflow as tf
+from sklearn.datasets import load_sample_images
+
+images = load_sample_images()["images"]
+images = tf.keras.layers.CenterCrop(height=70, width=120)(images)
+images = tf.keras.layers.Rescaling(scale=1 / 255)(images)
+
+# Capa Convolucional con 32 filtros, kernel 7x7 y padding
+conv_layer = tf.keras.layers.Conv2D(filters=32, kernel_size=7,
+padding="same", activation="relu")
+fmaps = conv_layer(images)
+
+# Capa de Max Pooling
+max_pool = tf.keras.layers.MaxPool2D(pool_size=2)
+\end{lstlisting}
+
+
+
+
+## Ejemplo de Código: Transfer Learning con Modelos Preentrenados
+
+\begin{lstlisting}[language=Python, style=mystyle]
+# Cargar modelo Xception preentrenado sin la capa superior
+base_model = tf.keras.applications.xception.Xception(
+weights="imagenet", include_top=False)
+
+# Congelar los pesos base
+for layer in base_model.layers:
+layer.trainable = False
+
+# Agregar nuevas capas superiores para nuestra tarea
+avg = tf.keras.layers.GlobalAveragePooling2D()(base_model.output)
+output = tf.keras.layers.Dense(5, activation="softmax")(avg)
+model = tf.keras.Model(inputs=base_model.input, outputs=output)
+\end{lstlisting}
+
+
+
+
+# Visión más allá de la Clasificación
+
+
+
+## Detección de Objetos
+
+
+![](assets/object_detection.png){width="60%"}
+
+
+- Clasificar y localizar múltiples objetos. El modelo predice un cuadro delimitador (bounding box) y una puntuación de "objetualidad" (objectness score).
+- **Métrica principal:** *Intersection over Union* (IoU) y *Mean Average Precision* (mAP).
+- **YOLO (You Only Look Once):** Arquitectura extremadamente rápida de un solo paso. Predice múltiples bounding boxes y probabilidades directamente de una cuadrícula.
+
+
+
+
+## Segmentación Semántica
+
+
+![](assets/semantic_segmentation.png){width="70%"}
+
+
+- Clasificar cada píxel individual de la imagen según la clase a la que pertenece.
+- Utiliza Redes Totalmente Convolucionales (**FCNs**).
+- Emplea capas convolucionales transpuestas (*Transposed Convolution*) y conexiones de salto desde capas inferiores para recuperar la resolución espacial perdida en el proceso.
+
+
+
+\nocite{*}
+
+## Referencias
+
+\AtNextBibliography{}
+\printbibliography
+
+
