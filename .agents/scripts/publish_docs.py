@@ -14,6 +14,31 @@ def main():
     if not os.path.exists(docs_dir):
         os.makedirs(docs_dir)
 
+    # Copy the logo to docs/assets/logo_RGB.png
+    docs_assets_dir = os.path.join(docs_dir, 'assets')
+    if not os.path.exists(docs_assets_dir):
+        os.makedirs(docs_assets_dir)
+    
+    logo_found = False
+    source_logo_paths = [
+        os.path.join(quarto_dir, 'intro_ia', 'assets', 'logo_RGB.png'),
+        os.path.join(quarto_dir, 'aprendizaje_profundo', 'assets', 'logo_RGB.png')
+    ]
+    for path in source_logo_paths:
+        if os.path.exists(path):
+            shutil.copy2(path, os.path.join(docs_assets_dir, 'logo_RGB.png'))
+            logo_found = True
+            print(f"Copied logo to docs/assets/logo_RGB.png")
+            break
+            
+    if not logo_found:
+        for root, dirs, files in os.walk(quarto_dir):
+            if 'logo_RGB.png' in files:
+                shutil.copy2(os.path.join(root, 'logo_RGB.png'), os.path.join(docs_assets_dir, 'logo_RGB.png'))
+                print(f"Copied logo to docs/assets/logo_RGB.png from {root}")
+                logo_found = True
+                break
+
     # 1. Compile all presentations using compile_quarto.py
     print("Compiling presentations...")
     subprocess.run(["python", "compile_quarto.py"], cwd=script_dir)
