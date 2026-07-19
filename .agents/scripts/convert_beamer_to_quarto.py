@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import shutil
 
 def clean_braces(text):
     """Remove outer braces if present."""
@@ -411,19 +412,14 @@ def convert_latex_to_qmd(content):
 
     return "\n".join(qmd_lines)
 
-import shutil
-
 FOLDER_MAPPING = {
-    "Sesión_1___Intro_IA (1)": "sesion_1_intro_ia",
-    "Sesión_2___Modelos_Lineales": "sesion_2_modelos_lineales",
-    "Sesión_3___Máquinas_de_Vectores_de_Soporte": "sesion_3_svm",
-    "Sesión_4___Árboles_de_Decisión": "sesion_4_arboles_decision",
-    "Sesión_5___Ensambles": "sesion_5_ensambles",
-    "Sesión_6___Redes_Neuronales (1)": "sesion_6_redes_neuronales",
-    "Sesión_7___Aprendizaje_Profundo": "sesion_7_aprendizaje_profundo",
-    "Sesión_8___LLM_y_modelos_Pre_entrenados": "sesion_8_llms",
-    "Sesión_9___Clustering": "sesion_9_clustering",
-    "Sesión___Redes_Neuronales_Convolucionales (1)": "sesion_cnn"
+    "Sesión_1___Comprensión_de_los_datos": "sesion_1_comprension_datos",
+    "Sesión_2___Limpieza_de_Datos (2)": "sesion_2_limpieza_datos",
+    "Sesión_3___Vista_Minable": "sesion_3_vista_minable",
+    "Sesión_4___Extracción_de_Información_Data_Tabular": "sesion_4_extraccion_datos_tabular",
+    "Sesión_5__Fuentes_Jerarquicas": "sesion_5_fuentes_jerarquicas",
+    "Sesión_6___Big_Data___Información_Sin_Estructura": "sesion_6_big_data_sin_estructura",
+    "Sesión_7___Big_Data___Grandes_Volúmenes (1)": "sesion_7_big_data_grandes_volumenes"
 }
 
 def process_directory(directory_path):

@@ -39,7 +39,7 @@ def configure_all_qmd():
                     if 'embed-resources: true' not in lines:
                         lines.insert(0, 'embed-resources: true')
                         
-                    # Revert width and height, remove smaller: true
+                    # Revert width and height, remove smaller: true, disable chalkboard
                     new_lines = []
                     for line in lines:
                         if line.startswith('smaller: true'):
@@ -48,6 +48,8 @@ def configure_all_qmd():
                             new_lines.append('width: 1050')
                         elif line.startswith('height:'):
                             new_lines.append('height: 700')
+                        elif line.startswith('chalkboard:'):
+                            new_lines.append('chalkboard: false')
                         else:
                             new_lines.append(line)
                             

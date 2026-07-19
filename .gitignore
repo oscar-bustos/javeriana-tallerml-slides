@@ -1,6 +1,34 @@
-old/
-reference/
-.quarto/
-*_files/
-.ipynb_checkpoints/
-assets/
+# Ignorar todo por defecto
+*
+
+# Permitir las carpetas que queremos versionar y su contenido
+!/docs/
+!/docs/**
+!/.agents/
+!/.agents/**
+
+# Permitir archivos de Quarto (.qmd y .bib)
+!/quarto/
+!/quarto/**/
+!/quarto/**/*.qmd
+!/quarto/**/*.bib
+
+# Permitir archivos específicos en la raíz
+!/.gitignore
+!/index.html
+!/README.md
+!/LICENSE
+
+# Ignorar archivos temporales y generados (al final para que tengan prioridad sobre los whitelists)
+**/.quarto/
+**/.quarto/**
+**/*_files/
+**/*_files/**
+**/.ipynb_checkpoints/
+**/.ipynb_checkpoints/**
+**/__pycache__/
+**/__pycache__/**
+**/*.pyc
+**/*.pyo
+**/assets/
+**/assets/**
