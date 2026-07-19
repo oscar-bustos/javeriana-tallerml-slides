@@ -77,6 +77,64 @@ Comparte lo siguiente sobre tu socio:
 
 ::::
 
+# Logística del Curso
+
+
+
+## Estructura del Curso
+
+- **Exposición**
+  - Exposición 10\%
+- **Talleres**
+  - Talleres 40\%
+  - Un taller por clase
+- **Proyecto Final**
+  - Entrega 1: 25\%
+  - Entrega 2: 25\%
+
+
+
+## Reglas del Curso
+
+- 📅 **Horario:** 7:10 am - 9:45 am (descanso 8:30 am).
+- 💻 **Entregas:** Talleres en parejas cada domingo (11:59 pm) vía Campus Virtual.
+- 👥 **Proyecto Final:** Grupos de 4 personas.
+- 🤖 **Uso de IA:** Clase amigable con IA (Gemini/ChatGPT) para programar.
+- 🚭 **Convivencia:** No consumir alimentos, ni fumar/vapear en el salón.
+
+
+
+## Lecturas y Videos
+
+- Todas las clases hay una lectura previa y un video recomendado
+- Todos los libros se encuentran en la plataforma de Springer Nature y O'Reilly
+- Se puede acceder a través de los recursos virtuales de la biblioteca en el siguiente enlace: [https://javeriana.libguides.com/az.php?a=o](https://javeriana.libguides.com/az.php?a=o)
+
+
+
+## Libros de la Clase
+
+:::: {.columns}
+
+::: {.column width="33%"}
+![](assets/IntroStatisticalLearning.png){height="450px" fig-align="center"}
+:::
+
+::: {.column width="33%"}
+![](assets/DataScienceBusiness.jpg){height="450px" fig-align="center"}
+:::
+
+::: {.column width="33%"}
+![](assets/keras.jpeg){height="450px" fig-align="center"}
+:::
+
+::::
+
+
+
+## Cronograma
+
+![](assets/CronogramaML.png){width="100%"}
 
 
 
@@ -339,6 +397,29 @@ Los datos son el **combustible de Machine Learning**. Si el combustible es defic
 - **Features irrelevantes:** *Garbage In, Garbage Out* (requiere Ingeniería de Características).
 
 
+
+## Irrazonable Efectividad de Datos
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Banko & Brill (2001)**
+
+- Con pocos datos, el desempeño varió significativamente.
+- Con millones de palabras, todos rindieron casi idénticamente bien.
+:::
+
+::: {.column width="50%"}
+**Norvig et al. (2009)**
+
+- Popularizaron que para tareas complejas, los datos importan más que la sofisticación.
+- Dilema del proyecto: invertir tiempo/dinero en afinar código o en recolectar más datos.
+:::
+
+::::
+
+
+
 ## Sesgo de Muestreo (Sampling Bias)
 
 **El error histórico de Literary Digest (1936):**
@@ -388,10 +469,10 @@ Un estudiante se memoriza el examen de práctica **palabra por palabra** y saca 
 
 ## Evaluación y Validación
 
-- Evaluar con los datos de entrenamiento es **hacer trampa** (como dar el examen con las respuestas en la mano).
+- Evaluar con los datos de entrenamiento es **hacer trampa** .
 - **Train/Test Split:** Separamos los datos en ~80% entrenamiento / 20% prueba. El modelo **nunca ve** los datos de prueba durante el entrenamiento.
 - **Validation Set / Cross-Validation:** Para ajustar hiperparámetros sin contaminar el test set (*data leakage*).
-- **Teorema "No Free Lunch":** No existe un modelo universalmente superior. Debemos **experimentar** con varios.
+- **Teorema "No Free Lunch":** No existe un modelo universalmente superior. 
 
 
 
@@ -610,7 +691,7 @@ La responsabilidad en Inteligencia Artificial requiere un enfoque claro:
 
 
 
-## Resultados de Aprendizaje Esperados
+## Resultados de Aprendizaje 
 
 Al finalizar el curso, el estudiante podrá:
 
@@ -621,64 +702,6 @@ Al finalizar el curso, el estudiante podrá:
 
 
 
-# Logística del Curso
-
-
-
-## Estructura del Curso
-
-- **Exposición**
-  - Exposición 10\%
-- **Talleres**
-  - Talleres 40\%
-  - Un taller por clase
-- **Proyecto Final**
-  - Entrega 1: 25\%
-  - Entrega 2: 25\%
-
-
-
-## Reglas del Curso
-
-- 📅 **Horario:** 7:10 am - 9:45 am (descanso 8:30 am).
-- 💻 **Entregas:** Talleres en parejas cada domingo (11:59 pm) vía Campus Virtual.
-- 👥 **Proyecto Final:** Grupos de 4 personas.
-- 🤖 **Uso de IA:** Clase amigable con IA (Gemini/ChatGPT) para programar.
-- 🚭 **Convivencia:** No consumir alimentos, ni fumar/vapear en el salón.
-
-
-
-## Lecturas y Videos
-
-- Todas las clases hay una lectura previa y un video recomendado
-- Todos los libros se encuentran en la plataforma de Springer Nature y O'Reilly
-- Se puede acceder a través de los recursos virtuales de la biblioteca en el siguiente enlace: [https://javeriana.libguides.com/az.php?a=o](https://javeriana.libguides.com/az.php?a=o)
-
-
-
-## Libros de la Clase
-
-:::: {.columns}
-
-::: {.column width="33%"}
-![](assets/IntroStatisticalLearning.png){width="90%"}
-:::
-
-::: {.column width="33%"}
-![](assets/DataScienceBusiness.jpg){width="90%"}
-:::
-
-::: {.column width="33%"}
-![](assets/keras.jpeg){width="90%"}
-:::
-
-::::
-
-
-
-## Cronograma
-
-![](assets/CronogramaML.png){width="100%"}
 
 
 
