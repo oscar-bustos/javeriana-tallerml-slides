@@ -105,7 +105,7 @@ Su jefe les pide construir un **filtro de spam** corporativo.
 
 Los sistemas de reglas sí se usan en empresas y se llaman **BRMS** (*Business Rules Management Systems*), como **Drools** o **Camunda**.
 
-- ⚖️ **Determinismo:** Para reglas estrictas (ej. *"menor de edad = denegar"*), donde no se admite el error probabilístico de una IA.
+- ⚖️ **Determinismo:** Para reglas estrictas, donde no se admite el error probabilístico de una IA.
 - 🔍 **Auditabilidad:** Permiten explicar el paso a paso exacto detrás de cada decisión tomada.
 - 🤝 **Autonomía:** Analistas de negocio pueden modificar la lógica operativa en producción sin escribir código.
 
