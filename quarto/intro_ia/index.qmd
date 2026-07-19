@@ -350,28 +350,66 @@ Los datos **no tienen etiquetas**. El sistema busca estructura por sí mismo:
 - **Construir una fórmula matemática** que resuma los patrones.
 
 
-## Instancias vs. Modelos
+## Basado en Instancias
 
-- **Basado en Instancias:** Memoriza los ejemplos y usa **similitud** para clasificar nuevos casos (ej. *k-Nearest Neighbors*: "¿A cuál de mis ejemplos conocidos se parece más?").
-- **Basado en Modelos:** Construye un modelo matemático y ajusta sus **parámetros** para minimizar una función de costo (ej. *Regresión Lineal*: encontrar la línea que mejor se ajusta).
+![](assets/mls3_0116.png){fig-align="center" width="75%"}
+
+- Memoriza los ejemplos de entrenamiento y clasifica usando **similitud** (distancia).
+- *Ejemplo:* **k-Nearest Neighbors** (KNN) - "¿A cuál de mis conocidos se parece más?"
 
 
 
-## Ejemplo: ¿El dinero compra la felicidad?
+## Basado en Modelos
+
+![](assets/mls3_0117.png){fig-align="center" width="75%"}
+
+- Construye un modelo matemático ajustando **parámetros** para minimizar una función de costo.
+- *Ejemplo:* **Regresión Lineal** - Encuentra la línea que mejor se ajusta a los datos.
+
+
+
+## ¿El dinero compra la felicidad? {auto-animate="true"}
+
+![](assets/mls3_0118.png){data-id="happiness-plot" height="350px" fig-align="center"}
+
+- ¿Qué patrón detectas en la data presentada?
+- **¿Es este patrón universal?**
+
+## ¿El dinero compra la felicidad? {auto-animate="true"}
+
+![](assets/mls3_0122.png){data-id="happiness-plot" height="350px" fig-align="center"}
+
+- **La trampa:** Países como Colombia reportan alta satisfacción con PIB bajo.
+
+## ¿El dinero compra la felicidad? {auto-animate="true"}
 
 ```python
+#| data-id: money-happiness-code
+#| code-line-numbers: "|1|5"
 from sklearn.linear_model import LinearRegression
-import numpy as np
-
-X = np.array([[28384], [31008], [42026], [60236]]) # PIB
-y = np.array([5.5, 5.6, 6.5, 6.9])                 # Satisfacción
-
+X = [[28384], [31008], [42026], [60236]] # PIB
+y = [5.5, 5.6, 6.5, 6.9]                 # Satisfacción
 model = LinearRegression()
 model.fit(X, y)
-print(model.predict([[37655]])) # Predicción: ≈ 6.2
+print(model.predict([[37655]])) # ≈ 6.2
 ```
 
-El poder de *Scikit-Learn* radica en su flexibilidad: cambiar a *k-Nearest Neighbors* requiere **solo una línea de código**.
+Cambiar de modelo en *scikit-learn* es sumamente sencillo.
+
+## ¿El dinero compra la felicidad? {auto-animate="true"}
+
+```python
+#| data-id: money-happiness-code
+#| code-line-numbers: "|1|5"
+from sklearn.neighbors import KNeighborsRegressor
+X = [[28384], [31008], [42026], [60236]] # PIB
+y = [5.5, 5.6, 6.5, 6.9]                 # Satisfacción
+model = KNeighborsRegressor(n_neighbors=3)
+model.fit(X, y)
+print(model.predict([[37655]])) # ≈ 6.0
+```
+
+¡Cambiar a *k-Nearest Neighbors* solo requirió modificar **el import y el constructor**!
 
 
 
