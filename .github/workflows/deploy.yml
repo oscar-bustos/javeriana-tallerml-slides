@@ -15,7 +15,7 @@ jobs:
       - name: Deploy pre-compiled docs/ to javeriana-tallerml
         uses: peaceiris/actions-gh-pages@v4
         with:
-          personal_token: ${{ secrets:GH_PAT }}
+          personal_token: ${{ secrets.GH_PAT }}
           external_repository: oscar-bustos/javeriana-tallerml
           publish_branch: main
           publish_dir: ./docs
