@@ -137,6 +137,17 @@ Comparte lo siguiente sobre tu socio:
 ![](assets/CronogramaML.png){width="100%"}
 
 
+## Tarea / Asignación
+
+**Actividades a desarrollar:**
+
+1. Leer capítulo 1 del libro *Hands-On Machine Learning with Scikit-Learn*.
+
+2. Explorar el [Cuaderno de Google NotebookLM](https://notebooklm.google.com/notebook/06494c56-a1b5-4bf6-a22f-5cd8af948a36):
+   - Revisar la infografía.
+   - Realizar los quices incluidos.
+   - Escuchar el podcast.
+
 
 # El Problema
 
@@ -156,7 +167,11 @@ Su jefe les pide construir un **filtro de spam** corporativo.
 
 ## La Aproximación Tradicional
 
-![[@geron2022hands] Capítulo 1](assets/mls3_0101.png){width="65%" fig-align="center"}
+![](assets/mls3_0101.png){width="65%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@geron2022hands], Capítulo 1
+:::
 
 
 ## Contexto Corporativo: BRMS
@@ -217,7 +232,11 @@ Las definiciones clásicas de la disciplina:
 
 ## ML como respuesta al problema
 
-![[@geron2022hands] Capítulo 1](assets/mls3_0102.png){width="65%" fig-align="center"}
+![](assets/mls3_0102.png){width="65%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@geron2022hands], Capítulo 1
+:::
 
 
 ## Adaptación al Cambio
@@ -229,7 +248,11 @@ Las definiciones clásicas de la disciplina:
 
 ## ML se adapta al cambio (Consolidación)
 
-![[@geron2022hands] Capítulo 1](assets/mls3_0103.png){width="65%" fig-align="center"}
+![](assets/mls3_0103.png){width="65%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@geron2022hands], Capítulo 1
+:::
 
 El sistema **aprende automáticamente** los nuevos patrones sin que nadie reescriba las reglas.
 
@@ -237,12 +260,20 @@ El sistema **aprende automáticamente** los nuevos patrones sin que nadie reescr
 
 ## ¿Dónde encaja ML en el universo de la IA?
 
-![[Fuente de la imagen](https://www.edureka.co/blog/ai-vs-machine-learning-vs-deep-learning/)](assets/AI-vs-ML-vs-Deep-Learning.png){width="80%" fig-align="center"}
+![](assets/AI-vs-ML-vs-Deep-Learning.png){width="75%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [Edureka - AI vs Machine Learning vs Deep Learning](https://www.edureka.co/blog/ai-vs-machine-learning-vs-deep-learning/)
+:::
 
 
 ## Definición de Inteligencia Artificial
 
-![[@russell_norvig_2020]](assets/DefinidioIA.jpg){width="65%" fig-align="center"}
+![](assets/DefinidioIA.jpg){width="65%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@russell_norvig_2020]
+:::
 
 
 ## ¿Por qué ahora?
@@ -250,6 +281,10 @@ El sistema **aprende automáticamente** los nuevos patrones sin que nadie reescr
 Si la IA ya existía en los años 50...
 
 - ¿Por qué hasta ahora estamos viendo una clase sobre esto en la universidad como algo 'nuevo'?
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: 30px;"}
+Fuente: [McKinsey & Company - An Executive's Guide to AI](https://www.mckinsey.com/capabilities/quantumblack/our-insights/an-executives-guide-to-ai)
+:::
 
 
 ## Consolidación: La Tormenta Perfecta
@@ -325,17 +360,19 @@ Los datos **no tienen etiquetas**. El sistema busca estructura por sí mismo:
 :::: {.columns}
 
 ::: {.column width="50%"}
-**Batch Learning (Offline)**
-- Entrena con **todos** los datos disponibles a la vez.
-- Requiere mucho tiempo y cómputo.
-- Si el entorno cambia → **Model Rot / Data Drift** → hay que reentrenar desde cero.
+### Batch (Offline)
+
+- 📥 **Datos:** Todos a la vez.
+- ⚡ **Cómputo:** Alto tiempo y memoria.
+- 🔄 **Cambio:** Reentrena desde cero (*Data Drift*).
 :::
 
 ::: {.column width="50%"}
-**Online Learning (Incremental)**
-- Aprende de manera secuencial, dato a dato o en *mini-batches*.
-- Ideal para recursos limitados o datos que cambian rápido.
-- Parámetro clave: **Learning Rate** (qué tan rápido olvida lo viejo).
+### Online (Incremental)
+
+- 🌊 **Datos:** Secuencial o *mini-batches*.
+- ⚡ **Cómputo:** Ligero y continuo.
+- 🔄 **Cambio:** Ajuste dinámico (*Learning Rate*).
 :::
 
 ::::
@@ -352,7 +389,11 @@ Los datos **no tienen etiquetas**. El sistema busca estructura por sí mismo:
 
 ## Basado en Instancias
 
-![](assets/mls3_0116.png){fig-align="center" width="75%"}
+![](assets/mls3_0116.png){fig-align="center" width="70%"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@geron2022hands], Capítulo 1
+:::
 
 - Memoriza los ejemplos de entrenamiento y clasifica usando **similitud** (distancia).
 - *Ejemplo:* **k-Nearest Neighbors** (KNN) - "¿A cuál de mis conocidos se parece más?"
@@ -361,7 +402,11 @@ Los datos **no tienen etiquetas**. El sistema busca estructura por sí mismo:
 
 ## Basado en Modelos
 
-![](assets/mls3_0117.png){fig-align="center" width="75%"}
+![](assets/mls3_0117.png){fig-align="center" width="70%"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@geron2022hands], Capítulo 1
+:::
 
 - Construye un modelo matemático ajustando **parámetros** para minimizar una función de costo.
 - *Ejemplo:* **Regresión Lineal** - Encuentra la línea que mejor se ajusta a los datos.
@@ -370,14 +415,22 @@ Los datos **no tienen etiquetas**. El sistema busca estructura por sí mismo:
 
 ## ¿El dinero compra la felicidad? {auto-animate="true"}
 
-![](assets/mls3_0118.png){data-id="happiness-plot" height="350px" fig-align="center"}
+![](assets/mls3_0118.png){data-id="happiness-plot" height="320px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@geron2022hands], Capítulo 1
+:::
 
 - ¿Qué patrón detectas en la data presentada?
 - **¿Es este patrón universal?**
 
 ## ¿El dinero compra la felicidad? {auto-animate="true"}
 
-![](assets/mls3_0122.png){data-id="happiness-plot" height="350px" fig-align="center"}
+![](assets/mls3_0122.png){data-id="happiness-plot" height="320px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@geron2022hands], Capítulo 1
+:::
 
 - **La trampa:** Países como Colombia reportan alta satisfacción con PIB bajo.
 
@@ -482,14 +535,16 @@ Un estudiante se memoriza el examen de práctica **palabra por palabra** y saca 
 :::: {.columns}
 
 ::: {.column width="50%"}
-**Overfitting (Sobreajuste)**
+### Overfitting (Sobreajuste)
+
 - El modelo memoriza los datos de entrenamiento, incluyendo el **ruido**.
 - Perfecto en entrenamiento, pésimo en datos nuevos.
 - *Solución:* Simplificar (regularización), más datos, limpiar ruido.
 :::
 
 ::: {.column width="50%"}
-**Underfitting (Subajuste)**
+### Underfitting (Subajuste)
+
 - El modelo es **demasiado simple** para capturar la estructura real.
 - Malo en entrenamiento Y en datos nuevos.
 - *Solución:* Modelo más potente, mejores features, menos regularización.
@@ -521,50 +576,71 @@ Un estudiante se memoriza el examen de práctica **palabra por palabra** y saca 
 
 ## Roles Orientados a Datos - Data Analyst
 
-![](assets/dataAnalyst.jpg){width="100%"}
-	 Tomado de: [https://www.datacamp.com/tutorial/data-science-industry-infographic](https://www.datacamp.com/tutorial/data-science-industry-infographic)
+![](assets/dataAnalyst.jpg){width="85%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [DataCamp - Data Science Industry Infographic](https://www.datacamp.com/tutorial/data-science-industry-infographic)
+:::
 
 
 
 ## Roles Orientados a Datos - Data Analyst
 
-![](assets/TrabajoDataAnalyst.png){width="60%"}
-	 Tomado de Linkedin
+![](assets/TrabajoDataAnalyst.png){width="60%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: LinkedIn
+:::
 
 
 
 ## Roles Orientados a Datos - Data Scientist
 
-![](assets/dataScientist.jpg){width="100%"}
-	 Tomado de: [https://www.datacamp.com/tutorial/data-science-industry-infographic](https://www.datacamp.com/tutorial/data-science-industry-infographic)
+![](assets/dataScientist.jpg){width="85%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [DataCamp - Data Science Industry Infographic](https://www.datacamp.com/tutorial/data-science-industry-infographic)
+:::
 
 
 
 ## Roles Orientados a Datos - Data Scientist
 
-![](assets/TrabajoDataScientist.png){width="100%"}
-	 Tomado de Linkedin
+![](assets/TrabajoDataScientist.png){width="85%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: LinkedIn
+:::
 
 
 
 ## Roles Orientados a Datos - Data Architect
 
-![](assets/dataArchitect.jpg){width="100%"}
-	 Tomado de: [https://www.datacamp.com/tutorial/data-science-industry-infographic](https://www.datacamp.com/tutorial/data-science-industry-infographic)
+![](assets/dataArchitect.jpg){width="85%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [DataCamp - Data Science Industry Infographic](https://www.datacamp.com/tutorial/data-science-industry-infographic)
+:::
 
 
 
 ## Roles Orientados a Datos - Data Engineer
 
-![](assets/dataEngineer.jpg){width="100%"}
-	 Tomado de: [https://www.datacamp.com/tutorial/data-science-industry-infographic](https://www.datacamp.com/tutorial/data-science-industry-infographic)
+![](assets/dataEngineer.jpg){width="85%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [DataCamp - Data Science Industry Infographic](https://www.datacamp.com/tutorial/data-science-industry-infographic)
+:::
 
 
 
 ## Remuneración
 
-![](assets/EstudioRemuneracion.jpg){width="80%"}
-	 Tomado de: [https://www.michaelpage.com.co/estudios-y-tendencias/estudio-de-remuneracion-tecnologia-2024-1-IT-088](https://www.michaelpage.com.co/estudios-y-tendencias/estudio-de-remuneracion-tecnologia-2024-1-IT-088)
+![](assets/EstudioRemuneracion.jpg){width="80%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [Michael Page - Estudio de Remuneración Tecnología 2024](https://www.michaelpage.com.co/estudios-y-tendencias/estudio-de-remuneracion-tecnologia-2024-1-IT-088)
+:::
 
 
 
@@ -588,14 +664,21 @@ Un estudiante se memoriza el examen de práctica **palabra por palabra** y saca 
 
 ## Popularidad de los lenguajes de programación
 
-![](assets/Python.png){width="100%"}
-	 Tomado de [https://www.tiobe.com/tiobe-index/](https://www.tiobe.com/tiobe-index/)
+![](assets/Python.png){width="85%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [TIOBE Index](https://www.tiobe.com/tiobe-index/)
+:::
 
 
 
 ## Sklearn y Problemas de ML
 
-![](assets/selectingAlgo.png){width="90%"}
+![](assets/selectingAlgo.png){width="85%" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [Scikit-Learn Machine Learning Map](https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html)
+:::
 
 
 
