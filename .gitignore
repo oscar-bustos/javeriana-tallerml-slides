@@ -2,16 +2,25 @@
 *
 
 # Permitir las carpetas que queremos versionar y su contenido
+!/.github/
+!/.github/**
 !/docs/
 !/docs/**
+!/docs/assets/
+!/docs/assets/**
 !/.agents/
 !/.agents/**
 
-# Permitir archivos de Quarto (.qmd y .bib)
+# Permitir archivos de Quarto (.qmd, .bib, .scss, imágenes)
 !/quarto/
 !/quarto/**/
 !/quarto/**/*.qmd
 !/quarto/**/*.bib
+!/quarto/**/*.scss
+!/quarto/**/*.png
+!/quarto/**/*.jpg
+!/quarto/**/*.jpeg
+!/quarto/**/*.svg
 
 # Permitir archivos específicos en la raíz
 !/.gitignore
@@ -30,5 +39,5 @@
 **/__pycache__/**
 **/*.pyc
 **/*.pyo
-**/assets/
-**/assets/**
+quarto/**/assets/
+

@@ -1,0 +1,26 @@
+name: Deploy Pre-compiled Slides to Main Portal
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout slides repo
+        uses: actions/checkout@v4
+
+      - name: Deploy pre-compiled docs/ to javeriana-tallerml
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets:GH_PAT }}
+          external_repository: oscar-bustos/javeriana-tallerml
+          publish_branch: main
+          publish_dir: ./docs
+          destination_dir: slides
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'docs: update slides from javeriana-tallerml-slides'

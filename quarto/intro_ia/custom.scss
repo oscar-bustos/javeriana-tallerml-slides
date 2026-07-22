@@ -1,0 +1,132 @@
+/*-- scss:defaults --*/
+
+// Fonts
+$font-family-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$presentation-heading-font: "Montserrat", "Inter", sans-serif !default;
+
+// Colors
+$main-blue: #003576; // Exact blue from sintefcolor.sty
+$body-bg: #ffffff !default; // White background
+$body-color: #000000 !default; // Black text
+$link-color: #003576 !default; // Main blue for links
+$selection-bg: rgba(0, 53, 118, 0.2) !default;
+
+// Headings
+$presentation-heading-color: $main-blue !default;
+
+/*-- scss:rules --*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap');
+
+// Global Background
+.reveal {
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+  color: #000000;
+}
+
+// Headings styling
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #003576; // Main blue
+  margin-bottom: 24px;
+}
+
+.reveal h1 {
+  font-size: 2.0em;
+}
+.reveal h2 {
+  font-size: 1.4em;
+}
+
+// Title slide specifically
+.reveal .slide-title {
+  font-size: 2.4em !important;
+  color: #003576 !important;
+  line-height: 1.2;
+}
+
+// Logo
+.reveal .slide-logo {
+  max-width: 150px !important;
+  max-height: 75px !important;
+}
+
+// Callouts (Modern Light styling)
+.reveal .callout {
+  border-radius: 16px;
+  border: 1px solid rgba(0, 53, 118, 0.1) !important;
+  background: rgba(0, 53, 118, 0.03) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.reveal .callout-header {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.1em;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 53, 118, 0.1);
+  padding-bottom: 10px;
+  color: #003576 !important;
+}
+
+// Code blocks
+.reveal pre code {
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  font-family: "Fira Code", monospace;
+  font-size: 0.9em;
+  padding: 18px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+// Images
+.reveal img {
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reveal img:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+// Miscellaneous
+.reveal figcaption {
+  text-align: center !important;
+  font-style: italic;
+  font-size: 0.7em !important;
+  color: #64748b;
+  margin-top: 12px;
+}
+
+.smaller-text {
+  font-size: 0.85em !important;
+  color: #333333;
+}
+
+// Lists
+.reveal ul li, .reveal ol li {
+  margin-bottom: 14px;
+  line-height: 1.4;
+  color: #000000;
+}
+
+.reveal ul li::marker {
+  color: #003576;
+}
+
+// Controls & Progress
+.reveal .controls {
+  color: #003576 !important;
+}
+.reveal .progress {
+  color: #003576 !important;
+}
