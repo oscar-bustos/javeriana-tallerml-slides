@@ -130,3 +130,62 @@ $presentation-heading-color: $main-blue !default;
 .reveal .progress {
   color: #003576 !important;
 }
+
+// Styled Salary Tables
+.reveal table.salary-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 12px 0;
+  font-size: 0.62em;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 53, 118, 0.08);
+  border: 2px solid #003576;
+}
+
+.reveal table.salary-table th {
+  background-color: #003576;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 14px;
+  border-bottom: 2px solid #003576;
+}
+
+.reveal table.salary-table th:first-child {
+  text-align: left;
+}
+
+.reveal table.salary-table td {
+  padding: 8px 14px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 53, 118, 0.12);
+  border-right: 1px solid rgba(0, 53, 118, 0.12);
+  color: #1e293b;
+}
+
+.reveal table.salary-table td:last-child {
+  border-right: none;
+}
+
+.reveal table.salary-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: #003576;
+}
+
+.reveal table.salary-table tr:nth-child(even) {
+  background-color: rgba(0, 53, 118, 0.03);
+}
+
+.reveal table.salary-table tr:hover {
+  background-color: rgba(0, 53, 118, 0.07);
+}
+
+.reveal table.salary-table .na {
+  color: #94a3b8;
+  font-style: italic;
+}
+

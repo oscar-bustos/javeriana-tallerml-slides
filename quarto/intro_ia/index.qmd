@@ -41,17 +41,13 @@ Comparte lo siguiente sobre tu socio:
 
 ## Estadísticas de Clase
 
-:::: {.columns}
+**Total de estudiantes:** 23 
 
-::: {.column width="50%"}
-![](assets/SemestreStats.png){width="95%" fig-align="center"}
-:::
+Ciencia: 15 | Ingeniería: 7 | Intercambio: 1
 
-::: {.column width="50%"}
-![](assets/ProgramStats.png){width="95%" fig-align="center"}
-:::
+![](assets/ClassStats.png){height="480px" fig-align="center"}
 
-::::
+
 
 
 
@@ -134,7 +130,7 @@ Comparte lo siguiente sobre tu socio:
 
 ## Cronograma
 
-![](assets/CronogramaML.png){width="100%"}
+![](assets/Cronograma.png){width="100%"}
 
 
 ## Tarea / Asignación
@@ -535,7 +531,7 @@ Un estudiante se memoriza el examen de práctica **palabra por palabra** y saca 
 :::: {.columns}
 
 ::: {.column width="50%"}
-### Overfitting (Sobreajuste)
+### Overfitting 
 
 - El modelo memoriza los datos de entrenamiento, incluyendo el **ruido**.
 - Perfecto en entrenamiento, pésimo en datos nuevos.
@@ -543,7 +539,7 @@ Un estudiante se memoriza el examen de práctica **palabra por palabra** y saca 
 :::
 
 ::: {.column width="50%"}
-### Underfitting (Subajuste)
+### Underfitting
 
 - El modelo es **demasiado simple** para capturar la estructura real.
 - Malo en entrenamiento Y en datos nuevos.
@@ -634,12 +630,110 @@ Fuente: [DataCamp - Data Science Industry Infographic](https://www.datacamp.com/
 
 
 
-## Remuneración
+## Remuneración: Inteligencia Artificial
 
-![](assets/EstudioRemuneracion.jpg){width="80%" fig-align="center"}
+<table class="salary-table">
+  <thead>
+    <tr>
+      <th>Posición / Experiencia</th>
+      <th>3 a 5 años</th>
+      <th>5 a 8 años</th>
+      <th>8 a 12 años</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ingeniero IA</td>
+      <td>$14M - $18M</td>
+      <td>$18M - $23M</td>
+      <td>$23M - $30M</td>
+    </tr>
+    <tr>
+      <td>Ingeniero de Datos IA</td>
+      <td>$12M - $16M</td>
+      <td>$16M - $23M</td>
+      <td>$23M - $32M</td>
+    </tr>
+    <tr>
+      <td>Ingeniero LLM</td>
+      <td class="na">—</td>
+      <td>$15M - $23M</td>
+      <td>$23M - $30M</td>
+    </tr>
+    <tr>
+      <td>Ingeniero IA Agéntico</td>
+      <td>$12M - $15M</td>
+      <td>$15M - $18M</td>
+      <td>$18M - $26M</td>
+    </tr>
+    <tr>
+      <td>Founding AI Engineer</td>
+      <td class="na">—</td>
+      <td class="na">—</td>
+      <td>$25M - $35M</td>
+    </tr>
+    <tr>
+      <td>Chief AI Officer</td>
+      <td class="na">—</td>
+      <td class="na">—</td>
+      <td>$50M - $65M</td>
+    </tr>
+  </tbody>
+</table>
 
-::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
-Fuente: [Michael Page - Estudio de Remuneración Tecnología 2024](https://www.michaelpage.com.co/estudios-y-tendencias/estudio-de-remuneracion-tecnologia-2024-1-IT-088)
+::: {style="text-align: center; font-size: 0.5em; margin-top: -5px;"}
+Fuente: [Michael Page - Guía Salarial](https://www.michaelpage.com.co/guia-salarial/gracias-profesionales?#introtablesbox)
+:::
+
+
+
+## Remuneración: Data & Analytics
+
+<table class="salary-table">
+  <thead>
+    <tr>
+      <th>Posición / Experiencia</th>
+      <th>3 a 5 años</th>
+      <th>5 a 8 años</th>
+      <th>8 a 12 años</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Data Engineer</td>
+      <td>$12M - $18M</td>
+      <td>$18M - $23M</td>
+      <td>$23M - $28M</td>
+    </tr>
+    <tr>
+      <td>Data Scientist</td>
+      <td>$10.5M - $14M</td>
+      <td>$14M - $18M</td>
+      <td>$18M - $24M</td>
+    </tr>
+    <tr>
+      <td>BI (Business Intelligence)</td>
+      <td>$9M - $13M</td>
+      <td>$13M - $16M</td>
+      <td>$16M - $22.7M</td>
+    </tr>
+    <tr>
+      <td>Arquitecto de Datos</td>
+      <td>$14.5M - $17M</td>
+      <td>$17M - $24M</td>
+      <td>$24M - $30M</td>
+    </tr>
+    <tr>
+      <td>RPA (Robotic Process Automation)</td>
+      <td>$11M - $15M</td>
+      <td>$15M - $22.7M</td>
+      <td>$22.7M - $25M</td>
+    </tr>
+  </tbody>
+</table>
+
+::: {style="text-align: center; font-size: 0.5em; margin-top: -5px;"}
+Fuente: [Michael Page - Guía Salarial](https://www.michaelpage.com.co/guia-salarial/gracias-profesionales?#introtablesbox)
 :::
 
 
