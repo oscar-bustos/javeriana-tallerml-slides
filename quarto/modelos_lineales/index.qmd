@@ -5,7 +5,8 @@ author: "Oscar Bustos"
 format:
   revealjs:
     embed-resources: true
-    theme: default
+    theme: [default, custom.scss]
+    logo: assets/logo_RGB.png
     slide-number: true
     show-slide-number: all
     transition: slide
@@ -15,198 +16,224 @@ format:
 bibliography: references.bib
 ---
 
-
-
+<style>
+.reveal figcaption {
+  text-align: center !important;
+}
+.smaller-text {
+  font-size: 0.75em !important;
+}
+</style>
 
 # Repaso
 
+## Sklearn Guía la Selección de Algoritmos
 
+![](assets/selectingAlgo.png){height="420px" fig-align="center"}
 
-## Sklearn y Problemas de ML
+## Bibliografía Principal del Curso
 
-![](assets/selectingAlgo.png){width="90%"}
+:::: {.columns}
 
+::: {.column width="50%"}
+![](assets/IntroStatisticalLearning.png){height="400px" fig-align="center"}
 
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+[@james2023introduction]
+:::
+:::
 
+::: {.column width="50%"}
+![](assets/keras.jpeg){height="400px" fig-align="center"}
 
-## Referencias de esta sesión
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+[@geron2022hands]
+:::
+:::
 
+::::
 
-![](assets/IntroStatisticalLearning.png){width="30%"}  
- 
-![](assets/keras.jpeg){width="30%"}
+## Un Proyecto de ML Consta de 8 Etapas
 
+Resumen Capítulo 2: *Machine Learning* (ML) [@geron2022hands]
 
+:::: {.columns}
 
+::: {.column width="33%"}
+::: {.callout-note icon=false title="🔍 Exploración"}
+1. **Panorama General**
+2. **Obtener Datos**
+3. **Explorar & Visualizar**
+:::
+:::
 
-## Etapas Clave en un Proyecto de Machine Learning
+::: {.column width="33%"}
+::: {.callout-note icon=false title="⚙️ Modelado"}
+4. **Preparar Datos**
+5. **Entrenar Modelo**
+6. **Optimizar Modelo**
+:::
+:::
 
-Resumen Capítulo 2 - Hands on ML (Cuaderno Colab)
-- Observar el panorama general.
-- Obtener los datos.
-- Explorar y visualizar los datos para obtener ideas.
-- Preparar los datos para los algoritmos de machine learning.
-- Seleccionar un modelo y entrenarlo.
-- Ajustar y optimizar el modelo.
-- Presentar la solución.
-- Lanzar, monitorear y mantener el sistema.
-[https://colab.research.google.com/github/ageron/handson-ml3/blob/main/02_end_to_end_machine_learning_project.ipynb](https://colab.research.google.com/github/ageron/handson-ml3/blob/main/02_end_to_end_machine_learning_project.ipynb)
+::: {.column width="33%"}
+::: {.callout-note icon=false title="🚀 Despliegue"}
+7. **Presentar Solución**
+8. **Lanzar & Monitorear**
+:::
+:::
 
+::::
 
-
-
+::: {style="text-align: center; font-size: 0.65em; margin-top: 20px;"}
+🔗 [Cuaderno Colab - Capítulo 2 (Hands-on ML)](https://colab.research.google.com/github/ageron/handson-ml3/blob/main/02_end_to_end_machine_learning_project.ipynb)
+:::
 
 # Regresión con Modelos Lineales
 
+## Educación Predictora de Ingresos
 
-
-## ¿Qué es el Aprendizaje Estadístico?
-
-- ¿Podemos predecir los ingresos usando años de educación?
+- ¿Podemos predecir los ingresos usando educación?
 - Modelo: $\text{Ingresos} \approx f(\text{Años de Educación})$
-![](assets/educacion_ingresos.png){width="80%"}
 
+![](assets/educacion_ingresos.png){height="280px" fig-align="center"}
 
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@james2023introduction], Capítulo 2
+:::
 
+## Regresión Múltiple Integra Experiencia
 
+- ¿Podemos predecir ingresos con educación y experiencia?
+- Modelo: $\text{Ingresos} \approx f(\text{Educación}, \text{Experiencia})$
 
-## ¿Qué es el Aprendizaje Estadístico?
+![](assets/educacion_ingresos_experiencia.png){height="280px" fig-align="center"}
 
-- ¿Podemos predecir los ingresos usando años de educación y años de experiencia?
-- Modelo: $\text{Ingresos} \approx f(\text{Años de Educación}, \text{Años de Experiencia})$
-![](assets/educacion_ingresos_experiencia.png){width="50%"}  \end{center}
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@james2023introduction], Capítulo 2
+:::
 
+## Diferencia entre Target y Predictores
 
+- **Variable objetivo (Target)**:
+  - Ingresos: resultado a predecir ($Y$)
 
+- **Predictores (Features)**:
+  - Años de Educación: predictor 1 ($X_1$)
+  - Experiencia: predictor 2 ($X_2$)
 
-## Notación
-
-
-- **Variable objetivo**:
-  - Ingresos: resultado que deseamos predecir ($Y$)
-
-  
-
-- **Predictores**:
-  - Ingresos: característica o predictor ($X_1$)
-  - Experiencia: segunda característica ($X_2$)
-
-  
+## Modelo General y Error Irreductible
 
 - **Vector de entradas**:
-  \[
-  \mathbf{X} = (X_1,\ X_2,\ X_3)
-  \]
-
-  
+  $$ \mathbf{X} = (X_1, X_2, \dots, X_p) $$
 
 - **Modelo general**:
-  \[
-  Y = f(\mathbf{X}) + \epsilon
-  \]
-  - $\epsilon$: captura los errores de medición
+  $$ Y = f(\mathbf{X}) + \epsilon $$
 
+  - $\epsilon$: error irreductible (factores no medidos)
 
+## Los Parámetros Beta Definen el Modelo
 
+$$ \text{Ingresos} = \beta_0 + \beta_1(\text{Educación}) + \beta_2(\text{Experiencia}) + \epsilon $$
 
-## Modelos Paramétricos: Caso Lineal
-
-\[ \text{Ingresos} = \beta_0 + \beta_1(\text{Años Educación}) + \beta_2(\text{Experiencia}) + \epsilon \]
 - Forma funcional predefinida
 - Estimación de parámetros $\beta_i$
 - Ventaja: Simplicidad computacional
 
+## Intercepto y Pendiente Definen la Recta
 
+$$ Y = \beta_0 + \beta_1 X $$
 
+- **$\beta_0$ (Intercepto)**: Valor esperado cuando $X=0$.
+- **$\beta_1$ (Pendiente)**: Cambio en $Y$ por unidad de $X$.
+- **Múltiples Dimensiones**: $\beta_0$ e hiperplano de ajuste.
 
-## Modelos Paramétricos: Caso Lineal
+## Superficie de Ajuste en 3D
 
-\[ \text{Ingresos} = \beta_0 + \beta_1(\text{Años Educación}) + \beta_2(\text{Experiencia}) + \epsilon \]
-\begin{center}
-![](assets/educacion_ingresos_experiencia_lineal.png){width="50%"}  \end{center}
+$$ \text{Ingresos} = \beta_0 + \beta_1(\text{Educación}) + \beta_2(\text{Experiencia}) + \epsilon $$
 
+![](assets/educacion_ingresos_experiencia_lineal.png){height="300px" fig-align="center"}
 
+::: {style="text-align: center; font-size: 0.5em; margin-top: -10px;"}
+Fuente: [@james2023introduction], Capítulo 2
+:::
 
+## Modelos Paramétricos Simplifican $f(X)$
 
-## Modelos Paramétricos: Caso Lineal
+$$ f(X) \approx \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p $$
 
-El modelo lineal es un importante ejemplo de modelos paramétrico
-\[
-f_L(X) = \beta_0 + \beta_1X_1+ \beta_2X_2+\dots + \beta_pX_p
-\]
-- Un modelo lineal es especificado en términos de $p+1$ parámetros $\beta_0 , \beta_1, \beta_2,\dots \beta_p$
-- Estimación de parámetros ajustando los parámetros a la información de entrenamiento
-- Aunque casi nunca es correcto, un modelo lineal sirve como una buena aproximación interpretable a la función desconocida $f(X)$
+- **Forma funcional**: Asume relación lineal con $p+1$ parámetros ($\beta$).
+- **Entrenamiento**: Estima parámetros a partir de los datos.
+- **Ventaja**: Es una aproximación simple e interpretable a $f(X)$.
 
+## OLS Minimiza Errores al Cuadrado
 
+- **OLS**: Mínimos Cuadrados Ordinarios (*Ordinary Least Squares*).
+- Busca la mejor línea (o hiperplano) de ajuste.
+- Minimiza la suma de diferencias cuadráticas entre observados y predichos.
 
+## Función de Pérdida OLS
 
+$$ \text{OLS} = \sum_{i=1}^{n} (y_i - (\beta_0 + \beta_1x_{i1} + \dots + \beta_px_{ip}))^2 $$
 
-## Mínimos Cuadrados Ordinarios (OLS)
+- $n$: número de observaciones
+- $y_i$: valor real observado
+- $x_{ij}$: valor del predictor $j$
+- $\beta$: coeficientes a estimar
 
+## Expresión Matricial del Modelo Lineal
 
-- **Objetivo:** Encontrar la mejor línea (o hiperplano) de ajuste que minimice la suma de las diferencias al cuadrado entre los valores observados y los valores predichos.
-- **Formulación Matemática:**
-  - Dado un conjunto de puntos de datos $(x_i, y_i)$, queremos encontrar los coeficientes $\beta_0, \beta_1, ..., \beta_p$ que minimicen la siguiente función objetivo:
-    \[
-    \text{OLS} = \sum_{i=1}^{n} (y_i - (\beta_0 + \beta_1x_{i1} + ... + \beta_px_{ip}))^2
-    \]
-    donde:
-    - $n$ es el número de observaciones
-    - $y_i$ es el valor real de la variable dependiente para la $i$-ésima observación
-    - $x_{ij}$ es el valor de la $j$-ésima variable independiente para la $i$-ésima observación
-    - $\beta_0, \beta_1, ..., \beta_p$ son los coeficientes que queremos estimar
+$$ \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon} $$
 
+- $\mathbf{y}$: vector columna de $n$ respuestas
+- $\mathbf{X}$: matriz de diseño de $n \times (p+1)$
+- $\boldsymbol{\beta}$: vector de $(p+1)$ coeficientes
+- $\boldsymbol{\epsilon}$: vector de $n$ errores
 
+## Solución Analítica mediante Ecuación Normal
 
+$$ \boldsymbol{\hat{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y} $$
 
+- Estima directamente los parámetros óptimos $\boldsymbol{\beta}$.
+- Requiere transponer e invertir la matriz de diseño.
 
+## Sklearn Usa Pseudoinversa por Estabilidad
 
+Sklearn calcula $\boldsymbol{\hat{\beta}} = \mathbf{X}^+ \mathbf{y}$ vía SVD ($\mathbf{X}^+$ es la pseudoinversa de Moore-Penrose).
 
+**Casos de matrices mal portadas en Ecuación Normal:**
 
-## Mínimos Cuadrados Ordinarios (OLS)
+- **Multicolinealidad / Singularidad**: Si existen columnas redundantes, $(\mathbf{X}^T\mathbf{X})$ no es invertible.
+- **Inestabilidad Numérica**: Invertir $(\mathbf{X}^T\mathbf{X})$ eleva al cuadrado el número de condición ($\text{cond}(\mathbf{X})^2$).
+- **Solución SVD**: Modifica valores singulares casi cero para garantizar estimaciones estables.
 
-- **Cálculo Matricial:**
-  - Expresamos el modelo de regresión lineal en forma matricial como:
-    \[
-    \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}
-    \]
-    donde:
-    - $\mathbf{y}$ es un vector columna de $n$ valores de la variable dependiente
-    - $\mathbf{X}$ es una matriz de diseño de $n \times (p+1)$ que contiene los valores de las variables independientes y un vector de unos para el término de intercepción
-    - $\boldsymbol{\beta}$ es un vector columna de $(p+1)$ coeficientes que queremos estimar
-    - $\boldsymbol{\epsilon}$ es un vector columna de $n$ errores
-  - La solución de OLS para los coeficientes $\boldsymbol{\beta}$ se obtiene mediante la siguiente fórmula:
-    \[
-    \boldsymbol{\hat{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}
-    \]
-    donde:
-    - $\mathbf{X}^T$ es la transpuesta de la matriz $\mathbf{X}$
-    - $(\mathbf{X}^T\mathbf{X})^{-1}$ es la inversa de la matriz $\mathbf{X}^T\mathbf{X}$
+## OLS es Eficiente pero Sensible a Atípicos
 
+:::: {.columns}
+::: {.column width="50%"}
+**Ventajas:**
 
+- Simple y eficiente.
+- Estimaciones insesgadas.
+- Permite inferencia estadística.
+:::
 
+::: {.column width="50%"}
+**Limitaciones:**
 
+- Sensible a valores atípicos.
+- Asume estricta linealidad.
+- Sufre con multicolinealidad.
+:::
+::::
 
-## Mínimos Cuadrados Ordinarios (OLS)
+## Magnitud de Beta Depende de la Escala
 
-- **Intuición Geométrica:** OLS busca la línea que esté "más cerca" de los puntos de datos en términos de la suma de las distancias verticales al cuadrado.
+- **$\beta = 0$**: La variable no impacta la predicción.
+- **$|\beta|$ grande**: Sugiere mayor importancia relativa.
+- **Cuidado con la Escala**: Un coeficiente alto puede depender de la unidad.
+- **Solución**: Estandarizar permite comparar importancia.
 
-- **Ventajas:**
-  - Simple y computacionalmente eficiente
-  - Proporciona estimaciones insesgadas de los coeficientes bajo ciertos supuestos
-  - Permite realizar pruebas de hipótesis e intervalos de confianza
-- **Limitaciones:**
-  - Sensible a los valores atípicos
-  - Asume una relación lineal entre las variables independientes y dependientes
-  - Puede no funcionar bien con predictores altamente correlacionados
-
-
-
-
-
-
-## ¿Por qué estimar $f$?
+## Roles de Predicción e Inferencia
 
 - **Predicción**: Pronosticar ingresos futuros
 - **Inferencia**:
@@ -216,431 +243,576 @@ f_L(X) = \beta_0 + \beta_1X_1+ \beta_2X_2+\dots + \beta_pX_p
   - Comparación de teorías
   - Toma de decisiones políticas
 
-
-
-
-
-
-## Métricas de Error en Regresión (1)
-
+## MSE y RMSE Miden Errores Cuadráticos
 
 **Error Cuadrático Medio (MSE)**:
-\[
-\text{MSE} = \frac{1}{n}\sum_{i=1}^n (Y_i - \hat{Y}_i)^2
-\]
+$$ \text{MSE} = \frac{1}{n}\sum_{i=1}^n (Y_i - \hat{Y}_i)^2 $$
 Penaliza más los errores grandes debido a la cuadratura.
 
-
-
 **Raíz del Error Cuadrático Medio (RMSE)**:
-\[
-\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2}
-\]
-Más interpretable que el MSE, ya que mantiene las unidades originales.
+$$ \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2} $$
+Conserva las unidades originales de la variable objetivo.
 
-
-
-
-
-## Métricas de Error en Regresión (2)
-
+## MAE y MAPE Expresan Errores Absolutos
 
 **Error Absoluto Medio (MAE)**:
-\[
-\text{MAE} = \frac{1}{n}\sum_{i=1}^n |Y_i - \hat{Y}_i|
-\]
+$$ \text{MAE} = \frac{1}{n}\sum_{i=1}^n |Y_i - \hat{Y}_i| $$
 Menos sensible a valores atípicos que el MSE.
 
-
-
-
 **Porcentaje de Error Absoluto Medio (MAPE)**:
-\[
-\text{MAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \left| \frac{Y_i - \hat{Y}_i}{Y_i} \right|
-\]
-Expresa el error en porcentaje para facilitar la comparación.
+$$ \text{MAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \left| \frac{Y_i - \hat{Y}_i}{Y_i} \right| $$
+Expresa el error en porcentaje para fácil interpretación.
 
+## Simulación Visual de Métricas Lineales
 
+Explora cómo cambian las métricas interactivamente:
 
+- [Error Cuadrático Medio (MSE)](https://oscar-bustos.github.io/javeriana-tallerml/regresion_lineal/mean_squared_error.html)
+- [Importancia de Características](https://oscar-bustos.github.io/javeriana-tallerml/regresion_lineal/feature_importance.html)
 
+![](assets/InteractividadLineal.png){height="250px" fig-align="center"}
 
-## Interactividad de Regresion lineal
+## Gradiente Descendente Optimiza la Función
 
-\begin{center}    ![](assets/InteractividadLineal.png){width="70%"}  \end{center}
-[https://oscar-bustos.github.io/javeriana-tallerml/regresion_lineal/mean_squared_error.html](https://oscar-bustos.github.io/javeriana-tallerml/regresion_lineal/mean_squared_error.html)
+![](assets/mls3_0406.png){height="400px" fig-align="center"}
 
+## Actualización Iterativa de Parámetros
 
+Método iterativo para minimizar una función de costo $J(\boldsymbol{\beta})$.
 
-
-
-## Gradiente Descendente
-
-\begin{center}    ![](assets/mls3_0406.png){width="70%"}  \end{center}
-
-
-
-
-
-## Algoritmo de Gradiente Descendente 
-
-
-Es un método iterativo de optimización para encontrar los parámetros $\boldsymbol{\beta}$ que minimizan una función de costo $J(\boldsymbol{\beta})$, como por ejemplo MSE.
-
-
-::: {.callout-note}
-## Paso de actualización del Gradiente Descendente
-La idea es moverse en la dirección opuesta al gradiente (que apunta hacia el mayor ascenso). La regla de actualización es:
-$$ \boldsymbol{\beta}_{\text{siguiente}} = \boldsymbol{\beta} - \eta \nabla_{\boldsymbol{\beta}} J(\boldsymbol{\beta}) $$
+::: {.callout-note title="Regla de Actualización"}
+$$ \boldsymbol{\beta}_{\text{next}} = \boldsymbol{\beta} - \eta \nabla_{\boldsymbol{\beta}} J(\boldsymbol{\beta}) $$
 :::
 
+- $\eta$: **Tasa de aprendizaje** (tamaño del paso).
+- $\nabla_{\boldsymbol{\beta}} J(\boldsymbol{\beta})$: **Vector gradiente** (dirección de ascenso).
 
-- $\boldsymbol{\beta}$: Son los parámetros del modelo que queremos optimizar.
-- $\eta$ (eta): Es la **tasa de aprendizaje** (learning rate), un hiperparámetro que controla qué tan grande es cada paso que damos.
-- $\nabla_{\boldsymbol{\beta}} J(\boldsymbol{\beta})$: Es el **vector gradiente** de la función de costo. Contiene todas las derivadas parciales y apunta en la dirección de mayor incremento de la función.
+## El Gradiente de MSE se Computa Vectorial
 
+Fórmula eficiente para calcular derivadas parciales simultáneas:
 
-
-
-
-## Gradiente para el Error Cuadrático Medio (MSE)
-
-
-
-
-
-::: {.callout-note}
-## Cálculo del Vector Gradiente (Forma Vectorizada)
-En lugar de calcular cada derivada parcial individualmente, usamos una fórmula eficiente que calcula todo el gradiente de una vez:
+::: {.callout-note title="Gradiente de MSE"}
 $$ \nabla_{\boldsymbol{\beta}} \text{MSE}(\boldsymbol{\beta}) = \frac{2}{m} \mathbf{X}^T (\mathbf{X} \boldsymbol{\beta} - \mathbf{y}) $$
 :::
 
+- $m$: Número total de instancias.
+- $\mathbf{X}$: Matriz de características.
+- $\mathbf{y}$: Vector de etiquetas reales.
 
-- $m$: Es el número total de instancias (ejemplos) en el conjunto de datos.
-- $\mathbf{X}$: Es la matriz que contiene todas las características (features) de las instancias. Cada fila es una instancia.
-- $\mathbf{y}$: Es el vector que contiene los valores o etiquetas reales para cada instancia.
-- $\mathbf{X}^T$: Es la transpuesta de la matriz $\mathbf{X}$.
+## Batch GD Usa Todo el Dataset por Paso
 
+- **Batch GD**: Descenso de Gradiente por Lotes (*Batch Gradient Descent*).
 
+![](assets/mls3_0407.png){height="300px" fig-align="center"}
 
+## Stochastic GD Actualiza por Instancia
 
-## Gradiente en Lotes (Batch)
+- **SGD**: Descenso de Gradiente Estocástico (*Stochastic Gradient Descent*).
 
-\begin{center}
-![](assets/mls3_0407.png){width="80%"}  \end{center}
+![](assets/mls3_0409.png){height="290px" fig-align="center"}
 
+## Mini-batch GD Equilibra Rapidez y Estabilidad
 
+- Usa pequeños lotes aleatorios de datos.
+- Aprovecha aceleración en GPU (*Graphics Processing Unit*).
+- Menos errático que SGD, requiere afinar hiperparámetros.
 
+## Comparativa de Optimización en Escala
 
-## Gradiente Estocástico
+| Algoritmo | Gran $m$ | Gran $n$ | Escalar | Implementación |
+|---|---|---|---|---|
+| Ecuación Normal | Rápido | Lento | No | `NumPy` (`np.linalg.inv`) |
+| SVD | Rápido | Lento | No | `LinearRegression` |
+| Batch GD | Lento | Rápido | Sí | Manual (`NumPy` / `scipy`) |
+| Stochastic GD | Rápido | Rápido | Sí | `SGDRegressor` |
+| Mini-batch GD | Rápido | Rápido | Sí | `SGDRegressor` (`partial_fit`) |
 
-\begin{center}
-![](assets/mls3_0409.png){width="60%"}  \end{center}
+::: {style="font-size: 0.65em; margin-top: 10px;"}
+*Batch GD se implementa habitualmente con bucles manuales en NumPy o `scipy.optimize`. SVD: Descomposición en Valores Singulares.*
+:::
 
+## Importancia del Escalamiento en GD
 
+::: {style="text-align: center; margin-top: 15%; font-size: 1.2em;"}
+¿Qué sucede con el Descenso de Gradiente si **no escalamos** (normalizamos) los datos de entrada previamente?
+:::
 
+## LinearRegression Estima Coeficientes OLS
 
-
-## Regresión Lineal en Sklearn
-
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
+import numpy as np
 from sklearn.linear_model import LinearRegression
 
-# Modelo base sin penalizacion (Minimos Cuadrados)
-reg_lin = LinearRegression(n_jobs=-1,        # Paralelizacion
-fit_intercept=True)
+# Datos sintéticos: y = 4 + 3x + ruido
+X = 2 * np.random.rand(100, 1)
+y = 4 + 3 * X.ravel() + np.random.randn(100)
 
-reg_lin.fit(Xtrn, ytrn)
-ypred = reg_lin.predict(Xtst)
-\end{lstlisting}
+reg = LinearRegression().fit(X, y)
+print(f"Intercepto: {reg.intercept_:.2f} (Objetivo: 4.0)")
+print(f"Pendiente: {reg.coef_[0]:.2f} (Objetivo: 3.0)")
+```
 
+## SGDRegressor Optimiza por Iteraciones
 
+```python
+import numpy as np
+from sklearn.linear_model import SGDRegressor
 
+X = 2 * np.random.rand(100, 1)
+y = 4 + 3 * X.ravel() + np.random.randn(100)
 
-## Tradeoffs en Modelado
+# Modifica eta0 (tasa aprendizaje) o max_iter
+sgd = SGDRegressor(max_iter=1000, eta0=0.01, penalty=None, random_state=42)
+sgd.fit(X, y)
+print(f"SGD -> b0: {sgd.intercept_[0]:.2f} | b1: {sgd.coef_[0]:.2f}")
+```
 
-- **Interpretabilidad** vs Complejidad
-- **Underfitting** (muy simple) vs **Overfitting** (muy complejo)
-- **Otras consideraciones**:
-  - Costo computacional
-  - Escalabilidad
+## 💻 Demo: Ecuación Normal en NumPy
 
-\begin{center}
-![](assets/sobreajuste.png){width="70%"}  \end{center}
+::: {.callout-tip title="Demostración en Vivo"}
+1. Generar datos lineales sintéticos.
+2. Resolver $\hat{\beta} = (X^TX)^{-1}X^Ty$ con NumPy.
+3. Comparar estimaciones con OLS y SGDRegressor.
+:::
 
+## Ecuación Normal y SGD Coinciden
 
+```python
+import numpy as np
+from sklearn.linear_model import LinearRegression, SGDRegressor
 
+X = 2 * np.random.rand(100, 1); y = 4 + 3 * X.ravel() + np.random.randn(100)
+X_b = np.c_[np.ones((100, 1)), X]
+b_norm = np.linalg.inv(X_b.T @ X_b) @ X_b.T @ y
+lin = LinearRegression().fit(X, y)
+sgd = SGDRegressor(max_iter=1000, eta0=0.05, random_state=42).fit(X, y)
 
+print(f"Normal: b0={b_norm[0]:.2f}, b1={b_norm[1]:.2f}")
+print(f"OLS:    b0={lin.intercept_:.2f}, b1={lin.coef_[0]:.2f}")
+print(f"SGD:    b0={sgd.intercept_[0]:.2f}, b1={sgd.coef_[0]:.2f}")
+```
 
-
-
-## Regularización: Ridge y Lasso
-
-
-La regularización es una técnica para evitar el sobreajuste al modificar la función de costo.
-
+## Equilibrio entre Complejidad y Ajuste
 
 :::: {.columns}
 
+::: {.column width="50%"}
+- **Interpretabilidad** vs Complejidad.
+- **Underfitting**: Modelo demasiado simple.
+- **Overfitting**: Modelo demasiado complejo.
+- **Costo computacional**: Escalabilidad.
+:::
 
+::: {.column width="50%"}
+![](assets/sobreajuste.png){height="300px" fig-align="center"}
+:::
+
+::::
+
+## Polinomios Capturan No-Linealidades
+
+- `PolynomialFeatures` añade potencias como columnas.
+- Grado bajo (por ejemplo 2) da curvatura; grado alto sobreajusta.
+- **Complejidad:** $n$ features y grado $d$ generan $(n+d)! / (d! \cdot n!)$ columnas.
+
+## Las Curvas Diagnostican Sesgo y Varianza
+
+- `learning_curve()` entrena con subconjuntos crecientes.
+- **Underfitting:** Ambas curvas convergen a error alto.
+- **Overfitting:** Gran brecha entre entrenamiento y validación.
+
+## Compromiso Fundamental: Sesgo vs Varianza
+
+- **Sesgo:** Error por suposiciones simplistas (Underfitting).
+- **Varianza:** Sensibilidad excesiva al ruido del entrenamiento (Overfitting).
+- Mayor complejidad reduce sesgo e incrementa varianza.
+
+## 💻 Práctica: Polinomios y Curvas
+
+::: {.callout-tip title="Ejercicio Práctico"}
+1. Generar datos no lineales.
+2. Ajustar modelos polinomiales de diferentes grados.
+3. Visualizar las curvas de aprendizaje con `learning_curve()`.
+:::
+
+## Pipelines Combinan Polinomios y Penalización
+
+```python
+import numpy as np
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import Ridge, Lasso
+from sklearn.pipeline import make_pipeline
+
+X = 6 * np.random.rand(100, 1) - 3
+y = (0.5 * X**2 + X + 2 + np.random.randn(100, 1)).ravel()
+
+# Probar cambiar degree=2 o alpha=1.0 / alpha=0.1
+p_ridge = make_pipeline(PolynomialFeatures(degree=2), Ridge(alpha=1.0)).fit(X, y)
+p_lasso = make_pipeline(PolynomialFeatures(degree=2), Lasso(alpha=0.1)).fit(X, y)
+
+print(f"R2 Ridge: {p_ridge.score(X, y):.3f} | R2 Lasso: {p_lasso.score(X, y):.3f}")
+```
+
+## Selección entre Ridge y Lasso
+
+::: {style="text-align: center; margin-top: 15%; font-size: 1.2em;"}
+Si tenemos cientos de características y sospechamos que solo unas pocas son realmente útiles, ¿usaríamos Ridge o Lasso? ¿Por qué?
+:::
+
+## Diferencias entre Penalización L2 y L1
+
+La regularización previene el sobreajuste modificando el costo.
+
+:::: {.columns}
 
 ::: {.column width="50%"}
 
-::: {.callout-note}
-## Ridge Regression (Penalización $\ell_2$)
-Añade el cuadrado de la norma $\ell_2$ de los pesos a la función de costo.
+::: {.callout-note title="Ridge (Penalización $\ell_2$)"}
+Suma el cuadrado de pesos a la función de costo:
 
 $$ J(\boldsymbol{\beta}) = \text{MSE}(\boldsymbol{\beta}) + \alpha \sum_{i=1}^{n} \beta_i^2 $$
 
-- Encoge los pesos de las características hacia cero.
-- No elimina los pesos por completo (no los hace exactamente cero).
+- Encoge los pesos hacia cero.
+- Mantiene todas las variables.
 :::
 
 :::
-
-
 
 ::: {.column width="50%"}
 
-::: {.callout-note}
-## Lasso Regression (Penalización $\ell_1$)
-Añade el valor absoluto (norma $\ell_1$) de los pesos a la función de costo.
+::: {.callout-note title="Lasso (Penalización $\ell_1$)"}
+Suma el valor absoluto de pesos al costo:
 
 $$ J(\boldsymbol{\beta}) = \text{MSE}(\boldsymbol{\beta}) + \alpha \sum_{i=1}^{n} |\beta_i| $$
 
-- Puede encoger los pesos **exactamente a cero**.
-- Efectivamente realiza una **selección de características**.
+- Hace pesos **exactamente cero**.
+- Selecciona características.
 :::
 
 :::
-
 
 ::::
 
+## Ridge Controla la Complejidad del Modelo
 
+![](assets/mls3_0417.png){height="290px" fig-align="center"}
 
+Modelos lineales (izquierda) y polinómicos (derecha) bajo Ridge.
 
+## Ridge Encoge Coeficientes con L2
 
-## Regularización
-
-\begin{center}
-![](assets/mls3_0417.png){width="80%"}  \end{center}
-
-Modelos lineales (izquierda) y polinómicos (derecha), ambos con distintos niveles de regularización (Ridge).
-
-
-
-
-
-
-
-## Regresión Ridge (L2) en Sklearn
-
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
+import numpy as np
 from sklearn.linear_model import Ridge
 
-# Regresion con penalizacion L2 (evita coeficientes gigantes)
-ridge_reg = Ridge(alpha=1.0,       # Fuerza de la regularizacion
-random_state=rng)
+X = np.random.randn(100, 5)
+y = 3 * X[:, 0] - 2 * X[:, 1] + np.random.randn(100)
 
-ridge_reg.fit(Xtrn, ytrn)
-ypred = ridge_reg.predict(Xtst)
-\end{lstlisting}
+# Modifica alpha (alpha mayor encoge coeficientes hacia cero)
+ridge = Ridge(alpha=10.0, random_state=42).fit(X, y)
+print("Coeficientes Ridge (alpha=10.0):")
+print(np.round(ridge.coef_, 2))
+```
 
+## Lasso Elimina Variables Irrelevantes
 
-
-
-## Regresión Lasso (L1) en Sklearn
-
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
+import numpy as np
 from sklearn.linear_model import Lasso
 
-# Regresion con penalizacion L1 (propicia sparsity)
-lasso_reg = Lasso(alpha=0.1,       # Fuerza de la regularizacion
-random_state=rng)
+X = np.random.randn(100, 5)
+y = 3 * X[:, 0] - 2 * X[:, 1] + np.random.randn(100)
 
-lasso_reg.fit(Xtrn, ytrn)
-ypred = lasso_reg.predict(Xtst)
-\end{lstlisting}
+# Modifica alpha (L1 anula coeficientes irrelevantes a cero)
+lasso = Lasso(alpha=0.2, random_state=42).fit(X, y)
+print("Coeficientes Lasso (alpha=0.2):")
+print(np.round(lasso.coef_, 2))
+```
 
+## Elastic Net Balancea L1 y L2
 
+```python
+import numpy as np
+from sklearn.linear_model import ElasticNet
 
+X = np.random.randn(100, 5)
+y = 3 * X[:, 0] - 2 * X[:, 1] + np.random.randn(100)
 
+# Modifica l1_ratio: 0.0 es Ridge (L2), 1.0 es Lasso (L1)
+enet = ElasticNet(alpha=0.1, l1_ratio=0.5, random_state=42).fit(X, y)
+print("Coeficientes ElasticNet (l1_ratio=0.5):")
+print(np.round(enet.coef_, 2))
+```
+
+## Criterios para Elegir el Regularizador
+
+- **Ridge (L2):** Buen valor por defecto. Encoge pesos, no elimina.
+- **Lasso (L1):** Pocas features útiles. Selección automática.
+- **Elastic Net:** Features correlacionadas + sparsity. Lo mejor de ambos.
+- **Sin regularización:** Casi nunca recomendable.
+
+## Early Stopping Evita el Sobreajuste
+
+```python
+import numpy as np
+from sklearn.linear_model import SGDRegressor
+from sklearn.metrics import mean_squared_error
+
+X = np.random.randn(200, 5); y = 3 * X[:, 0] + np.random.randn(200)
+X_tr, X_val = X[:150], X[150:]; y_tr, y_val = y[:150], y[150:]
+sgd = SGDRegressor(penalty=None, eta0=0.005, random_state=42)
+
+best_err, best_epoch = float('inf'), 0
+for epoch in range(100):
+    sgd.partial_fit(X_tr, y_tr)
+    err = mean_squared_error(y_val, sgd.predict(X_val))
+    if err < best_err: best_err, best_epoch = err, epoch
+
+print(f"Mejor epoca Early Stopping: {best_epoch} (MSE Val: {best_err:.3f})")
+```
+
+## Descanso
+
+::: {style="text-align: center; margin-top: 20%; font-size: 2em;"}
+☕ Descanso de 15 minutos
+:::
 
 # Clasificación con Modelos Lineales
 
+## Clasificación Predice Categorías
 
+- Variables cualitativas en conjunto no ordenado $C$.
+- Predictor $X \rightarrow$ Respuesta cualitativa $Y \in C$.
+- Clasificador $C(X)$: Asigna una categoría a la entrada $X$.
+- Busca estimar $P(Y=c|X)$ para cada categoría.
 
-## Clasificación y Variables Cualitativas
+## MNIST es el Benchmark de Clasificación
 
-- Las variables cualitativas toman valores en un conjunto no ordenado $C$, como:
-  - Color de ojos $\in \{\text{marrón, azul, verde}\}$
-  - Correo electrónico $\in \{\text{spam, ham}\}$
-- Dado un vector de características $X$ y una variable respuesta cualitativa $Y$ que toma valores en el conjunto $C$, la tarea de clasificación consiste en construir una función $C(X)$ que toma como entrada $X$ y predice su valor para $Y$; es decir, $C(X) \in C$.
-- A menudo, estamos más interesados en estimar las probabilidades de que $X$ pertenezca a cada categoría en $C$.
+- **MNIST**: *Modified National Institute of Standards and Technology*.
+- Conjunto de 70,000 imágenes de dígitos (28x28 píxeles).
+- 784 características por imagen (intensidad de píxeles).
+- Problema de referencia estándar para evaluación en Machine Learning.
 
+## Accuracy Engaña en Clases Desbalanceadas
 
+- En clases desbalanceadas (90/10), predecir la clase mayoritaria da 90% exactitud sin aprender nada.
 
+```python
+import numpy as np
+from sklearn.dummy import DummyClassifier
 
-## Ejemplo: Tarjeta de Crédito
+y = np.array([0]*900 + [1]*100)  # 90% ceros, 10% unos
+X = np.random.randn(1000, 2)
 
-\begin{center}
-![](assets/CreditCard.png){width="80%"}  \end{center}
+dummy = DummyClassifier(strategy="most_frequent").fit(X, y)
+print(f"Accuracy Dummy (siempre clase 0): {dummy.score(X, y):.2%}")
+```
 
+## 💻 Práctica: Clasificador Binario
 
+::: {.callout-tip title="Ejercicio en Vivo"}
+1. Cargar conjunto de datos de dígitos (`load_digits`).
+2. Entrenar `SGDClassifier` vs `DummyClassifier` para detectar el 5.
+3. Comparar Accuracy vs F1-Score para evidenciar desbalance.
+:::
 
+## F1-Score Desenmascara el Accuracy Falso
 
-## Modelos Lineales para Clasificación
+```python
+from sklearn.datasets import load_digits
+from sklearn.linear_model import SGDClassifier
+from sklearn.dummy import DummyClassifier
+from sklearn.metrics import f1_score
 
+X, y = load_digits(return_X_y=True)
+y_5 = (y == 5)  # Detectar digito 5 (~10% datos)
+
+sgd = SGDClassifier(random_state=42).fit(X, y_5)
+dummy = DummyClassifier(strategy="most_frequent").fit(X, y_5)
+
+print(f"Accuracy: SGD={sgd.score(X, y_5):.2%}, Dummy={dummy.score(X, y_5):.2%}")
+print(f"F1-Score: SGD={f1_score(y_5, sgd.predict(X)):.2f}, Dummy={f1_score(y_5, dummy.predict(X)):.2f}")
+```
+
+## Default en Tarjetas de Crédito
+
+![](assets/CreditCard.png){height="400px" fig-align="center"}
+
+## La Sigmoide Acota Probabilidades
 
 :::: {.columns}
 
-
 ::: {.column width="40%"}
 - Regresión Logística:
-  \[ P(Y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \beta X)}} \]
-
+  $$ P(Y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \beta X)}} $$
 :::
 
 ::: {.column width="60%"}
-\begin{center}
-![](assets/BalanceLogistic.png){width="90%"}
-\end{center}
+![](assets/BalanceLogistic.png){height="320px" fig-align="center"}
 :::
+
 ::::
 
+## Validación Cruzada en Datos Desbalanceados
 
+- `cross_val_score`: Evalúa modelos en $k$ pliegues.
+- `cross_val_predict`: Genera predicciones out-of-sample.
+- Esencial ante la imprecisión del accuracy en desbalance.
 
+## Estructura de la Matriz de Confusión
 
+![](assets/mls3_0303.png){height="400px" fig-align="center"}
 
-## Matriz de Confusión
+## Desglose de TP, TN, FP y FN
 
-\begin{center}
-![](assets/mls3_0303.png){width="80%"}  \end{center}
+$$ \text{Matriz} = \begin{bmatrix} TP & FN \\ FP & TN \end{bmatrix} $$
 
+- **TP (Verdaderos Positivos / *True Positives*)**: Positivos correctos.
+- **TN (Verdaderos Negativos / *True Negatives*)**: Negativos correctos.
+- **FP (Falsos Positivos / *False Positives*)**: Error tipo I.
+- **FN (Falsos Negativos / *False Negatives*)**: Error tipo II.
 
-
-
-## Matriz de Confusión
-
-
-**Matriz de Confusión**:
-\[
-\begin{bmatrix}
-TP & FN<br>
-FP & TN
-\end{bmatrix}
-\]
-
-Permite visualizar el desempeño del modelo mostrando las predicciones correctas e incorrectas en cada categoría.
-
-
-
-**Definiciones**:
-- **TP (True Positives)**: Casos positivos correctamente identificados.
-- **TN (True Negatives)**: Casos negativos correctamente identificados.
-- **FP (False Positives)**: Casos negativos incorrectamente clasificados como positivos.
-- **FN (False Negatives)**: Casos positivos incorrectamente clasificados como negativos.
-
-
-
-
-
-## Métricas de Clasificación (1)
-
+## Accuracy y Precision Miden Calidad
 
 **Exactitud (Accuracy)**:
-\[
-\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
-\]
-Mide la proporción de instancias correctamente clasificadas.
-
-
+$$ \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} $$
+Mide la proporción total de aciertos del modelo.
 
 **Precisión (Precision)**:
-\[
-\text{Precision} = \frac{TP}{TP + FP}
-\]
-Indica la proporción de positivos predichos que son realmente positivos.
+$$ \text{Precision} = \frac{TP}{TP + FP} $$
+Mide la proporción de verdaderos positivos entre las predicciones positivas.
 
-
-
-
-
-## Métricas de Clasificación (2)
-
+## Recall y F1-Score Evalúan Cobertura
 
 **Exhaustividad (Recall)**:
-\[
-\text{Recall} = \frac{TP}{TP + FN}
-\]
-Mide la capacidad del modelo para encontrar todos los positivos reales.
-
-
-
+$$ \text{Recall} = \frac{TP}{TP + FN} $$
+Mide la capacidad de identificar todos los casos positivos reales.
 
 **Puntuación F1 (F1-Score)**:
-\[
-\text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
-\]
-Media armónica entre precisión y exhaustividad, útil en conjuntos de datos desbalanceados.
+$$ \text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} $$
+Media armónica entre precisión y exhaustividad.
 
+## Compromiso entre Precisión y Recall
 
+![](assets/mls3_0304.png){height="400px" fig-align="center"}
 
+## Variar el Umbral Modifica la Sensibilidad
 
+```python
+from sklearn.datasets import load_digits
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import precision_recall_curve
 
-## Tradeoff: Precision /Recall
+X, y = load_digits(return_X_y=True)
+y_5 = (y == 5)
+sgd = SGDClassifier(random_state=42)
+scores = cross_val_predict(sgd, X, y_5, cv=3, method="decision_function")
+p, r, th = precision_recall_curve(y_5, scores)
 
-\begin{center}
-![](assets/mls3_0304.png){width="80%"}  \end{center}
+print(f"Punto medio -> Precision: {p[len(p)//2]:.2f}, Recall: {r[len(r)//2]:.2f}")
+```
 
+## Curva Precision-Recall en MNIST
 
+![](assets/mls3_0306.png){height="400px" fig-align="center"}
 
+## ROC Evalúa Sensibilidad vs Especificidad
 
-## Curva Precision /Recall
+- **ROC**: Característica de Operación del Receptor (*Receiver Operating Characteristic*).
 
-\begin{center}
-![](assets/mls3_0306.png){width="60%"}  \end{center}
+![](assets/mls3_0307.png){height="290px" fig-align="center"}
 
+## Visualización de Errores de Clasificación
 
+- `ConfusionMatrixDisplay.from_predictions()` genera diagramas de color.
+- Normalizar por filas (`normalize="true"`) muestra porcentajes por clase real.
+- Normalizar por columnas (`normalize="pred"`) muestra errores por clase predicha.
 
+## Fronteras de Decisión Logísticas
 
-## Curva Receiver Operating Characteristic (ROC) 
+:::: {.columns}
 
-\begin{center}
-![](assets/mls3_0307.png){width="60%"}  \end{center}
+::: {.column width="40%"}
+- `predict_proba()` estima probabilidades.
+- La frontera se ubica en $P=50\%$.
+- Con 2 features forma un plano de corte lineal.
+:::
 
+::: {.column width="60%"}
+![](assets/mls3_0423.png){height="350px" fig-align="center"}
+:::
 
+::::
 
+## 💻 Práctica: Métricas y Logística
 
+::: {.callout-tip title="Ejercicio Práctico"}
+1. Cargar el dataset Iris para clasificar clase Virginica.
+2. Ajustar `LogisticRegression` evaluando la probabilidad estimada.
+3. Calcular la puntuación de área bajo la curva (ROC-AUC).
+:::
 
-## Regresión Logística en Sklearn
+## Regresión Logística Estima Probabilidades
 
+```python
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score
 
-\begin{lstlisting}[language=Python, style=mystyle]
+iris = load_iris()
+X, y = iris.data[:, [3]], (iris.target == 2)  # Iris Virginica por ancho petalo
+
+# Modifica C (C menor = mas regularizacion)
+log_reg = LogisticRegression(C=1.0).fit(X, y)
+prob = log_reg.predict_proba([[1.7]])[0, 1]
+auc = roc_auc_score(y, log_reg.predict_proba(X)[:, 1])
+
+print(f"Prob (ancho=1.7cm): {prob:.2%} | ROC-AUC Modelo: {auc:.3f}")
+```
+
+## Límites del Accuracy en Spam
+
+::: {style="text-align: center; margin-top: 15%; font-size: 1.2em;"}
+¿Por qué la exactitud (*Accuracy*) puede ser engañosa si el 90% de los correos electrónicos no son spam?
+:::
+
+## Prioridad en Diagnóstico Médico
+
+::: {style="text-align: center; margin-top: 15%; font-size: 1.2em;"}
+Si estamos detectando cáncer maligno, ¿qué nos importa más maximizar: Precisión o Exhaustividad (Recall)?
+:::
+
+## Estrategias OvR y OvO en Multiclase
+
+Estrategias para clasificar más de dos categorías:
+
+- **OvR (One-versus-Rest / Uno contra el resto):** Clasificador por clase.
+- **OvO (One-versus-One / Uno contra uno):** Clasificador por par de clases.
+
+## Softmax Generaliza Logística a Multiclase
+
+- Extiende la regresión logística a múltiples clases.
+- Asigna un puntaje por clase y aplica Softmax para probabilidades.
+- Clasifica asignando la categoría con mayor probabilidad.
+
+## El Parámetro C Controla Regularización
+
+```python
+from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
 
-# Clasificacion (a pesar del nombre 'Regresion')
-log_clf = LogisticRegression(C=1.0,           # Inverso de la regularizacion
-penalty='l2',    # Tipo de penalizacion
-solver='lbfgs',  # Optimizador estandar
-random_state=rng)
-log_clf.fit(Xtrn, ytrn)
-ypred = log_clf.predict(Xtst)
-\end{lstlisting}
+X, y = load_iris(return_X_y=True)
 
-
-
+# Modifica C (C pequeño = regularizacion fuerte, C grande = sin regularizacion)
+clf = LogisticRegression(C=1.0, penalty='l2', solver='lbfgs', max_iter=200, random_state=42)
+clf.fit(X, y)
+print(f"Accuracy Multiclase Iris (C=1.0): {clf.score(X, y):.2%}")
+```
 
 \nocite{*}
 
-
-## References
+## Referencias Bibliográficas
 
 \AtNextBibliography{}
 \printbibliography
-
-
-

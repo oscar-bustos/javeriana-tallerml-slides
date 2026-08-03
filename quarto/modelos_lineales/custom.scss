@@ -1,0 +1,244 @@
+/*-- scss:defaults --*/
+
+// Fonts
+$font-family-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$presentation-heading-font: "Montserrat", "Inter", sans-serif !default;
+
+// Colors
+$main-blue: #003576; // Exact blue from sintefcolor.sty
+$body-bg: #ffffff !default; // White background
+$body-color: #000000 !default; // Black text
+$link-color: #003576 !default; // Main blue for links
+$selection-bg: rgba(0, 53, 118, 0.2) !default;
+
+// Headings
+$presentation-heading-color: $main-blue !default;
+
+/*-- scss:rules --*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap');
+
+// Global Background
+.reveal {
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+  color: #000000;
+}
+
+// Widescreen Layout & Canvas Optimization
+.reveal .slides > section {
+  padding: 0 10px;
+}
+
+// Columns & Grid Layout
+.reveal .columns {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.8rem;
+  width: 100%;
+}
+
+.reveal .columns .column {
+  margin: 0 !important;
+}
+
+// Headings styling
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #003576; // Main blue
+  margin-bottom: 20px;
+}
+
+.reveal h1 {
+  font-size: 2.0em;
+}
+.reveal h2 {
+  font-size: 1.3em;
+  line-height: 1.2;
+}
+
+// Title slide specifically
+.reveal .slide-title {
+  font-size: 2.4em !important;
+  color: #003576 !important;
+  line-height: 1.2;
+}
+
+// Logo
+.reveal .slide-logo {
+  max-width: 150px !important;
+  max-height: 75px !important;
+}
+
+// Callouts (Modern Light styling)
+.reveal .callout {
+  border-radius: 16px;
+  border: 1px solid rgba(0, 53, 118, 0.1) !important;
+  background: rgba(0, 53, 118, 0.03) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+  padding: 16px 20px;
+  margin: 16px 0;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.reveal .callout-header {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.05em;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 53, 118, 0.1);
+  padding-bottom: 8px;
+  color: #003576 !important;
+}
+
+// Code blocks
+.reveal pre {
+  width: 100% !important;
+  margin: 12px 0 !important;
+}
+
+.reveal pre code {
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  font-family: "Fira Code", monospace;
+  font-size: 0.85em;
+  padding: 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+// Images
+.reveal img {
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reveal img:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+// Miscellaneous
+.reveal figcaption {
+  text-align: center !important;
+  font-style: italic;
+  font-size: 0.7em !important;
+  color: #64748b;
+  margin-top: 12px;
+}
+
+.smaller-text {
+  font-size: 0.85em !important;
+  color: #333333;
+}
+
+// Lists
+.reveal ul li, .reveal ol li {
+  margin-bottom: 14px;
+  line-height: 1.4;
+  color: #000000;
+}
+
+.reveal ul li::marker {
+  color: #003576;
+}
+
+// Controls & Progress
+.reveal .controls {
+  color: #003576 !important;
+}
+.reveal .progress {
+  color: #003576 !important;
+}
+
+// Widescreen Table Styling
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 0.72em;
+}
+
+.reveal table th {
+  background-color: #003576;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  padding: 6px 10px;
+  text-align: left;
+  border-bottom: 2px solid #003576;
+}
+
+.reveal table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid rgba(0, 53, 118, 0.12);
+  color: #1e293b;
+}
+
+.reveal table tr:nth-child(even) {
+  background-color: rgba(0, 53, 118, 0.03);
+}
+
+// Styled Salary Tables
+.reveal table.salary-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 12px 0;
+  font-size: 0.62em;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 53, 118, 0.08);
+  border: 2px solid #003576;
+}
+
+.reveal table.salary-table th {
+  background-color: #003576;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 14px;
+  border-bottom: 2px solid #003576;
+}
+
+.reveal table.salary-table th:first-child {
+  text-align: left;
+}
+
+.reveal table.salary-table td {
+  padding: 8px 14px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 53, 118, 0.12);
+  border-right: 1px solid rgba(0, 53, 118, 0.12);
+  color: #1e293b;
+}
+
+.reveal table.salary-table td:last-child {
+  border-right: none;
+}
+
+.reveal table.salary-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: #003576;
+}
+
+.reveal table.salary-table tr:nth-child(even) {
+  background-color: rgba(0, 53, 118, 0.03);
+}
+
+.reveal table.salary-table tr:hover {
+  background-color: rgba(0, 53, 118, 0.07);
+}
+
+.reveal table.salary-table .na {
+  color: #94a3b8;
+  font-style: italic;
+}
