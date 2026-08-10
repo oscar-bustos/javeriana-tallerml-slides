@@ -27,9 +27,9 @@ bibliography: references.bib
 
 # Icebreaker
 
-## Conversación entre Robots
+## Diálogo autónomo entre agentes AI
 
-![](assets/Gibberlink.jpg){height="400px" fig-align="center"}
+![](assets/Gibberlink.jpg){height="360px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@gbrl2024]
@@ -38,14 +38,12 @@ bibliography: references.bib
 
 # Intuición Matemática
 
-## Capítulos sobre SVM
+## Referencia: Géron (Capítulo 5)
 
 :::: {.columns}
 
-::: {.column width="50%"}
+::: {.column width="60%"}
 ![](assets/keras.jpeg){height="360px" fig-align="center"}
-
-
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 Capítulo 5 [@geron2022hands]
@@ -55,13 +53,12 @@ Capítulo 5 [@geron2022hands]
 ::::
 
 
-## Capítulos sobre SVM
+## Referencias: James y Provost
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-![](assets/IntroStatisticalLearning.png){height="360px" fig-align="center"}
-
+![](assets/IntroStatisticalLearning.png){height="340px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 Capítulo 9 [@james2023introduction]
@@ -69,136 +66,148 @@ Capítulo 9 [@james2023introduction]
 :::
 
 ::: {.column width="50%"}
-![](assets/DataScienceBusiness.jpg){height="360px" fig-align="center"}
-
-
+![](assets/DataScienceBusiness.jpg){height="340px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
-Capítulo 4[@provost2013data]
+Capítulo 4 [@provost2013data]
 :::
 :::
 
 ::::
 
 
-## Problema de Separación Lineal
+## ¿Existe una frontera lineal óptima?
 
 ¿Cómo construyo un modelo lineal que permita separar perfectamente los puntos de la siguiente gráfica?
 
-![](assets/SeparacionLineal.png){height="380px" fig-align="center"}
+![](assets/SeparacionLineal.png){height="360px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@provost2013data]
 :::
 
 
-## Problema de Separación Lineal
+## Múltiples hiperplanos separan los datos
 
 ¿Cuál de los dos modelos es mejor?
 
-![](assets/LinealVsSVM.png){height="380px" fig-align="center"}
+![](assets/LinealVsSVM.png){height="360px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@provost2013data]
 :::
 
 
-## Problema de Separación Lineal
+## Nuevos datos exigen generalización
 
 ¿Qué pasa si entra un nuevo dato?
 
-![](assets/dsfb_0506.png){height="380px" fig-align="center"}
+![](assets/dsfb_0506.png){height="360px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@provost2013data]
 :::
 
 
-## Maximización del margen
+## SVM maximiza la distancia a las clases
 
 Entre todos los hiperplanos separadores, encuentre el que genere la mayor brecha o margen entre las dos clases.
 
-![](assets/MargenSVM.png){height="380px" fig-align="center"}
+![](assets/MargenSVM.png){height="360px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@geron2022hands]
 :::
 
 
-## Enfoque Máquinas de Vectores de Soporte
+## SVM maximiza la separación entre clases
 
-Enfoque principal
+:::: {.columns}
 
-- Encontrar la línea (o hiperplano) que divide las clases de la mejor manera.
-- Maximizar el margen entre las clases.
+::: {.column width="50%"}
+**Enfoque principal**
 
-Características clave
+- Encontrar la línea o hiperplano óptimo.
+- Maximizar la distancia entre clases.
+:::
 
-- **Hiperplano:** La línea (o plano) que separa las clases.
-- **Margen:** Distancia entre el hiperplano y los puntos más cercanos.
-- **Vectores de Soporte:** Puntos más cercanos al hiperplano.
+::: {.column width="50%"}
+**Características clave**
 
-::: {style="text-align: right; font-size: 0.65em; margin-top: 20px;"}
+- **Hiperplano:** Frontera separadora.
+- **Margen:** Distancia a los puntos cercanos.
+- **Vectores de Soporte:** Puntos límite.
+:::
+
+::::
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 40px;"}
 [@james2023introduction; @geron2022hands]
 :::
 
 
-## Regresión Logística: Optimización
+## La Regresión Logística minimiza Log-Loss
 
-- **Modelo:** $\hat{p}(X_i) = \frac{1}{1 + \exp(-(X_i w + w_0))}$ (Prob. clase positiva)
+- **Modelo:** $\hat{p}(X_i) = \frac{1}{1 + \exp(-(X_i w + w_0))}$
 - **Función de Pérdida (Log-Loss):**
   $$\min_w \sum_{i=1}^{n} \left[-y_i \log(\hat{p}(X_i)) - (1-y_i) \log(1-\hat{p}(X_i))\right]$$
-- **Optimización:** Se minimiza la Log-Loss para encontrar los parámetros $w$ y $w_0$.
-- **Ventajas:**
-  - Bajo costo computacional (pocos parámetros).
-  - Interpretabilidad (importancia de variables).
-- **Desventaja:** Requiere separabilidad lineal.
+- **Características:**
+  - Bajo costo computacional e interpretable.
+  - Sensible a problemas no linealmente separables.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@james2023introduction]
 :::
 
 
-## Máquinas de Vectores de Soporte (SVM): Optimización
+## SVM minimiza la pérdida Hinge con margen
 
-- **Clasificación (Hiperplano):**
+- **Condición de Clasificación:**
   $$
   \begin{cases}
   w^T X_i - b \geq 1, & \text{si } y_i = 1 \\
   w^T X_i - b \leq -1, & \text{si } y_i = -1
   \end{cases}
   $$
-- **Función de Pérdida (Hinge-Loss):**
+
+- **Optimización de Pérdida Hinge:**
   $$\min_{w,b} \frac{1}{2} w^T w + C \sum_{i=1}^{n} \max(0, 1 - y_i(w^T \phi(X_i) + b))$$
-- **Kernels:** $\phi(x_i, x_j)$
-  - Lineal: $\phi(x_i, x_j) = x_i^T x_j$
-  - Polinómico: $\phi(x_i, x_j) = (x_i^T x_j)^d$
-  - RBF: $\phi(x_i, x_j) = \exp(-\gamma ||x_i - x_j||^2)$
-- **Optimización:** Se minimiza la Hinge-Loss para encontrar $w$ y $b$. $C$ es un hiperparámetro de regularización.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@james2023introduction; @geron2022hands]
 :::
 
 
-## El Parámetro de Regularización C en SVM
+## Los Kernels transforman el espacio
 
-- **Control de la complejidad:** El parámetro $C$ controla el equilibrio entre dos objetivos:
-  1. Maximizar el margen entre las clases.
-  2. Minimizar el error de clasificación en los datos de entrenamiento.
-- **Interpretación:**
-  - **C grande:** Prioriza minimizar errores de clasificación, puede llevar a márgenes más pequeños y mayor complejidad del modelo (riesgo de sobreajuste).
-  - **C pequeño:** Prioriza maximizar el margen, tolera algunos errores de clasificación y da como resultado modelos más simples (menor riesgo de sobreajuste).
-- **Ajuste de C:** El valor óptimo de $C$ debe determinarse mediante validación cruzada u otras técnicas de evaluación del modelo.
+- **Función de Kernel:** $\phi(x_i, x_j)$
+  - **Lineal:** $\phi(x_i, x_j) = x_i^T x_j$
+  - **Polinómico:** $\phi(x_i, x_j) = (x_i^T x_j)^d$
+  - **RBF:** $\phi(x_i, x_j) = \exp(-\gamma ||x_i - x_j||^2)$
+
+- **Regularización ($C$):** Hiperparámetro que penaliza los errores de clasificación.
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@james2023introduction; @geron2022hands]
+:::
+
+
+## El hiperparámetro C controla el margen
+
+- **Control de complejidad:** Balanza el tamaño del margen y los errores de entrenamiento.
+- **Interpretación del parámetro:**
+  - **C grande:** Prioriza pocos errores, genera márgenes estrechos.
+  - **C pequeño:** Prioriza un margen amplio, tolera algunos errores.
+- **Selección:** Se determina mediante validación cruzada.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@geron2022hands]
 :::
 
 
-## Parametro de Regularización C
+## Un C mayor reduce el margen de tolerancia
 
-![](assets/RegularizacionSVM.png){height="420px" fig-align="center"}
+![](assets/RegularizacionSVM.png){height="380px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@geron2022hands]
@@ -207,54 +216,51 @@ Características clave
 
 # Separación no lineal
 
-## Expansión de Características
+## Proyección no lineal permite corte plano
 
 Frontera cuadrática
 
-![](assets/dsfb_0412.png){height="380px" fig-align="center"}
+![](assets/dsfb_0412.png){height="360px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@provost2013data]
 :::
 
 
-## Expansión de Características (Feature Expansion)
+## Mapeo de características genera curvas
 
-- **Aumento de la dimensión:** Se amplía el espacio de características mediante transformaciones no lineales de las características originales.
-- **Ejemplo:** De $(X_1, X_2)$ a $(X_1, X_2, X_1^2, X_2^2, X_1X_2)$.
-- **Objetivo:** Permitir fronteras de decisión no lineales en el espacio original.
+- **Aumento dimensional:** Transforma características a un espacio $M > p$.
+- **Ejemplo:** Mapeo de $(X_1, X_2)$ a $(X_1, X_2, X_1^2, X_2^2, X_1X_2)$.
 - **Proceso:**
-  1. Transformar las características originales a un espacio de mayor dimensión ($M > p$).
-  2. Entrenar un clasificador de vectores de soporte (u otro modelo) en el espacio ampliado.
-  3. La frontera de decisión resultante será no lineal en el espacio original.
-- **Ejemplo de frontera no lineal:**
+  1. Transformar datos a dimensión superior.
+  2. Aplicar hiperplano separador lineal.
+- **Frontera cuadrática resultante:**
   $$\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1^2 + \beta_4 X_2^2 + \beta_5 X_1 X_2 = 0$$
-  (Secciones cónicas cuadráticas en el espacio original $(X_1, X_2)$).
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@james2023introduction]
 :::
 
 
-## Truco del Kernel
+## El Kernel evita el costo dimensional
 
-![](assets/KernelRadial2.png){height="420px" fig-align="center"}
-
-::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
-[@james2023introduction]
-:::
-
-
-## Comparacion de Kernel
-
-![](assets/DistintosKernel.png){height="420px" fig-align="center"}
+![](assets/KernelRadial2.png){height="380px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@james2023introduction]
 :::
 
 
-## Comparación de Kernels SVM
+## Diferentes Kernels adaptan la frontera
+
+![](assets/DistintosKernel.png){height="380px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+[@james2023introduction]
+:::
+
+
+## Selección del Kernel según complejidad
 
 ::: {style="font-size: 0.75em;"}
 
@@ -273,50 +279,50 @@ Frontera cuadrática
 
 # Librerías
 
-## Seleccionando Algoritmos
+## Scikit-Learn ofrece guía de selección
 
 ¿Cómo elijo el algoritmo más adecuado para mis datos?
 
-![](assets/selectingAlgo.png){height="400px" fig-align="center"}
+![](assets/selectingAlgo.png){height="380px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_map]
 :::
 
 
-## Comparación de Algoritmos
+## Rendimiento comparativo entre modelos
 
 Comparación de distintos algoritmos a la fecha
 
-![](assets/comparacionAlgo.png){height="400px" fig-align="center"}
+![](assets/comparacionAlgo.png){height="380px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_comparison]
 :::
 
 
-## SVC en scikit-learn: API
+## SVC configura clasificación en Scikit-Learn
 
 - **Clase principal:** `sklearn.svm.SVC`
 - **Parámetros clave:**
-  - `C`: Parámetro de regularización (penalización de errores).
-  - `kernel`: Tipo de kernel ('linear', 'poly', 'rbf', 'sigmoid').
-  - `gamma`: Coeficiente del kernel (aplicable a 'rbf', 'poly' y 'sigmoid').
-- **Métodos importantes:**
-  - `fit(X, y)`: Entrena el modelo con los datos y las etiquetas.
-  - `predict(X)`: Predice las etiquetas de nuevos datos.
-  - `score(X, y)`: Evalúa el rendimiento del modelo.
+  - `C`: Regularización (penalización de error).
+  - `kernel`: Tipo ('linear', 'poly', 'rbf', 'sigmoid').
+  - `gamma`: Coeficiente de kernel ('rbf', 'poly', 'sigmoid').
+- **Métodos principales:**
+  - `fit(X, y)`: Entrena el modelo.
+  - `predict(X)`: Infiere nuevas etiquetas.
+  - `score(X, y)`: Evalúa el desempeño.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_api]
 :::
 
 
-## Explicabilidad
+## Vectores de soporte sustentan la decisión
 
 :::: {.columns}
 
-::: {.column width="60%"}
+::: {.column width="70%"}
 ![](assets/explicabilidad.png){height="350px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
@@ -327,7 +333,7 @@ Comparación de distintos algoritmos a la fecha
 ::::
 
 
-## SVC en Scikit-learn (Código)
+## Implementación práctica de SVC
 
 ```python
 from sklearn.svm import SVC
@@ -349,25 +355,22 @@ y_pred = model_svc.predict(X_test)
 :::
 
 
-## SVR en scikit-learn: API
+## SVR adapta SVM para regresión
 
 - **Clase principal:** `sklearn.svm.SVR`
 - **Parámetros clave:**
-  - `C`: Parámetro de regularización.
-  - `kernel`: Tipo de kernel ('linear', 'poly', 'rbf', 'sigmoid').
-  - `gamma`: Coeficiente del kernel.
-  - `epsilon`: Tolerancia para errores en el margen.
-- **Métodos importantes:**
-  - `fit(X, y)`: Entrena el modelo con datos y valores objetivo.
-  - `predict(X)`: Predice valores objetivo para nuevos datos.
-  - `score(X, y)`: Evalúa el rendimiento del modelo.
+  - `C`: Regularización.
+  - `kernel`: Tipo ('linear', 'poly', 'rbf', 'sigmoid').
+  - `gamma`: Coeficiente de kernel.
+  - `epsilon`: Márgen insensible de tolerancia.
+- **Métodos principales:** `fit(X, y)`, `predict(X)`, `score(X, y)`.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_api]
 :::
 
 
-## SVR en Scikit-learn (Código)
+## Implementación práctica de SVR
 
 ```python
 from sklearn.svm import SVR
@@ -389,37 +392,28 @@ y_pred = model_svr.predict(X_test)
 :::
 
 
-## GridSearchCV en scikit-learn: API
+## GridSearchCV realiza una búsqueda exhaustiva
 
-- **Clase principal:** `sklearn.model_selection.GridSearchCV`
-- **Propósito:** Búsqueda exhaustiva de hiperparámetros.
-- **Parámetros clave:**
-  - `estimator`: El modelo a optimizar (ej., `SVC()`).
-  - `param_grid`: Diccionario con los nombres de los parámetros y sus valores.
-  - `cv`: Número de particiones para la validación cruzada.
-  - `scoring`: Métrica de evaluación.
-- **Atributos importantes:**
-  - `best_params_`: Mejor combinación de parámetros encontrada.
-  - `best_score_`: Mejor puntuación obtenida en validación.
-  - `best_estimator_`: Estimador con los mejores parámetros.
+- **Clase:** `sklearn.model_selection.GridSearchCV`
+- **Propósito:** Búsqueda exhaustiva sobre una grilla de parámetros.
+- **Parámetros:** `estimator`, `param_grid`, `cv`, `scoring`.
+- **Atributos:**
+  - `best_params_`: Mejor combinación.
+  - `best_score_`: Mejor puntuación de validación.
+  - `best_estimator_`: Modelo optimizado resultante.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_api]
 :::
 
 
-## RandomizedSearchCV en scikit-learn: API
+## RandomizedSearch optimiza hiperparámetros
 
-- **Clase principal:** `sklearn.model_selection.RandomizedSearchCV`
-- **Propósito:** Búsqueda aleatoria de hiperparámetros.
-- **Parámetros clave:**
-  - `estimator`: El modelo a optimizar.
-  - `param_distributions`: Diccionario con distribuciones de parámetros.
-  - `n_iter`: Número de configuraciones a probar.
-  - `cv`: Número de pliegues para la validación cruzada.
-- **Diferencia con GridSearch:**
-  - Más eficiente en espacios de búsqueda grandes.
-  - Controla el presupuesto computacional mediante `n_iter`.
+- **Clase:** `sklearn.model_selection.RandomizedSearchCV`
+- **Propósito:** Búsqueda aleatoria eficiente en espacios amplios.
+- **Parámetros:** `estimator`, `param_distributions`, `n_iter`, `cv`.
+- **Ventaja clave:**
+  - Control de presupuesto computacional mediante `n_iter`.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_api]
