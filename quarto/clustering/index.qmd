@@ -1,6 +1,6 @@
 ---
 title: "Aprendizaje No Supervisado y Clustering"
-subtitle: "Técnicas de aprendizaje de máquina"
+subtitle: "Técnicas de Aprendizaje de Máquina"
 author: "Oscar Bustos"
 date: "\today"
 format:

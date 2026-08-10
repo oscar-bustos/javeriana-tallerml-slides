@@ -1,6 +1,6 @@
 ---
 title: "Redes Neuronales"
-subtitle: "Técnicas de aprendizaje de máquina"
+subtitle: "Técnicas de Aprendizaje de Máquina"
 author: "Oscar Bustos"
 format:
   revealjs:

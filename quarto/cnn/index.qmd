@@ -1,6 +1,6 @@
 ---
 title: "Visión por Computador Profunda con CNNs"
-subtitle: "Redes Neuronales Convolucionales"
+subtitle: "Técnicas de Aprendizaje de Máquina"
 author: "Oscar Bustos"
 format:
   revealjs:

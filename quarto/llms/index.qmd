@@ -1,6 +1,6 @@
 ---
 title: "Aplicaciones con LLM y modelos Preentrenados"
-subtitle: "Técnicas de aprendizaje de máquina"
+subtitle: "Técnicas de Aprendizaje de Máquina"
 author: "Oscar Bustos"
 format:
   revealjs:

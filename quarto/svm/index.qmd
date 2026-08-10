@@ -1,6 +1,6 @@
 ---
 title: "Máquinas de Vectores de Soporte"
-subtitle: "Técnicas de aprendizaje de máquina"
+subtitle: "Técnicas de Aprendizaje de Máquina"
 author: "Oscar Bustos"
 format:
   revealjs:
@@ -120,6 +120,18 @@ Entre todos los hiperplanos separadores, encuentre el que genere la mayor brecha
 :::
 
 
+## Minijuego: Maximizar el margen
+
+Ajusta los parámetros para encontrar la frontera óptima y maximizar la distancia a los vectores de soporte.
+
+[![](assets/InteractividadSVMMargen.png){height="340px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_margin.html)
+
+::: {style="text-align: center; font-size: 0.7em; margin-top: 10px;"}
+🔗 [Abrir minijuego interactivo](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_margin.html){target="_blank"}
+:::
+
+
+
 ## SVM maximiza la separación entre clases
 
 :::: {.columns}
@@ -144,6 +156,109 @@ Entre todos los hiperplanos separadores, encuentre el que genere la mayor brecha
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 40px;"}
 [@james2023introduction; @geron2022hands]
 :::
+
+
+## ¿Qué pasa con datos ruidosos?
+
+Si un dato está mal etiquetado y cae en medio del margen...
+
+- ¿Debería el modelo fallar por un solo punto?
+- ¿Prefieren un margen perfecto o uno flexible?
+
+::: {.callout-note title="Discusión"}
+💬 Analicemos cuándo conviene sacrificar precisión por robustez.
+:::
+
+
+## Hard margin falla ante outliers
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Hard Margin**
+
+- Exige que TODOS los puntos estén fuera del margen.
+- Un solo outlier destruye la frontera.
+- Solo funciona con datos linealmente separables.
+:::
+
+::: {.column width="50%"}
+**Problema**
+
+- Imposible encontrar margen si hay ruido.
+- Extremadamente sensible a datos atípicos.
+:::
+
+::::
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@geron2022hands]
+:::
+
+
+## Soft margin tolera algunos errores
+
+El objetivo: balance entre margen amplio y violaciones toleradas.
+
+- **Variable de holgura (ζ):** Mide cuánto un punto viola el margen.
+- **C controla el balance:**
+  - C grande → pocos errores, margen estrecho.
+  - C pequeño → margen amplio, tolera errores.
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@geron2022hands]
+:::
+
+
+## El hiperparámetro C controla el margen
+
+- **Control de complejidad:** Balanza el tamaño del margen y los errores de entrenamiento.
+- **Interpretación del parámetro:**
+  - **C grande:** Prioriza pocos errores, genera márgenes estrechos.
+  - **C pequeño:** Prioriza un margen amplio, tolera algunos errores.
+- **Selección:** Se determina mediante validación cruzada.
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@geron2022hands]
+:::
+
+
+## Un C mayor reduce el margen de tolerancia
+
+![](assets/RegularizacionSVM.png){height="380px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+[@geron2022hands]
+:::
+
+
+## ¿Importa la escala de los datos?
+
+Si sus features tienen rangos muy distintos (edad: 0–100, salario: 0–10M)...
+
+- ¿Cómo afecta eso a la distancia que calcula SVM?
+- ¿Qué preprocesamiento aplicarían?
+
+
+## SVM es sensible a la escala
+
+Sin escalado, el eje con mayor rango domina la distancia y el margen se distorsiona.
+
+- **Solución:** Usar `StandardScaler` antes de SVM.
+- **Pipeline:** `make_pipeline(StandardScaler(), SVC())`
+- **Regla práctica:** Escalar features es obligatorio para SVM.
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@geron2022hands]
+:::
+
+
+## ¿Por qué no basta con R. Logística?
+
+Ya conocemos Regresión Logística para clasificar.
+
+- ¿Qué limitación tiene que SVM podría resolver?
+- ¿En qué casos querríamos maximizar el margen?
 
 
 ## La Regresión Logística minimiza Log-Loss
@@ -178,42 +293,6 @@ Entre todos los hiperplanos separadores, encuentre el que genere la mayor brecha
 :::
 
 
-## Los Kernels transforman el espacio
-
-- **Función de Kernel:** $\phi(x_i, x_j)$
-  - **Lineal:** $\phi(x_i, x_j) = x_i^T x_j$
-  - **Polinómico:** $\phi(x_i, x_j) = (x_i^T x_j)^d$
-  - **RBF:** $\phi(x_i, x_j) = \exp(-\gamma ||x_i - x_j||^2)$
-
-- **Regularización ($C$):** Hiperparámetro que penaliza los errores de clasificación.
-
-::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
-[@james2023introduction; @geron2022hands]
-:::
-
-
-## El hiperparámetro C controla el margen
-
-- **Control de complejidad:** Balanza el tamaño del margen y los errores de entrenamiento.
-- **Interpretación del parámetro:**
-  - **C grande:** Prioriza pocos errores, genera márgenes estrechos.
-  - **C pequeño:** Prioriza un margen amplio, tolera algunos errores.
-- **Selección:** Se determina mediante validación cruzada.
-
-::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
-[@geron2022hands]
-:::
-
-
-## Un C mayor reduce el margen de tolerancia
-
-![](assets/RegularizacionSVM.png){height="380px" fig-align="center"}
-
-::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
-[@geron2022hands]
-:::
-
-
 # Separación no lineal
 
 ## Proyección no lineal permite corte plano
@@ -242,6 +321,28 @@ Frontera cuadrática
 :::
 
 
+## ¿Es práctico mapear a dimensión alta?
+
+Si tenemos 100 features y mapeamos a grado 5...
+
+- ¿Cuántas features nuevas tendríamos?
+- ¿Es computacionalmente viable entrenar así?
+
+
+## El Kernel Trick evita la explosión
+
+- **Idea clave:** Calcular el dot product en dimensión alta sin transformar los datos.
+- **Resultado:** Eficiencia sin explosión dimensional.
+- **Kernels comunes:**
+  - **Lineal:** $K(x_i, x_j) = x_i^T x_j$
+  - **Polinómico:** $K(x_i, x_j) = (x_i^T x_j + r)^d$
+  - **RBF:** $K(x_i, x_j) = \exp(-\gamma ||x_i - x_j||^2)$
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@james2023introduction; @geron2022hands]
+:::
+
+
 ## El Kernel evita el costo dimensional
 
 ![](assets/KernelRadial2.png){height="380px" fig-align="center"}
@@ -251,6 +352,40 @@ Frontera cuadrática
 :::
 
 
+## Minijuego: Kernel Polinómico
+
+Visualiza cómo proyectar los datos a un espacio 3D permite separarlos con un hiperplano.
+
+[![](assets/SVMPolinomial.png){height="340px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_poly.html)
+
+::: {style="text-align: center; font-size: 0.7em; margin-top: 10px;"}
+🔗 [Abrir minijuego: Kernel Polinómico](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_poly.html){target="_blank"}
+:::
+
+
+## γ controla el radio de influencia
+
+- **γ grande:** Cada punto influye poco → frontera irregular (overfitting).
+- **γ pequeño:** Cada punto influye mucho → frontera suave (underfitting).
+- **Ajuste:** Se calibra junto con C mediante validación cruzada.
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@geron2022hands]
+:::
+
+
+## Minijuego: Kernel Gaussiano (RBF)
+
+Explora cómo la interacción entre $\gamma$ y $C$ moldea la complejidad de la frontera de decisión.
+
+[![](assets/SVMGaussiano.png){height="340px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_rbf.html)
+
+::: {style="text-align: center; font-size: 0.7em; margin-top: 10px;"}
+🔗 [Abrir minijuego: Kernel RBF](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_rbf.html){target="_blank"}
+:::
+
+
+
 ## Diferentes Kernels adaptan la frontera
 
 ![](assets/DistintosKernel.png){height="380px" fig-align="center"}
@@ -258,6 +393,14 @@ Frontera cuadrática
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@james2023introduction]
 :::
+
+
+## ¿Kernel simple o complejo primero?
+
+Tienen múltiples kernels disponibles (Lineal, Polinómico, RBF).
+
+- ¿Empezarían con el más complejo o el más simple?
+- ¿Qué riesgo tiene empezar con RBF directamente?
 
 
 ## Selección del Kernel según complejidad
@@ -278,6 +421,25 @@ Frontera cuadrática
 
 
 # Librerías
+
+## Complejidad: ¿qué clase SVM usar?
+
+::: {style="font-size: 0.75em;"}
+
+| **Clase** | **Complejidad** | **Out-of-core** | **Kernel Trick** |
+| --- | --- | --- | --- |
+| `LinearSVC` | O(m × n) | No | No |
+| `SVC` | O(m² × n) a O(m³ × n) | No | Sí |
+| `SGDClassifier` | O(m × n) | Sí | No |
+
+:::
+
+- **Regla:** Empezar con `LinearSVC`; si m es grande, usar `SGDClassifier`.
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@geron2022hands]
+:::
+
 
 ## Scikit-Learn ofrece guía de selección
 
@@ -336,16 +498,15 @@ Comparación de distintos algoritmos a la fecha
 ## Implementación práctica de SVC
 
 ```python
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-# Clasificación con Kernel RBF
-# C: Regularización, gamma: Coeficiente
-model_svc = SVC(
-    kernel='rbf', 
-    C=1.0, 
-    gamma='scale'
+# Pipeline con escalado + Kernel RBF
+model_svc = make_pipeline(
+    StandardScaler(),
+    SVC(kernel='rbf', C=1.0, gamma='scale')
 )
-
 model_svc.fit(X_train, y_train)
 y_pred = model_svc.predict(X_test)
 ```
@@ -355,34 +516,40 @@ y_pred = model_svc.predict(X_test)
 :::
 
 
-## SVR adapta SVM para regresión
+## ¿Y si el objetivo no es clasificar?
 
-- **Clase principal:** `sklearn.svm.SVR`
+SVM maximiza el margen para separar clases.
+
+- Si quisiéramos predecir un valor numérico, ¿cómo adaptarían esta idea?
+- ¿El margen tendría el mismo significado?
+
+
+## SVR invierte el objetivo de SVM
+
+- **Clasificación:** Puntos *fuera* de la calle; margen separa clases.
+- **Regresión:** Puntos *dentro* de la calle; margen define tolerancia.
+- **ε-insensible:** Errores dentro del margen ε no se penalizan.
 - **Parámetros clave:**
-  - `C`: Regularización.
-  - `kernel`: Tipo ('linear', 'poly', 'rbf', 'sigmoid').
-  - `gamma`: Coeficiente de kernel.
-  - `epsilon`: Márgen insensible de tolerancia.
-- **Métodos principales:** `fit(X, y)`, `predict(X)`, `score(X, y)`.
+  - `C`: Regularización, `epsilon`: Ancho de calle.
+  - `kernel`, `gamma`: Igual que en clasificación.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
-[@scikit_learn_api]
+[@scikit_learn_api; @geron2022hands]
 :::
 
 
 ## Implementación práctica de SVR
 
 ```python
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 
-# Regresión con Kernel Lineal
-# epsilon: Margen de tolerancia sin penalización
-model_svr = SVR(
-    kernel='linear', 
-    C=1.0, 
-    epsilon=0.1
+# Pipeline con escalado + Kernel Lineal
+model_svr = make_pipeline(
+    StandardScaler(),
+    SVR(kernel='linear', C=1.0, epsilon=0.1)
 )
-
 model_svr.fit(X_train, y_train)
 y_pred = model_svr.predict(X_test)
 ```
@@ -392,28 +559,88 @@ y_pred = model_svr.predict(X_test)
 :::
 
 
-## GridSearchCV realiza una búsqueda exhaustiva
+## ¿Cómo encontrar los mejores parámetros?
+
+Tienen C, kernel, gamma, degree...
+
+- ¿Cómo encontrarían la mejor combinación?
+- ¿Probar manualmente? ¿Grid? ¿Aleatorio?
+
+
+## GridSearchCV realiza búsqueda exhaustiva
 
 - **Clase:** `sklearn.model_selection.GridSearchCV`
 - **Propósito:** Búsqueda exhaustiva sobre una grilla de parámetros.
 - **Parámetros:** `estimator`, `param_grid`, `cv`, `scoring`.
-- **Atributos:**
-  - `best_params_`: Mejor combinación.
-  - `best_score_`: Mejor puntuación de validación.
-  - `best_estimator_`: Modelo optimizado resultante.
+- **Atributos:** `best_params_`, `best_score_`, `best_estimator_`.
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_api]
 :::
 
 
-## RandomizedSearch optimiza hiperparámetros
+## Código: GridSearchCV en Scikit-Learn
+
+```python
+from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+
+pipe = make_pipeline(StandardScaler(), SVC())
+param_grid = {
+    'svc__C': [0.1, 1, 10],
+    'svc__gamma': [0.01, 0.1, 1],
+    'svc__kernel': ['rbf', 'linear']
+}
+grid = GridSearchCV(pipe, param_grid, cv=5)
+grid.fit(X_train, y_train)
+```
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@scikit_learn_api]
+:::
+
+
+## ¿Qué ocurre si la grilla es muy grande?
+
+Evaluando 5 valores de $C$, 5 de $\gamma$, 3 kernels y 5 pliegues de CV:
+
+$$5 \times 5 \times 3 \times 5 = 375 \text{ modelos a entrenar}$$
+
+- ¿Cuánto tiempo computacional tomaría si el dataset es grande?
+- ¿Valdrá la pena evaluar cada punto exacto de la grilla?
+- ¿Existe una alternativa más rápida que explore mejor el espacio?
+
+
+## RandomizedSearchCV optimiza el tiempo
 
 - **Clase:** `sklearn.model_selection.RandomizedSearchCV`
-- **Propósito:** Búsqueda aleatoria eficiente en espacios amplios.
-- **Parámetros:** `estimator`, `param_distributions`, `n_iter`, `cv`.
-- **Ventaja clave:**
-  - Control de presupuesto computacional mediante `n_iter`.
+- **Muestreo aleatorio:** Evalúa solo $N$ combinaciones fijas (`n_iter`).
+- **Eficiencia:** Explora rangos continuos sin costo desmedido.
+- **Recomendación:** Usar `RandomizedSearchCV` en espacios grandes.
+
+::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
+[@scikit_learn_api]
+:::
+
+
+## Código: RandomizedSearchCV en Scikit-Learn
+
+```python
+from scipy.stats import loguniform
+from sklearn.model_selection import RandomizedSearchCV
+
+param_dist = {
+    'svc__C': loguniform(1e-2, 1e2),
+    'svc__gamma': loguniform(1e-3, 1e1),
+    'svc__kernel': ['rbf', 'linear']
+}
+rand_search = RandomizedSearchCV(
+    pipe, param_distributions=param_dist, n_iter=20, cv=5, random_state=42
+)
+rand_search.fit(X_train, y_train)
+```
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_api]
