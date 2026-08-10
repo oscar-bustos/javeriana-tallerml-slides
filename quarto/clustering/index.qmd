@@ -6,7 +6,8 @@ date: "\today"
 format:
   revealjs:
     embed-resources: true
-    theme: default
+    theme: [default, ../custom.scss]
+    logo: assets/logo_RGB.png
     slide-number: true
     show-slide-number: all
     transition: slide

@@ -64,6 +64,7 @@ def compile_file(file_path, quarto_bin):
                 import shutil
                 import time
                 
+                time.sleep(1.0)
                 max_retries = 10
                 for attempt in range(max_retries):
                     try:
@@ -75,7 +76,7 @@ def compile_file(file_path, quarto_bin):
                         if attempt == max_retries - 1:
                             print(f"-> Failed to move file: {e}")
                             return False
-                        time.sleep(0.5)
+                        time.sleep(1.0)
                 
             return True
         else:
