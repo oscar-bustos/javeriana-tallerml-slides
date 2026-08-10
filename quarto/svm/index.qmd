@@ -13,6 +13,7 @@ format:
     chalkboard: false
     width: 1050
     height: 700
+    margin: 0.05
 bibliography: references.bib
 ---
 
@@ -29,7 +30,7 @@ bibliography: references.bib
 
 ## Diálogo autónomo entre agentes AI
 
-![](assets/Gibberlink.jpg){height="360px" fig-align="center"}
+![](assets/Gibberlink.jpg){height="400px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@gbrl2024]
@@ -40,17 +41,11 @@ bibliography: references.bib
 
 ## Referencia: Géron (Capítulo 5)
 
-:::: {.columns}
-
-::: {.column width="60%"}
-![](assets/keras.jpeg){height="360px" fig-align="center"}
+![](assets/keras.jpeg){height="400px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 Capítulo 5 [@geron2022hands]
 :::
-:::
-
-::::
 
 
 ## Referencias: James y Provost
@@ -58,7 +53,7 @@ Capítulo 5 [@geron2022hands]
 :::: {.columns}
 
 ::: {.column width="50%"}
-![](assets/IntroStatisticalLearning.png){height="340px" fig-align="center"}
+![](assets/IntroStatisticalLearning.png){height="380px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 Capítulo 9 [@james2023introduction]
@@ -66,7 +61,7 @@ Capítulo 9 [@james2023introduction]
 :::
 
 ::: {.column width="50%"}
-![](assets/DataScienceBusiness.jpg){height="340px" fig-align="center"}
+![](assets/DataScienceBusiness.jpg){height="380px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 Capítulo 4 [@provost2013data]
@@ -76,44 +71,107 @@ Capítulo 4 [@provost2013data]
 ::::
 
 
-## ¿Existe una frontera lineal óptima?
+## Tarea: Lecturas
 
-¿Cómo construyo un modelo lineal que permita separar perfectamente los puntos de la siguiente gráfica?
+**Actividades a desarrollar:**
 
-![](assets/SeparacionLineal.png){height="360px" fig-align="center"}
+1. **(Obligatorio)** Leer el **Capítulo 5** de *Hands-On Machine Learning* (Géron).
+2. **(Opcional)** Leer el **Capítulo 9** de *Introduction to Statistical Learning* (James et al.).
+3. **(Opcional)** Leer el **Capítulo 4** de *Data Science for Business* (Provost).
 
-::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+
+## Tarea: NotebookLM
+
+**Actividades complementarias:**
+
+- Explorar el [Cuaderno de Google NotebookLM](https://notebook.google.com/notebook/66b41346-8e9e-41b6-bed5-9de19ce529e3):
+  - Revisar la infografía.
+  - Realizar los quices incluidos.
+  - Escuchar el podcast.
+
+
+## ¿Existe frontera lineal óptima?
+
+:::: {.columns style="align-items: flex-start;"}
+
+::: {.column width="55%"}
+![](assets/SeparacionLineal.png){height="400px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
 [@provost2013data]
 :::
+:::
+
+::: {.column width="45%"}
+¿Cómo construyo un modelo lineal que separe perfectamente los puntos de la gráfica?
+
+::: {.callout-note title="Reflexión"}
+💭 ¿Qué criterio usarías para elegir entre múltiples fronteras válidas?
+:::
+:::
+
+::::
 
 
-## Múltiples hiperplanos separan los datos
+## Múltiples hiperplanos separadores
 
+:::: {.columns style="align-items: flex-start;"}
+
+::: {.column width="55%"}
+![](assets/LinealVsSVM.png){height="400px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+[@provost2013data]
+:::
+:::
+
+::: {.column width="45%"}
 ¿Cuál de los dos modelos es mejor?
 
-![](assets/LinealVsSVM.png){height="360px" fig-align="center"}
-
-::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
-[@provost2013data]
+::: {.callout-note title="Discusión"}
+💬 ¿Qué criterio usarías para decidir? ¿Intuición o métricas?
 :::
+:::
+
+::::
 
 
 ## Nuevos datos exigen generalización
 
-¿Qué pasa si entra un nuevo dato?
+:::: {.columns style="align-items: flex-start;"}
 
-![](assets/dsfb_0506.png){height="360px" fig-align="center"}
+::: {.column width="55%"}
+![](assets/dsfb_0506.png){height="400px" fig-align="center"}
 
-::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
 [@provost2013data]
 :::
+:::
+
+::: {.column width="45%"}
+¿Qué pasa si entra un nuevo dato?
+
+::: {.callout-note title="Reflexión"}
+💭 ¿Qué modelo de los anteriores clasificaría mejor este nuevo punto?
+:::
+:::
+
+::::
 
 
-## SVM maximiza la distancia a las clases
+## SVM maximiza distancia a las clases
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="45%"}
 Entre todos los hiperplanos separadores, encuentre el que genere la mayor brecha o margen entre las dos clases.
+:::
 
-![](assets/MargenSVM.png){height="360px" fig-align="center"}
+::: {.column width="55%"}
+![](assets/MargenSVM.png){height="400px" fig-align="center"}
+:::
+
+::::
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@geron2022hands]
@@ -124,7 +182,7 @@ Entre todos los hiperplanos separadores, encuentre el que genere la mayor brecha
 
 Ajusta los parámetros para encontrar la frontera óptima y maximizar la distancia a los vectores de soporte.
 
-[![](assets/InteractividadSVMMargen.png){height="340px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_margin.html)
+[![](assets/InteractividadSVMMargen.png){height="400px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_margin.html)
 
 ::: {style="text-align: center; font-size: 0.7em; margin-top: 10px;"}
 🔗 [Abrir minijuego interactivo](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_margin.html){target="_blank"}
@@ -132,7 +190,7 @@ Ajusta los parámetros para encontrar la frontera óptima y maximizar la distanc
 
 
 
-## SVM maximiza la separación entre clases
+## SVM maximiza separación de clases
 
 :::: {.columns}
 
@@ -160,14 +218,22 @@ Ajusta los parámetros para encontrar la frontera óptima y maximizar la distanc
 
 ## ¿Qué pasa con datos ruidosos?
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="50%"}
 Si un dato está mal etiquetado y cae en medio del margen...
 
 - ¿Debería el modelo fallar por un solo punto?
 - ¿Prefieren un margen perfecto o uno flexible?
+:::
 
+::: {.column width="50%"}
 ::: {.callout-note title="Discusión"}
 💬 Analicemos cuándo conviene sacrificar precisión por robustez.
 :::
+:::
+
+::::
 
 
 ## Hard margin falla ante outliers
@@ -210,7 +276,7 @@ El objetivo: balance entre margen amplio y violaciones toleradas.
 :::
 
 
-## El hiperparámetro C controla el margen
+## El parámetro C controla el margen
 
 - **Control de complejidad:** Balanza el tamaño del margen y los errores de entrenamiento.
 - **Interpretación del parámetro:**
@@ -223,9 +289,9 @@ El objetivo: balance entre margen amplio y violaciones toleradas.
 :::
 
 
-## Un C mayor reduce el margen de tolerancia
+## Mayor C reduce margen de tolerancia
 
-![](assets/RegularizacionSVM.png){height="380px" fig-align="center"}
+![](assets/RegularizacionSVM.png){height="480px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@geron2022hands]
@@ -234,10 +300,22 @@ El objetivo: balance entre margen amplio y violaciones toleradas.
 
 ## ¿Importa la escala de los datos?
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="55%"}
 Si sus features tienen rangos muy distintos (edad: 0–100, salario: 0–10M)...
 
 - ¿Cómo afecta eso a la distancia que calcula SVM?
 - ¿Qué preprocesamiento aplicarían?
+:::
+
+::: {.column width="45%"}
+::: {.callout-warning title="Trampa conceptual"}
+⚠️ Un modelo SVM sin escalar aprende el rango de los datos, no el patrón.
+:::
+:::
+
+::::
 
 
 ## SVM es sensible a la escala
@@ -255,13 +333,25 @@ Sin escalado, el eje con mayor rango domina la distancia y el margen se distorsi
 
 ## ¿Por qué no basta con R. Logística?
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="50%"}
 Ya conocemos Regresión Logística para clasificar.
 
 - ¿Qué limitación tiene que SVM podría resolver?
 - ¿En qué casos querríamos maximizar el margen?
+:::
+
+::: {.column width="50%"}
+::: {.callout-note title="Debate"}
+💬 ¿En qué problema de la vida real elegirían SVM sobre Regresión Logística?
+:::
+:::
+
+::::
 
 
-## La Regresión Logística minimiza Log-Loss
+## R. Logística minimiza Log-Loss
 
 - **Modelo:** $\hat{p}(X_i) = \frac{1}{1 + \exp(-(X_i w + w_0))}$
 - **Función de Pérdida (Log-Loss):**
@@ -275,7 +365,7 @@ Ya conocemos Regresión Logística para clasificar.
 :::
 
 
-## SVM minimiza la pérdida Hinge con margen
+## SVM minimiza pérdida Hinge
 
 - **Condición de Clasificación:**
   $$
@@ -295,26 +385,25 @@ Ya conocemos Regresión Logística para clasificar.
 
 # Separación no lineal
 
-## Proyección no lineal permite corte plano
+## Proyección no lineal permite corte
 
 Frontera cuadrática
 
-![](assets/dsfb_0412.png){height="360px" fig-align="center"}
+![](assets/dsfb_0412.png){height="400px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@provost2013data]
 :::
 
 
-## Mapeo de características genera curvas
+## Mapeo de features genera curvas
 
 - **Aumento dimensional:** Transforma características a un espacio $M > p$.
 - **Ejemplo:** Mapeo de $(X_1, X_2)$ a $(X_1, X_2, X_1^2, X_2^2, X_1X_2)$.
 - **Proceso:**
   1. Transformar datos a dimensión superior.
   2. Aplicar hiperplano separador lineal.
-- **Frontera cuadrática resultante:**
-  $$\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1^2 + \beta_4 X_2^2 + \beta_5 X_1 X_2 = 0$$
+- **Frontera cuadrática resultante:** $\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1^2 + \beta_4 X_2^2 + \beta_5 X_1 X_2 = 0$
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@james2023introduction]
@@ -323,10 +412,22 @@ Frontera cuadrática
 
 ## ¿Es práctico mapear a dimensión alta?
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="50%"}
 Si tenemos 100 features y mapeamos a grado 5...
 
 - ¿Cuántas features nuevas tendríamos?
 - ¿Es computacionalmente viable entrenar así?
+:::
+
+::: {.column width="50%"}
+::: {.callout-warning title="Explosión combinatoria"}
+⚠️ El número de features puede crecer exponencialmente, haciendo el entrenamiento intratable.
+:::
+:::
+
+::::
 
 
 ## El Kernel Trick evita la explosión
@@ -345,7 +446,7 @@ Si tenemos 100 features y mapeamos a grado 5...
 
 ## El Kernel evita el costo dimensional
 
-![](assets/KernelRadial2.png){height="380px" fig-align="center"}
+![](assets/KernelRadial2.png){height="400px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@james2023introduction]
@@ -356,7 +457,7 @@ Si tenemos 100 features y mapeamos a grado 5...
 
 Visualiza cómo proyectar los datos a un espacio 3D permite separarlos con un hiperplano.
 
-[![](assets/SVMPolinomial.png){height="340px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_poly.html)
+[![](assets/SVMPolinomial.png){height="400px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_poly.html)
 
 ::: {style="text-align: center; font-size: 0.7em; margin-top: 10px;"}
 🔗 [Abrir minijuego: Kernel Polinómico](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_poly.html){target="_blank"}
@@ -378,17 +479,16 @@ Visualiza cómo proyectar los datos a un espacio 3D permite separarlos con un hi
 
 Explora cómo la interacción entre $\gamma$ y $C$ moldea la complejidad de la frontera de decisión.
 
-[![](assets/SVMGaussiano.png){height="340px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_rbf.html)
+[![](assets/SVMGaussiano.png){height="400px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_rbf.html)
 
 ::: {style="text-align: center; font-size: 0.7em; margin-top: 10px;"}
 🔗 [Abrir minijuego: Kernel RBF](https://oscar-bustos.github.io/javeriana-tallerml/clasificacion/svm_kernel_rbf.html){target="_blank"}
 :::
 
 
+## Distintos Kernels adaptan frontera
 
-## Diferentes Kernels adaptan la frontera
-
-![](assets/DistintosKernel.png){height="380px" fig-align="center"}
+![](assets/DistintosKernel.png){height="480px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@james2023introduction]
@@ -397,13 +497,25 @@ Explora cómo la interacción entre $\gamma$ y $C$ moldea la complejidad de la f
 
 ## ¿Kernel simple o complejo primero?
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="55%"}
 Tienen múltiples kernels disponibles (Lineal, Polinómico, RBF).
 
 - ¿Empezarían con el más complejo o el más simple?
 - ¿Qué riesgo tiene empezar con RBF directamente?
+:::
+
+::: {.column width="45%"}
+::: {.callout-tip title="Principio práctico"}
+💡 Empezar siempre con el modelo más simple: `LinearSVC` antes que RBF.
+:::
+:::
+
+::::
 
 
-## Selección del Kernel según complejidad
+## Selección de Kernel por complejidad
 
 ::: {style="font-size: 0.75em;"}
 
@@ -441,58 +553,63 @@ Tienen múltiples kernels disponibles (Lineal, Polinómico, RBF).
 :::
 
 
-## Scikit-Learn ofrece guía de selección
+## Scikit-Learn guía la selección
 
 ¿Cómo elijo el algoritmo más adecuado para mis datos?
 
-![](assets/selectingAlgo.png){height="380px" fig-align="center"}
+![](assets/selectingAlgo.png){height="400px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_map]
 :::
 
 
-## Rendimiento comparativo entre modelos
+## Rendimiento entre modelos
 
 Comparación de distintos algoritmos a la fecha
 
-![](assets/comparacionAlgo.png){height="380px" fig-align="center"}
+![](assets/comparacionAlgo.png){height="400px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_comparison]
 :::
 
 
-## SVC configura clasificación en Scikit-Learn
+## Configuración de SVC en Scikit-Learn
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Características Generales**
 
 - **Clase principal:** `sklearn.svm.SVC`
-- **Parámetros clave:**
-  - `C`: Regularización (penalización de error).
-  - `kernel`: Tipo ('linear', 'poly', 'rbf', 'sigmoid').
-  - `gamma`: Coeficiente de kernel ('rbf', 'poly', 'sigmoid').
-- **Métodos principales:**
-  - `fit(X, y)`: Entrena el modelo.
-  - `predict(X)`: Infiere nuevas etiquetas.
-  - `score(X, y)`: Evalúa el desempeño.
+- **Entrenamiento:** `fit(X, y)`
+- **Inferencia:** `predict(X)`
+- **Evaluación:** `score(X, y)`
+:::
+
+::: {.column width="50%"}
+**Parámetros Clave**
+
+- **C:** Regularización (penalización).
+- **kernel:** Tipo ('linear', 'rbf').
+- **gamma:** Coeficiente ('scale').
+:::
+
+::::
 
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_api]
 :::
 
 
-## Vectores de soporte sustentan la decisión
+## Vectores de soporte guían decisión
 
-:::: {.columns}
-
-::: {.column width="70%"}
-![](assets/explicabilidad.png){height="350px" fig-align="center"}
+![](assets/explicabilidad.png){height="480px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 [@mathworks_svm]
 :::
-:::
-
-::::
 
 
 ## Implementación práctica de SVC
@@ -518,10 +635,22 @@ y_pred = model_svc.predict(X_test)
 
 ## ¿Y si el objetivo no es clasificar?
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="50%"}
 SVM maximiza el margen para separar clases.
 
 - Si quisiéramos predecir un valor numérico, ¿cómo adaptarían esta idea?
 - ¿El margen tendría el mismo significado?
+:::
+
+::: {.column width="50%"}
+::: {.callout-note title="Reflexión"}
+💭 ¿Qué significaría "maximizar el margen" en un problema de predicción numérica?
+:::
+:::
+
+::::
 
 
 ## SVR invierte el objetivo de SVM
@@ -559,15 +688,27 @@ y_pred = model_svr.predict(X_test)
 :::
 
 
-## ¿Cómo encontrar los mejores parámetros?
+## ¿Cómo hallar los mejores parámetros?
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="50%"}
 Tienen C, kernel, gamma, degree...
 
 - ¿Cómo encontrarían la mejor combinación?
 - ¿Probar manualmente? ¿Grid? ¿Aleatorio?
+:::
+
+::: {.column width="50%"}
+::: {.callout-note title="Discusión"}
+💬 ¿Cómo equilibrarían exploración y costo computacional al buscar hiperparámetros?
+:::
+:::
+
+::::
 
 
-## GridSearchCV realiza búsqueda exhaustiva
+## GridSearchCV busca exhaustivamente
 
 - **Clase:** `sklearn.model_selection.GridSearchCV`
 - **Propósito:** Búsqueda exhaustiva sobre una grilla de parámetros.
@@ -602,18 +743,29 @@ grid.fit(X_train, y_train)
 :::
 
 
-## ¿Qué ocurre si la grilla es muy grande?
+## ¿Y si la grilla es muy grande?
 
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="55%"}
 Evaluando 5 valores de $C$, 5 de $\gamma$, 3 kernels y 5 pliegues de CV:
 
-$$5 \times 5 \times 3 \times 5 = 375 \text{ modelos a entrenar}$$
+$$5 \times 5 \times 3 \times 5 = 375 \text{ modelos}$$
 
-- ¿Cuánto tiempo computacional tomaría si el dataset es grande?
-- ¿Valdrá la pena evaluar cada punto exacto de la grilla?
-- ¿Existe una alternativa más rápida que explore mejor el espacio?
+- ¿Cuánto tiempo tomaría si el dataset es grande?
+- ¿Existe una alternativa que explore mejor?
+:::
+
+::: {.column width="45%"}
+::: {.callout-warning title="Costo computacional"}
+⚠️ En producción, 375+ entrenamientos puede ser inviable. ¿Cuál sería la alternativa?
+:::
+:::
+
+::::
 
 
-## RandomizedSearchCV optimiza el tiempo
+## RandomizedSearchCV optimiza tiempo
 
 - **Clase:** `sklearn.model_selection.RandomizedSearchCV`
 - **Muestreo aleatorio:** Evalúa solo $N$ combinaciones fijas (`n_iter`).
@@ -625,7 +777,7 @@ $$5 \times 5 \times 3 \times 5 = 375 \text{ modelos a entrenar}$$
 :::
 
 
-## Código: RandomizedSearchCV en Scikit-Learn
+## Código: RandomizedSearchCV (Sklearn)
 
 ```python
 from scipy.stats import loguniform
@@ -645,6 +797,20 @@ rand_search.fit(X_train, y_train)
 ::: {style="text-align: right; font-size: 0.65em; margin-top: 10px;"}
 [@scikit_learn_api]
 :::
+
+
+## Vapnik y Cortes consolidan las SVM modernas
+
+- **Orígenes (1963):** V. Vapnik y A. Chervonenkis desarrollan el algoritmo original [@vapnik1963pattern].
+- **Fronteras No Lineales (1992):** Boser, Guyon y Vapnik integran el *Kernel trick* [@boser1992training].
+- **Modelo Actual (1995):** C. Cortes y V. Vapnik proponen el margen suave [@cortes1995support].
+
+::: {style="text-align: center; font-size: 0.75em; margin-top: 25px;"}
+**Paper Fundacional:** *Support-vector networks* [@cortes1995support]
+:::
+
+
+
 
 
 ## Referencias
