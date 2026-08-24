@@ -41,13 +41,18 @@ bibliography: references.bib
 
 ## Patrón XOR: imposible para una recta
 
+::: {.columns}
+::: {.column width="50%"}
 - Una línea recta jamás podrá separar estas clases correctamente.
-- Si probamos regresión logística aquí, el *accuracy* será del 50%.
-
+- Con regresión logística, el *accuracy* será del 50%.
+:::
+::: {.column width="50%"}
 ![](assets/Xor.png){height="290px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
 Tomado de: [@provost2013data]
+:::
+:::
 :::
 
 
@@ -80,18 +85,35 @@ Recordemos los sistemas **BRMS** (*Business Rules Management Systems*) como Droo
 ¿Cómo logramos la explicabilidad de las reglas de negocio, pero logrando que la máquina **las descubra sola** desde los datos?
 :::
 
+## Vectores de soporte guían decisión
+
+![](assets/explicabilidad.png){height="480px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+[@mathworks_svm]
+:::
+
 
 # Árboles y CART
 
 ## Árboles: no linealidad e interpretabilidad
 
-El Árbol de Decisión ofrece lo mejor de ambos mundos:
+::: {.columns}
+::: {.column width="50%"}
+**Lo mejor de ambos mundos:**
 
-- **No lineal:** Capaz de separar patrones complejos (XOR).
-- **Interpretable:** Crea reglas jerárquicas simples (If-Then).
+- **No lineal:** Separa patrones complejos (XOR).
+- **Interpretable:** Reglas jerárquicas simples (If-Then).
 - **Sin preprocesamiento:** No exige escalar variables.
+:::
+::: {.column width="50%"}
+![](assets/ArbolBalance.png){height="320px" fig-align="center"}
 
-![](assets/ArbolBalance.png){height="260px" fig-align="center"}
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@provost2013data]
+:::
+:::
+:::
 
 
 ## Algoritmo CART construye reglas
@@ -107,21 +129,210 @@ El Árbol de Decisión ofrece lo mejor de ambos mundos:
 
 ## Entropía y Gini miden el desorden
 
-El algoritmo evalúa la **Ganancia de Información**. A mayor reducción del desorden, mejor es el corte.
+::: {.columns}
+::: {.column width="50%"}
+Se evalúa la **Ganancia de Información**. A mayor reducción del desorden, mejor es el corte.
 
+- **Entropía=0:** Nodo puro (una sola clase).
+- **Entropía=1:** Máxima mezcla (incertidumbre).
+:::
+::: {.column width="50%"}
 ![](assets/Entropia.png){height="260px" fig-align="center"}
 
-- **Entropía=0:** Nodo puro (solo una clase presente).
-- **Entropía=1:** Máxima mezcla (incertidumbre total).
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@provost2013data]
+:::
+:::
+:::
+
+
+## Escenario del Ejemplo
+
+**Escenario:** Nodo $S$ con 10 individuos.
+
+Imagina que estamos analizando un nodo en un árbol de decisión, al que llamamos "Nodo S". Este nodo representa un conjunto de datos con 10 individuos.
+
+**Clasificación:** Dentro de estos 10 individuos, tenemos dos categorías importantes:
+
+- **3 individuos en mora** (nuestra clase positiva, por ejemplo)
+- **7 individuos sin mora** (nuestra clase negativa)
+
+
+## Cálculo de Probabilidades
+
+::: {.callout-note title="Cálculo de Probabilidades"}
+Para calcular la entropía, necesitamos las probabilidades de cada clase en el Nodo S.
+
+- Probabilidad de "no mora":
+  $$p(\text{no-mora}) = \frac{7}{10} = 0.7$$
+
+- Probabilidad de "mora":
+  $$p(\text{mora}) = \frac{3}{10} = 0.3$$
+:::
+
+
+## Fórmula de Entropía
+
+::: {.callout-note title="Fórmula de Entropía (para dos clases)"}
+La fórmula general para calcular la entropía en un sistema con dos clases es:
+
+$$\text{entropy}(S) = - p(\text{mora}) \log_2(p(\text{mora})) - p(\text{no-mora}) \log_2(p(\text{no-mora}))$$
+
+Donde:
+
+- $S$ representa el conjunto de datos (nuestro Nodo S)
+- $p(\text{mora})$ es la probabilidad de la clase "mora"
+- $p(\text{no-mora})$ es la probabilidad de la clase "no mora"
+:::
+
+
+## Cálculo de Entropía (Nodo S)
+
+::: {.callout-note title="Sustituyendo valores en la fórmula"}
+Sustituimos las probabilidades calculadas en la fórmula de la entropía:
+
+$$\text{entropy}(S) = - \frac{3}{10} \log_2 \left(\frac{3}{10}\right) - \frac{7}{10} \log_2 \left(\frac{7}{10}\right)$$
+:::
+
+::: {.callout-note title="Resultado Aproximado"}
+Calculando esta expresión, obtenemos:
+
+$$\text{entropy}(S) \approx 0.88 \text{ bits}$$
+:::
+
+
+## Ganancia de Información reduce la Entropía
+
+La entropía ($\approx 0.88$) mide qué tan **mezcladas** están las clases (impureza). Para mejorar, usamos la **Ganancia de Información (IG)**.
+
+::: {.columns}
+::: {.column width="55%"}
+- **Objetivo:** Medir la **reducción del desorden** al dividir un nodo.
+- **Regla:** Mayor IG $\implies$ Mejor corte.
+- El algoritmo siempre prefiere cortes que generen hijos más puros.
+:::
+::: {.column width="45%"}
+```{mermaid}
+%%| fig-width: 4
+flowchart TD
+    A[Padre: Mezclado] -->|Corte| B(Hijo 1: Más puro)
+    A -->|Corte| C(Hijo 2: Más puro)
+    B -.-> D{Ganancia de<br>Información}
+    C -.-> D
+```
+:::
+:::
+
+
+
+## Ganancia de Información (Fórmula)
+
+::: {style="font-size: 0.8em;"}
+La fórmula para calcular la Ganancia de Información es:
+
+$$IG(\text{padre}, \text{hijos}) = \text{entropy}(\text{padre}) - \sum_{i=1}^{n} p(hijo_i) \times \text{entropy}(hijo_i)$$
+
+Donde:
+
+- $IG$: Ganancia al dividir el nodo "padre".
+- $\text{entropy}(\text{padre})$: Entropía **antes** de la división.
+- $n$: Número de nodos hijos creados.
+- $p(hijo_i)$: Proporción de individuos que se dirigen al nodo hijo $i$.
+- $\text{entropy}(hijo_i)$: Entropía **después** de la división.
+:::
+
+
+## Ganancia de Información (Balance)
+
+::: {.columns}
+::: {.column width="55%"}
+::: {style="font-size: 0.65em;"}
+$IG = entropy(padre)$  
+$- p(\text{Bal.} < 50K) \times entropy(\text{Bal.} < 50K)$  
+$- p(\text{Bal.} \geq 50K) \times entropy(\text{Bal.} \geq 50K)$  
+
+<br>
+$IG \approx 0.99 - 0.43(0.39) - 0.57(0.79)$  
+$IG \approx 0.37$
+:::
+:::
+::: {.column width="45%"}
+![](assets/InformationGainBalance.png){height="280px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em;"}
+Partición usando el Balance. [@provost2013data]
+:::
+:::
+:::
+
+
+## Ganancia de Información (Residencia)
+
+::: {.columns}
+::: {.column width="50%"}
+::: {style="font-size: 0.65em;"}
+$entropy(parent) \approx 0.99$  
+<br>
+$entropy(Res.=OWN) \approx 0.54$  
+<br>
+$entropy(Res.=RENT) \approx 0.97$  
+<br>
+$entropy(Res.=OTHER) \approx 0.98$  
+<br>
+**$IG \approx 0.13$**
+:::
+:::
+::: {.column width="50%"}
+![](assets/InformationGainResidence.png){height="280px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em;"}
+Partición usando la Residencia. [@provost2013data]
+:::
+:::
+:::
+
+
+## Variables continuas requieren cortes óptimos
+
+Vimos divisiones claras con clases (Residencia = OWN).
+
+::: {.callout-note title="Reflexión"}
+Si tenemos una variable continua como el Salario o la Edad, hay infinitos puntos. ¿Cómo decide la máquina en qué valor exacto hacer el corte (ej: Edad > 35)?
+:::
+
+
+## Búsqueda exhaustiva del umbral
+
+El algoritmo CART ordena los valores de la variable y evalúa la ganancia en todos los puntos medios posibles entre datos consecutivos.
+
+- Se elige el umbral $t_k$ que **maximiza la pureza** (o minimiza el desorden).
+- Por esto, buscar el mejor corte es computacionalmente intensivo.
+
+
+## Nodos hoja estiman probabilidades
+
+Al llegar a una hoja, el árbol predice la clase mayoritaria.
+
+::: {.callout-note title="Reflexión"}
+En detección de fraude, predecir "Fraude" o "No Fraude" puede ser insuficiente. ¿Cómo sabemos el grado de certeza o riesgo de esa decisión?
+:::
+
+
+## Proporciones definen la probabilidad
+
+El modelo estima probabilidades basado en la proporción de la clase en esa hoja.
+
+- Si en el nodo final hay 49 "No-Mora" y 5 "Mora", predecir "Mora" tiene baja certeza.
+- La probabilidad estimada de *Mora* será simplemente $\frac{5}{54} \approx 9.3\%$.
 
 
 ## Inferencia es rápida, entrenar es lento
 
-- **Predicción (Rápida):** Evalúa condiciones hasta llegar a una hoja $O(\log_2 m)$.
-- **Entrenamiento (Lento):** Prueba exhaustivamente cada variable y umbral posible.
+- **Predicción (Rápida):** Evalúa condiciones hasta llegar a una hoja $\mathcal{O}(\log_2 m)$.
+- **Entrenamiento (Lento):** Busca exhaustivamente cortes continuos y categóricos.
 
 ::: {.callout-warning title="Pregunta sobre Convergencia"}
-Si el árbol sigue dividiendo los datos para mejorar la pureza... ¿Cuándo se detiene? ¿Qué pasa si llega hasta el final?
+Si el árbol sigue dividiendo para purificar... ¿Cuándo se detiene?
 :::
 
 
@@ -171,26 +382,91 @@ print(f"Test Accuracy: {tree_reg.score(X_test, y_test)}") # 88%
 - Al obligar hojas de mínimo 5 muestras, el modelo generaliza mejor.
 
 
+# Árboles de Regresión
+
+## Regresión: Predecir valores numéricos
+
+Hasta ahora clasificamos categorías (Mora vs No-Mora).
+
+::: {.callout-note title="Reflexión"}
+¿Cómo adaptamos los cortes si queremos predecir el valor continuo de una casa en dólares? ¿Qué usaríamos en vez de medir Entropía o Gini?
+:::
+
+
+## Árboles minimizan la Varianza
+
+::: {.columns}
+::: {.column width="50%"}
+En vez de buscar "pureza de clases", el árbol busca que los valores en la hoja sean parecidos.
+
+- **Métrica:** Mayor reducción de Varianza (minimizar el MSE).
+- **Predicción:** Es el **promedio** de los valores en el nodo hoja.
+:::
+::: {.column width="50%"}
+![](assets/mls3_0604.png){height="320px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Árbol de Regresión. Tomado de: [@geron2022hands]
+:::
+:::
+:::
+
+
+## La predicción es escalonada
+
+::: {.columns}
+::: {.column width="50%"}
+Como el modelo promedia los datos en cada región separada por cortes, la línea de predicción luce como escalones planos horizontales.
+:::
+::: {.column width="50%"}
+![](assets/mls3_0605.png){height="280px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Predicciones constantes por región. Tomado de: [@geron2022hands]
+:::
+:::
+:::
+
+
 # Limitaciones
 
 ## Árboles generan particiones ortogonales
 
+::: {.columns}
+::: {.column width="45%"}
 Observen cómo se forman las áreas de decisión de un árbol:
 
+::: {.callout-warning title="El Problema Diagonal"}
+Las reglas siempre son paralelas a los ejes. ¿Qué sucede si la frontera óptima es una línea diagonal?
+:::
+:::
+::: {.column width="55%"}
 ![](assets/RegresionZona2d.png){height="250px" fig-align="center"}
 
-::: {.callout-warning title="El Problema Diagonal"}
-Las reglas siempre son "mayor que" o "menor que" (paralelas a los ejes). ¿Qué sucede si la frontera óptima es una línea diagonal?
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@geron2022hands]
+:::
+:::
 :::
 
 
 ## Cortes ortogonales sufren en diagonales
 
+::: {.columns}
+::: {.column width="45%"}
 El árbol intenta imitar la diagonal con cientos de escalones microscópicos.
 
-![](assets/mls3_0607.png){height="280px" fig-align="center"}
+- **Consecuencia:** Requiere mucha profundidad.
+- El modelo se vuelve complejo y propenso al **sobreajuste**.
+:::
+::: {.column width="55%"}
+![](assets/mls3_0607.png){height="250px" fig-align="center"}
 
-- **Consecuencia:** Requiere mucha profundidad, es complejo y propenso al sobreajuste.
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@geron2022hands]
+:::
+:::
+:::
 
 
 ## PCA rota datos antes del árbol
@@ -233,6 +509,10 @@ Tenemos un modelo interpretable, capaz de modelar no linealidad y correctamente 
 - Un cambio leve en los datos iniciales puede alterar la primera división (raíz), cambiando **todo el resto del árbol**.
 
 ![](assets/mls3_0609.png){height="240px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Alta varianza de los árboles. Tomado de: [@geron2022hands]
+:::
 
 - **Solución:** Entrenar múltiples árboles y promediarlos (*Random Forest*).
 
