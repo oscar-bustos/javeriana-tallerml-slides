@@ -1,0 +1,16 @@
+# Modelos de Inteligencia Artificial
+
+| Modelo | Empresa / Autor | Área | Descripción | Enlace |
+| :--- | :--- | :--- | :--- | :--- |
+| **AutoGluon** | Amazon Web Services (AWS) | AutoML para datos tabulares | Framework de AutoML que automatiza el aprendizaje profundo y el ensamblado de modelos para datos tabulares, texto e imágenes. | [Hugging Face](https://huggingface.co/autogluon) / [Web Oficial](https://auto.gluon.ai/) |
+| **Chronos** | Amazon Web Services (AWS) | Series de tiempo | Familia de modelos de lenguaje preentrenados adaptados para pronóstico probabilístico de series temporales. | [Hugging Face](https://huggingface.co/amazon/chronos-t5-small) |
+| **ModernBERT** | Answer.AI y LightOn | NLP (Clasificación de texto) | Evolución de la arquitectura BERT optimizada para GPU modernas con soporte nativo de hasta 8k tokens de contexto. | [Hugging Face](https://huggingface.co/answerdotai/ModernBERT-base) |
+| **BGE-M3** | BAAI | Embeddings | Modelo de embeddings multilingüe versátil que soporta recuperación densa, dispersa y multivectorial hasta 8192 tokens. | [Hugging Face](https://huggingface.co/BAAI/bge-m3) |
+| **Whisper** | OpenAI | Reconocimiento de voz (Speech-to-Text) | Sistema de procesamiento de audio robusto para transcripción de voz a texto y traducción multilingüe. | [Hugging Face](https://huggingface.co/openai/whisper-large-v3) |
+| **MusicGen (AudioCraft)** | Meta AI | Generación de música | Modelo autorregresivo generativo capaz de sintetizar música de alta fidelidad guiado por descripciones en texto. | [Hugging Face](https://huggingface.co/facebook/musicgen-small) |
+| **Stable Diffusion XL (SDXL)** | Stability AI | Generación de imágenes | Modelo de difusión latente avanzado diseñado para la generación y edición de imágenes hiperrealistas a partir de texto. | [Hugging Face](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) |
+| **YOLOv11** | Ultralytics | Detección de objetos | Arquitectura de visión por computadora optimizada para detección, segmentación y estimación de pose en tiempo real. | [Hugging Face Docs](https://huggingface.co/docs/hub/ultralytics) / [GitHub](https://github.com/ultralytics/ultralytics) |
+| **ResNet** | Microsoft Research *(Kaiming He et al.)* | Visión por Computadora (Clasificación) | Arquitectura convolucional histórica que introdujo conexiones residuales (*skip connections*) para entrenar redes muy profundas. | [Hugging Face](https://huggingface.co/microsoft/resnet-50) |
+| **Depth Anything V2** | ByteDance Research | Estimación de profundidad monocular | Modelo SOTA para estimar mapas de profundidad complejos e hiperdetallados a partir de una sola imagen de entrada. | [Hugging Face](https://huggingface.co/depth-anything/Depth-Anything-V2-Base) |
+| **CLIP** | OpenAI | Visión + Lenguaje | Red neuronal multimodal que une texto e imagen, permitiendo búsquedas semánticas y clasificación *zero-shot*. | [Hugging Face](https://huggingface.co/openai/clip-vit-base-patch32) |
+| **Florence-2** | Microsoft Research | Visión multimodal | Modelo fundacional de visión compacto que aborda múltiples tareas (captioning, detección, grounding) mediante representación texto-a-texto. | [Hugging Face](https://huggingface.co/microsoft/Florence-2-base) |

@@ -10,6 +10,8 @@
 !/docs/assets/**
 !/.agents/
 !/.agents/**
+!/homework/
+!/homework/**
 
 # Permitir archivos de Quarto (.qmd, .bib, .scss, imágenes)
 !/quarto/
