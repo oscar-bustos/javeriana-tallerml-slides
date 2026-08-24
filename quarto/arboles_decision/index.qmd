@@ -94,6 +94,57 @@ Recordemos los sistemas **BRMS** (*Business Rules Management Systems*) como Droo
 :::
 
 
+## Referencia: Géron (Capítulo 6)
+
+![](assets/keras.jpeg){height="400px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+Capítulo 6 [@geron2022hands]
+:::
+
+
+## Referencias: James y Provost
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](assets/IntroStatisticalLearning.png){height="380px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+Capítulo 8 [@james2023introduction]
+:::
+:::
+
+::: {.column width="50%"}
+![](assets/DataScienceBusiness.jpg){height="380px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+Capítulo 3 [@provost2013data]
+:::
+:::
+
+::::
+
+
+## Tarea: Lecturas
+
+**Actividades a desarrollar:**
+
+1. **(Obligatorio)** Leer el **Capítulo 6** de *Hands-On Machine Learning* (Géron).
+2. **(Opcional)** Leer el **Capítulo 8** de *Introduction to Statistical Learning* (James et al.).
+3. **(Opcional)** Leer el **Capítulo 3** de *Data Science for Business* (Provost).
+
+
+## Tarea: NotebookLM
+
+**Actividades complementarias:**
+
+- Explorar el [Cuaderno de Google NotebookLM](https://notebook.google.com/notebook/f1e87c40-b872-466d-94ec-8544024b5986):
+  - Revisar la infografía.
+  - Realizar los quices incluidos.
+  - Escuchar el podcast.
+
+
 # Árboles y CART
 
 ## Árboles: no linealidad e interpretabilidad
@@ -118,9 +169,9 @@ Tomado de: [@provost2013data]
 
 ## Algoritmo CART construye reglas
 
-- **Algoritmo CART (Classification and Regression Trees):** 
-  - Divide el espacio recursivamente de arriba hacia abajo.
-  - En cada paso, selecciona la variable y el umbral que separe mejor los datos.
+- **Algoritmo CART (*Classification and Regression Trees*):** 
+  - **Partición binaria recursiva:** Comienza en la raíz y divide sucesivamente los datos en dos subconjuntos cada vez más puros.
+  - **Selección óptima $(k, t_k)$:** En cada nodo elige la variable y el umbral que minimizan la impureza.
 
 ::: {.callout-note title="Reflexión"}
 ¿Cómo mide matemáticamente la máquina que un "corte" o división es mejor que otro?
@@ -517,12 +568,7 @@ Alta varianza de los árboles. Tomado de: [@geron2022hands]
 - **Solución:** Entrenar múltiples árboles y promediarlos (*Random Forest*).
 
 
-## Tarea y Lecturas Sugeridas
-
-**Actividades a desarrollar:**
-
-1. **(Obligatorio)** Leer el **Capítulo 6** de Géron.
-2. **(Opcional)** Explorar el [Cuaderno de Google NotebookLM](https://notebook.google.com/notebook/f1e87c40-b872-466d-94ec-8544024b5986).
+## Referencias
 
 ::: {#refs}
 :::
