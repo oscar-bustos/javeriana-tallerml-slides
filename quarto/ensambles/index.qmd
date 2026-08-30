@@ -11,582 +11,540 @@ format:
     show-slide-number: all
     transition: slide
     chalkboard: false
-    width: 1050
-    height: 700
+    auto-stretch: false
+    width: 1280
+    height: 720
+    margin: 0.04
+    center: false
 bibliography: references.bib
+nocite: |
+  @*
 ---
 
-
-
+<style>
+.reveal figcaption {
+  text-align: center !important;
+}
+.smaller-text {
+  font-size: 0.75em !important;
+}
+</style>
 
 # Intuición Matemática
 
-
-
-## Capítulos sobre Ensambles
-
-
+## Bibliografía Principal sobre Ensambles
 
 :::: {.columns}
 
+::: {.column width="34%"}
+![](assets/IntroStatisticalLearning.png){height="360px" fig-align="center"}
 
-::: {.column width="35%"}
-
-![](assets/IntroStatisticalLearning.png){width="70%"}<br>
-Capítulo 9
-
+::: {style="text-align: center; font-size: 0.75em; margin-top: 5px;"}
+Capítulo 9 [@james2023introduction]
+:::
 :::
 
-::: {.column width="35%"}
+::: {.column width="33%"}
+![](assets/keras.jpeg){height="360px" fig-align="center"}
 
-![](assets/keras.jpeg){width="80%"}<br>
-Capítulo 7
-
+::: {style="text-align: center; font-size: 0.75em; margin-top: 5px;"}
+Capítulo 7 [@geron2022hands]
+:::
 :::
 
-::: {.column width="30%"}
+::: {.column width="33%"}
+![](assets/EnsembleMethodsBook.jpg){height="360px" fig-align="center"}
 
-![](assets/EnsembleMethodsBook.jpg){width="80%"}<br>
-Capítulos 1,2,3,5
+::: {style="text-align: center; font-size: 0.75em; margin-top: 5px;"}
+Caps. 1, 2, 3, 5 [@kunapuli2023ensemble]
 :::
+:::
+
 ::::
 
 
+## Sabiduría Colectiva en Diagnóstico Médico
+
+¿Cómo se diagnostica si un paciente tiene cáncer combinando opiniones médicas?
+
+![](assets/CH01_F01_Kunapuli.png){height="390px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
+## Sabiduría de la Multitud con IA
 
-## Wisdom of Crowds
+¿Cómo se formula el mismo diagnóstico combinando múltiples modelos de IA?
 
+![](assets/CH02_F01_Kunapuli.png){height="390px" fig-align="center"}
 
-¿Cómo se puede diagnosticar si un paciente tiene cáncer o no?
-
- % Espacio opcional entre el texto y la imagen
-
-![](assets/CH01_F01_Kunapuli.png){width="70%"}
-
-
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
-## Wisdom of Crowds
+## Evidencia Empírica Favorable a Ensambles
+
+¿Qué familia de algoritmos lidera el rendimiento en problemas reales? [@olson2018data]
+
+![](assets/CH01_F02_Kunapuli.png){height="390px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
-¿Cómo se puede diagnosticar si un paciente tiene cáncer o no usando IA?
+## Los Ensambles Combinan Modelos Débiles
+
+- **Principio central:** Basado en *"la sabiduría de la multitud"*.
+- **Construcción:** Combina múltiples modelos débiles para crear uno robusto.
+- **Reducción de error:** Reduce simultáneamente el sesgo y la varianza.
+- **Beneficio clave:** Incrementa la precisión y la estabilidad general.
 
 
- % Espacio opcional entre el texto y la imagen
+## Tres Categorías Principales de Ensambles
 
-![](assets/CH02_F01_Kunapuli.png){width="50%"}
-
-
-
-
-## Evidencia empírica en los ensambles
-
-
-¿Qué algoritmo de aprendizaje de máquina debo utilizar? [@olson2018data]
-
-
- % Espacio opcional entre el texto y la imagen
-
-![](assets/CH01_F02_Kunapuli.png){width="50%"}
-
-
-
-
-
-
-## ¿Qué son los Ensambles?
-
-- Combinación de múltiples modelos más débiles para crear un modelo más fuerte.
-- Idea principal: "La sabiduría de la multitud".
-- Reducen el sesgo y la varianza.
-- Mejoran la precisión y la robustez del modelo.
-
-
-
-
-## Resumen de Categorías de Ensambles
-
-Existen tres principales categorías de ensambles en machine learning:
-- **Parallel Homogeneous Ensembles:** Múltiples modelos del mismo tipo, entrenados con diferentes conjuntos de datos. Mejora la estabilidad y reduce la varianza.
-- **Parallel Heterogeneous Ensembles:** Combinación de diferentes tipos de modelos para aprovechar sus fortalezas individuales.
-- **Sequential Gradient Boosting Ensembles:** Modelos entrenados secuencialmente, en los que cada uno corrige los errores del anterior, logrando una mejor optimización de la función de pérdida.
-
-
-
-
+- **Homogéneos Paralelos (*Bagging*):** Modelos iguales sobre muestras bootstrap. Reduce varianza.
+- **Heterogéneos Paralelos (*Voting / Stacking*):** Modelos de distinta familia algorítmica combinados.
+- **Secuenciales (*Gradient Boosting*):** Modelos en cascada donde cada uno corrige residuos previos.
 
 
 # Parallel Homogeneous Ensembles
 
-
-
-
 ## Arquitectura de Ensamble Homogéneo
 
+Todos los estimadores base pertenecen a la misma familia algorítmica:
 
-Cuando todos los clasificadores son del mismo tipo
+![](assets/CH02_F02_Kunapuli.png){height="390px" fig-align="center"}
 
-
- % Espacio opcional entre el texto y la imagen
-
-![](assets/CH02_F02_Kunapuli.png){width="50%"}
-
-
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
-## Bootstrapping
+## Bootstrapping Genera Muestras Diversas
+
+:::: {.columns}
+
+::: {.column width="48%"}
+- **Muestreo con reemplazo:** Permite repetir instancias en cada muestra.
+- **Subconjuntos diversos:** Estimadores entrenan con datos variados.
+- **Out-of-Bag (OOB):** Datos no seleccionados evalúan el modelo sin test set.
+:::
+
+::: {.column width="52%"}
+![](assets/CH02_F03_Kunapuli.png){height="340px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
+:::
+
+::::
 
 
+## Muestreo con Reemplazo en Bagging
+
+![](assets/mls3_0704.png){height="400px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@geron2022hands]
+:::
 
 
+## Implementación de Bagging: Entrenamiento
 
-
-El bootstrapping es un método estadístico que permite generar **múltiples subconjuntos de datos** a partir del conjunto de entrenamiento original. Se basa en el muestreo con reemplazo, lo que significa que algunos ejemplos pueden aparecer más de una vez en un subconjunto, mientras que otros pueden no aparecer en absoluto.
-
-
-
- % Espacio opcional entre el texto y la imagen
-
-![](assets/CH02_F03_Kunapuli.png){width="80%"}
-
-
-
-
-## Bootstrapping
-
-
-
-
-![](assets/mls3_0704.png){width="60%"}
-
-
- % Espacio opcional entre el texto y la imagen
-Entrenamiento con Bootstraping - [@geron2022hands]
-
-
-
-
-
-
-## Bagging - Entrenamiento
-
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 
 rng = np.random.RandomState(seed=4190)
+
 def bagging_fit(X, y, n_estimators, max_depth=5, max_samples=200):
-n_examples = len(y)
-estimators = [DecisionTreeClassifier(max_depth=max_depth)
-for _ in range(n_estimators)]
-
-for tree in estimators:
-bag = np.random.choice(n_examples, max_samples,
-replace=True)
-tree.fit(X[bag, :], y[bag])
-
-return estimators
-\end{lstlisting}
+    n_examples = len(y)
+    estimators = [DecisionTreeClassifier(max_depth=max_depth) for _ in range(n_estimators)]
+    
+    for tree in estimators:
+        bag = rng.choice(n_examples, max_samples, replace=True)
+        tree.fit(X[bag, :], y[bag])
+        
+    return estimators
+```
 
 
+## Implementación de Bagging: Inferencia
 
-
-## Bagging - Inferencia
-
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
+import numpy as np
 from scipy.stats import mode
 
 def bagging_predict(X, estimators):
-all_predictions = np.array([tree.predict(X)
-for tree in estimators])
-ypred, _ = mode(all_predictions, axis=0,
-keepdims=False)
-return np.squeeze(ypred)
-\end{lstlisting}
+    all_predictions = np.array([tree.predict(X) for tree in estimators])
+    ypred, _ = mode(all_predictions, axis=0, keepdims=False)
+    return np.squeeze(ypred)
+```
 
 
+## Bagging Suaviza Límites de Decisión
+
+:::: {.columns}
+
+::: {.column width="45%"}
+- **Árbol simple (izq.):** Sobreajusta y es muy sensible al ruido.
+- **Ensamble (der.):** Suaviza la frontera de decisión al promediar.
+:::
+
+::: {.column width="55%"}
+![](assets/CH02_F04_Kunapuli.png){height="340px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
+:::
+
+::::
 
 
-## Comparación Bagging en Árboles de Decisión
+## BaggingClassifier en Scikit-Learn
 
-
-
-Un único árbol de decisión (izquierda) **sobreajusta** el conjunto de entrenamiento y puede ser sensible a los valores atípicos. Un conjunto de bagging (derecha) **suaviza** los efectos de sobreajuste y las clasificaciones erróneas de varios de esos estimadores base.
-
-
-
- % Espacioopcional entre el texto y la imagen
-
-![](assets/CH02_F04_Kunapuli.png){width="70%"}
-
-
-
-
-## Bagging en Sklearn
-
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import BaggingClassifier
 
-base_estimator = DecisionTreeClassifier(max_depth=10)
-bag_ens = BaggingClassifier(base_estimator=base_estimator,
-n_estimators=500,
-max_samples=100,
-oob_score=True,
-random_state=rng)
+base_tree = DecisionTreeClassifier(max_depth=10)
+bag_ens = BaggingClassifier(
+    estimator=base_tree,
+    n_estimators=500,
+    max_samples=100,
+    oob_score=True,
+    random_state=42
+)
 bag_ens.fit(Xtrn, ytrn)
 ypred = bag_ens.predict(Xtst)
-\end{lstlisting}
+```
 
 
+## Paralelización Eficiente con n_jobs
+
+:::: {.columns}
+
+::: {.column width="58%"}
+```python
+bag_ens = BaggingClassifier(
+    estimator=DecisionTreeClassifier(),
+    n_estimators=100,
+    max_samples=100,
+    oob_score=True,
+    n_jobs=-1  # Paralelo en todas las CPUs disponibles
+)
+```
+:::
+
+::: {.column width="42%"}
+![](assets/CH02_F06_Kunapuli.png){height="300px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
+:::
+
+::::
 
 
-## Optimización en Bagging
+## Selección Aleatoria de Características
+
+![](assets/CH02_F07_Kunapuli.png){height="400px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
-\begin{lstlisting}[language=Python, style=mystyle]
+## Ventajas Clave de Random Forest
 
-BaggingClassifier(base_estimator=DecisionTreeClassifier(),
-n_estimators=100, max_samples=100,
-oob_score=True, n_jobs=-1)
-\end{lstlisting}
-
- % Espacioopcional entre el texto y la imagen
+- **Precisión:** Alta robustez frente a ruido y patrones no lineales.
+- **Alta dimensionalidad:** Opera eficientemente con muchas variables.
+- **Generalización:** Doble aleatorización (filas y columnas) mitiga sobreajuste.
+- **Interpretabilidad:** Permite estimar la importancia relativa de variables.
 
 
+## Hiperparámetros Clave en Random Forest
 
-![](assets/CH02_F06_Kunapuli.png){width="35%"}
-
-
-
-
-
-## Características Aleatorias
+- `n_estimators`: Número total de árboles en el bosque.
+- `max_features`: Tamaño del subconjunto de características por división.
+- `max_depth`: Profundidad máxima permitida en cada árbol.
+- `min_samples_split`: Muestras mínimas para dividir un nodo interno.
 
 
-![](assets/CH02_F07_Kunapuli.png){width="80%"}
+## RandomForestClassifier en Scikit-Learn
 
-
-
-
-
-## Random Forest: Ventajas
-
-- Alta precisión y robustez.
-- Maneja bien datos de alta dimensionalidad.
-- Reduce el sobreajuste.
-- Proporciona la importancia de las características.
-
-
-
-
-## Random Forest: Hiperparámetros Clave
-
-- `n\_estimators`: Número de árboles en el bosque.
-- `max\_features`: Número de características a considerar en cada división.
-- `max\_depth`: Profundidad máxima de los árboles.
-- `min\_samples\_split`: Número mínimo de muestras requerido para dividir un nodo interno.
-
-
-
-
-
-## Random Forest en Sklearn
-
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
 from sklearn.ensemble import RandomForestClassifier
 
-rf_ens = RandomForestClassifier(n_estimators=500,
-max_depth=10,
-oob_score=True,
-n_jobs=-1,
-random_state=rng)
+rf_ens = RandomForestClassifier(
+    n_estimators=500,
+    max_depth=10,
+    oob_score=True,
+    n_jobs=-1,
+    random_state=42
+)
 rf_ens.fit(Xtrn, ytrn)
 ypred = rf_ens.predict(Xtst)
-\end{lstlisting}
+```
 
 
+## Fronteras de Decisión en Random Forest
+
+![](assets/CH02_F08_Kunapuli.png){height="400px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
-## Random Forest en Sklearn
+## Cálculo de Importancia de Variables
 
+```python
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 
-![](assets/CH02_F08_Kunapuli.png){width="70%"}
-
-
-
-
-## Random Forest en Sklearn
-
-
-\begin{lstlisting}[language=Python, style=mystyle]
-X_trn, X_tst, y_trn, y_tst = train_test_split(X, y, test_size=0.15)
-n_features = X_trn.shape[1]
-
-rf = RandomForestClassifier(max_leaf_nodes=24,
-n_estimators=50, n_jobs=-1)
+X_trn, X_tst, y_trn, y_tst = train_test_split(X, y, test_size=0.15, random_state=42)
+rf = RandomForestClassifier(max_leaf_nodes=24, n_estimators=50, n_jobs=-1)
 rf.fit(X_trn, y_trn)
-err = 1 - accuracy_score(y_tst, rf.predict(X_tst))
 
 importance_threshold = 0.02
-for i, (feature, importance) in enumerate(zip(dataset['feature_names'],
-rf.feature_importances_)):
-if importance > importance_threshold:
-print('[{0}] {1} (score={2:4.3f})'.
-format(i, feature, importance))
-\end{lstlisting}
+for i, (feat, imp) in enumerate(zip(dataset['feature_names'], rf.feature_importances_)):
+    if imp > importance_threshold:
+        print(f"[{i}] {feat} (score={imp:4.3f})")
+```
 
 
+## Ranking de Importancia de Variables
 
+![](assets/CH02_F14_Kunapuli.png){height="400px" fig-align="center"}
 
-## Random Forest en Sklearn
-
-
-Importancia de Características
-![](assets/CH02_F14_Kunapuli.png){width="70%"}
-
-
-
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
 # Parallel Heterogeneous Ensembles
 
-
-
-
 ## Arquitectura de Ensamble Heterogéneo
 
+Integración de clasificadores de distinta naturaleza algorítmica:
 
-Cuando todos los clasificadores son de tipos distintos
+![](assets/CH03_F05_Kunapuli.png){height="390px" fig-align="center"}
 
-
- % Espacio opcional entre el texto y la imagen
-
-![](assets/CH03_F05_Kunapuli.png){width="80%"}
-
-
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
-## Voting
-
-
+## Métodos de Votación: Simple vs Ponderada
 
 :::: {.columns}
 
-
 ::: {.column width="50%"}
+![](assets/CH03_F08_Kunapuli.png){height="320px" fig-align="center"}
 
-![](assets/CH03_F08_Kunapuli.png){width="90%"}<br>
-Votación
+::: {style="text-align: center; font-size: 0.7em; margin-top: 5px;"}
+Votación Mayoritaria [@kunapuli2023ensemble]
+:::
 :::
 
 ::: {.column width="50%"}
+![](assets/CH03_F09_Kunapuli.png){height="320px" fig-align="center"}
 
-![](assets/CH03_F09_Kunapuli.png){width="90%"}<br>
-Votación Ponderada
+::: {style="text-align: center; font-size: 0.7em; margin-top: 5px;"}
+Votación Ponderada [@kunapuli2023ensemble]
 :::
+:::
+
 ::::
 
 
+## Stacking: Meta-Modelo sobre Predicciones
 
+Entrenamiento de un clasificador secundario sobre las salidas de los modelos base:
 
+![](assets/CH03_F12_Kunapuli.png){height="390px" fig-align="center"}
 
-
-## Stacking
-
-
-Entrenando un modelo que usa como entrada las salidas de otro modelo
-
-
- % Espacio opcional entre el texto y la imagen
-
-![](assets/CH03_F12_Kunapuli.png){width="80%"}
-
-
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
 # Sequential Gradient Boosting Ensembles
 
-
-
 ## Arquitectura de Gradient Boosting
 
+Entrenamiento secuencial donde cada modelo se enfoca en los errores del anterior:
+
+![](assets/CH04_F01_Kunapuli.png){height="390px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
 
 
-![](assets/CH04_F01_Kunapuli.png){width="50%"}
+## Entrenamiento Secuencial en AdaBoost
+
+![](assets/mls3_0707.png){height="400px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@geron2022hands]
+:::
 
 
+## GBT Paso 1: Ajuste del Modelo Inicial
+
+:::: {.columns}
+
+::: {.column width="45%"}
+- Ajusta un primer estimador base a los datos originales.
+- Calcula los residuos iniciales ($y - \hat{y}^{(0)}$).
+:::
+
+::: {.column width="55%"}
+![](assets/CH04_F03_Kunapuli.png){height="330px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
+:::
+
+::::
 
 
-## Arquitectura de Gradient Boosting
+## GBT Paso 2: Corrección de Residuos
+
+:::: {.columns}
+
+::: {.column width="45%"}
+- El nuevo árbol modela los pseudo-residuos del anterior.
+- La combinación lineal reduce progresivamente el sesgo.
+:::
+
+::: {.column width="55%"}
+![](assets/CH04_F05_Kunapuli.png){height="330px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
+:::
+
+::::
 
 
+## GBT Paso 3: Convergencia del Ensamble
 
-![](assets/mls3_0707.png){width="50%"}
+:::: {.columns}
 
-Entrenamiento secuencial de AdaBoost  - [@james2023introduction]
+::: {.column width="45%"}
+- El ensamble final captura patrones no lineales complejos.
+- Requiere controlar `learning_rate` (*shrinkage*) para no sobreajustar.
+:::
 
+::: {.column width="55%"}
+![](assets/CH04_F06_Kunapuli.png){height="330px" fig-align="center"}
 
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@kunapuli2023ensemble]
+:::
+:::
 
-
-
-## Gradient Boosted Trees (GBT): Intuición
-
-
-![](assets/CH04_F03_Kunapuli.png){width="50%"}
-
-
-- Construye modelos de forma secuencial, donde cada nuevo modelo se enfoca en corregir los errores del modelo anterior.
-- Utiliza el gradiente descendente para minimizar la función de pérdida.
-
-
-
-
-## Gradient Boosted Trees (GBT): Intuición
+::::
 
 
-![](assets/CH04_F05_Kunapuli.png){width="50%"}
+## Hiperparámetros Clave en GBT
+
+- `n_estimators`: Número total de árboles secuenciales en el ensamble.
+- `learning_rate`: Ponderación del aporte de cada árbol (*shrinkage*).
+- `max_depth`: Profundidad máxima (árboles típicamente poco profundos).
+- `subsample`: Fracción de datos para cada árbol (*Stochastic Boosting*).
+- `colsample_bytree`: Fracción de características por árbol.
 
 
-- Construye modelos de forma secuencial, en los que cada nuevo modelo se enfoca en corregir los errores del anterior.
-- Utiliza el gradiente descendente para minimizar la función de pérdida.
-
-
-
-
-## Gradient Boosted Trees (GBT): Intuición
-
-
-![](assets/CH04_F06_Kunapuli.png){width="50%"}
-
-
-- Construye modelos de forma secuencial, donde cada nuevo modelo se enfoca en corregir los errores del modelo anterior.
-- Utiliza el gradiente descendente para minimizar la función de pérdida.
-
-
-
-
-
-## Gradient Boosted Trees (GBT): Hiperparámetros Clave
-
-- `n\_estimators`: Número de árboles en el modelo.
-- `learning\_rate`: Tasa de aprendizaje, controla el impacto de cada árbol.
-- `max\_depth`: Profundidad máxima de los árboles.
-- `subsample`: Fracción de las muestras utilizadas para entrenar cada árbol.
-- `colsample\_bytree`: Fracción de las características utilizadas para entrenar cada árbol.
-
-
-
-
-# Comparación
-
-
+# Comparación de Enfoques
 
 ## Random Forest vs Gradient Boosted Trees
 
-
+::: {style="font-size: 0.75em;"}
 | **Característica** | **Random Forest** | **Gradient Boosted Trees** |
-| --- | --- | --- |
-| Enfoque | Bagging | Boosting |
-| Paralelización | Sí | No (secuencial) |
-| Precisión | Alta | Muy alta |
-| Sobreajuste | Menor riesgo | Mayor riesgo (requiere ajuste cuidadoso) |
-| Velocidad | Rápido | Más lento (depende de la implementación) |
-| Importancia de características | Sí | Sí |
+|:---|:---|:---|
+| **Enfoque** | Bagging (Paralelo) | Boosting (Secuencial) |
+| **Paralelización** | Totalmente paralelizable | Secuencial (paraleliza dentro del árbol) |
+| **Rendimiento** | Alta precisión y estabilidad | Máxima precisión (SOTA en datos tabulares) |
+| **Sobreajuste** | Bajo riesgo (asintótico al sumar árboles) | Alto riesgo si no se regulariza adecuadamente |
+| **Sensibilidad** | Robusto a hiperparámetros por defecto | Muy sensible a `learning_rate` y profundidad |
+| **Importancia Vars** | Importancia Gini / Permutación | Importancia por Ganancia / Cobertura |
+:::
 
 
+# Ecosistema y Librerías
+
+## Guía de Selección de Algoritmos
+
+¿Cómo seleccionar el ensamble adecuado para nuestros datos?
+
+![](assets/selectingAlgo.png){height="400px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Tomado de: [@geron2022hands]
+:::
 
 
+## Comparativa de Librerías en Python
 
-# Librerías
-
-
-
-## Seleccionando Algoritmos
-
-
-¿Cómo elijo el algoritmo más adecuado para mis datos?
-![](assets/selectingAlgo.png){width="80%"}
-
-
-
-
-## Ensambles en Python
+::: {style="font-size: 0.65em;"}
+| **Modelo** | **Librería** | **Enfoque** | **Categóricas** | **Valores Nulos** | **Rendimiento / Velocidad** |
+|:---|:---|:---|:---|:---|:---|
+| **Random Forest** | `scikit-learn` | Bagging | Requiere codificación previa | No soportado nativo | Paralelo, alto consumo de memoria |
+| **Gradient Boosting** | `scikit-learn` | Boosting | Requiere codificación previa | Soportado en `HistGradient` | Secuencial puro, velocidad moderada |
+| **XGBoost** | `xgboost` | Level-wise Boosting | Soporte experimental | Soporte nativo (dirección óptima) | Muy rápido, optimizado en C++ / GPU |
+| **LightGBM** | `lightgbm` | Leaf-wise Boosting | Soporte nativo muy eficiente | Soporte nativo | Extremadamente rápido y ligero en RAM |
+| **CatBoost** | `catboost` | Oblivious Trees | Soporte nativo especializado | Soporte nativo | Inferencia ultra rápida, excelente con GPU |
+:::
 
 
-\begin{table}[htbp]
+## Código: Random Forest en Scikit-Learn
 
-\renewcommand{\arraystretch}{1.5} % Espaciado para mayor legibilidad
-\resizebox{\textwidth}{!}{%
-
-| **Modelo** | **Librería / Creador** | **Enfoque** | **Variables Categóricas** | **Valores Nulos** | **Velocidad / Rendimiento** |
-| --- | --- | --- | --- | --- | --- |
-| **Random Forest** | `sklearn.ensemble` (Scikit-Learn) | Bagging (Paralelo) | Requiere codificación previa (One-Hot, Ordinal, etc.). | No soportado nativamente en sklearn. | Rápido al paralelizar árboles, pero consume mucha memoria. |
-| **Gradient Boosting** | `sklearn.ensemble` (Scikit-Learn) | Boosting (Secuencial) | Requiere codificación previa. | No soportado nativamente (a menos que se use `HistGradientBoosting`). | Lento en entrenamiento (secuencial puro). Consumo de memoria moderado. |
-| **XGBoost** | `xgboost` (DMLC) | Boosting (Level-wise) | Soportado experimentalmente / en versiones recientes. | Soporte nativo (aprende la dirección de los nulos). | Muy rápido (paraleliza la creación de nodos). Muy popular en competiciones. |
-| **LightGBM** | `lightgbm` (Microsoft) | Boosting (Leaf-wise) | Soporte nativo y muy eficiente. | Soporte nativo. | Extremadamente rápido en entrenamiento y muy eficiente en memoria. |
-| **CatBoost** | `catboost` (Yandex) | Boosting (Oblivious Trees) | Soporte nativo (diseñado específicamente para ser el mejor en esto). | Soporte nativo. | Rápido entrenamiento en GPU. Velocidad de inferencia (predicción) inigualable. |
-
-}
-\caption{Comparativa de modelos de ensamble basados en árboles.}
-\label{tab:comparativa_modelos}
-\end{table}
-
-
-
-
-
-
-
-## Ejemplo de Código: Random Forest (scikit-learn)
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-rf = RandomForestClassifier(n_estimators=100, max_depth=5)
+rf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42)
 rf.fit(X_train, y_train)
 
 y_pred = rf.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
-\end{lstlisting}
+print(f"Accuracy RF: {accuracy_score(y_test, y_pred):.4f}")
+```
 
 
+## Código: Gradient Boosting con XGBoost
 
-
-## Ejemplo de Código: Gradient Boosting (XGBoost)
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-xgb_model = xgb.XGBClassifier(n_estimators=100, max_depth=5, learning_rate=0.1)
+xgb_model = xgb.XGBClassifier(n_estimators=100, max_depth=5, learning_rate=0.1, random_state=42)
 xgb_model.fit(X_train, y_train)
 
 y_pred = xgb_model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
-\end{lstlisting}
+print(f"Accuracy XGBoost: {accuracy_score(y_test, y_pred):.4f}")
+```
 
 
+## Referencias
 
-\nocite{*}
-
-## References
-
-\AtNextBibliography{}
-\printbibliography
-
-
+::: {#refs}
+:::

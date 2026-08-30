@@ -112,11 +112,49 @@ $presentation-heading-color: $main-blue !default;
   border: 1px solid rgba(0,0,0,0.05);
 }
 
-// Images
-.reveal img {
+// Images - Aspect ratio protection & centering (Zero distortion guarantee)
+.reveal img,
+.reveal .slides section img,
+.reveal .quarto-figure img,
+.reveal .figure-img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center;
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+// When height is explicitly set, maintain proportional width
+.reveal img[style*="height"] {
+  width: auto !important;
+}
+
+// When width is explicitly set, maintain proportional height
+.reveal img[style*="width"] {
+  height: auto !important;
+}
+
+// Quarto figure containers centering and alignment
+.reveal .quarto-figure,
+.reveal .quarto-figure figure,
+.reveal figure {
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  max-width: 100% !important;
+}
+
+.reveal .quarto-figure > p,
+.reveal figure > p {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin: 0 !important;
 }
 
 .reveal img:hover {
