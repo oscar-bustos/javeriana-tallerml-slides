@@ -30,29 +30,71 @@ nocite: |
 }
 </style>
 
+# Introducción
+
+## Tarea: Lecturas
+
+**Actividades a desarrollar:**
+
+1. **(Obligatorio)** Leer el **Capítulo 7** de *Hands-On Machine Learning* (Géron).
+2. **(Opcional)** Leer el **Capítulo 8** de *Introduction to Statistical Learning* (James et al.).
+
+
+## Tarea: NotebookLM
+
+**Actividades complementarias:**
+
+- Explorar el [Cuaderno de Google NotebookLM](https://notebook.google.com/notebook/037da261-6750-4b22-83a2-4d086cc971f7):
+  - Revisar la infografía.
+  - Realizar los quices incluidos.
+  - Escuchar el podcast.
+
+
 # Acto 1: El Árbol ya no es suficiente
 
-## El árbol fue nuestra primera solución no lineal
+## Árboles dividen el espacio no lineal
+
+:::: {.columns}
+
+::: {.column width="45%"}
+**Ventajas del particionamiento:**
+
+- **No lineal:** Separa patrones complejos mediante hiperrectángulos.
+- **Interpretable:** Reglas *If-Then* intuitivas y auditables.
+- **Sin preprocesamiento:** No requiere escalado de variables.
+:::
+
+::: {.column width="55%"}
+![](assets/mls3_0603.png){height="320px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
+Partición ortogonal del espacio. Tomado de: [@geron2022hands]
+:::
+:::
+
+::::
+
+
+## CART sufre de alta inestabilidad
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-**Resolvimos el problema de interpretabilidad:**
+**El dilema de la alta varianza:**
 
-- No lineal (separa XOR, moons, datos complejos).
-- Interpretable: reglas If-Then auditables.
-- Sin preprocesamiento de escala.
+- **Algoritmo voraz (*greedy*):** Optimiza divisiones de forma puramente local.
+- **Efecto dominó:** Un cambio leve en datos altera la raíz y todo el árbol.
 
-::: {.callout-warning title="Pero hay un problema grave"}
-CART es un algoritmo **voraz y estocástico**. Un pequeño cambio en los datos puede alterar la primera división raíz... y con ella, todo el árbol.
+::: {.callout-warning title="Problema clave"}
+Un árbol individual tiene alta varianza y es propenso al sobreajuste.
 :::
 :::
 
 ::: {.column width="50%"}
-![](assets/tree_alta_varianza.png){height="370px" fig-align="center"}
+![](assets/tree_alta_varianza.png){height="320px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
-Alta varianza: cambios mínimos en los datos generan árboles radicalmente distintos
+Pequeños cambios en datos generan árboles muy diferentes
 :::
 :::
 
@@ -88,45 +130,44 @@ Tomado de: [@kunapuli2023ensemble]
 ![](assets/CH01_F02_Kunapuli.png){height="400px" fig-align="center"}
 
 ::: {style="text-align: center; font-size: 0.65em; margin-top: 5px;"}
-Tomado de: [@kunapuli2023ensemble]
+Tomado de: [@olson2018data]
 :::
 
 
 ## Tres Familias de Ensambles
 
+::: {style="font-size: 0.85em;"}
 :::: {.columns}
 
-::: {.column width="34%"}
-**Paralelos Homogéneos**
+::: {.column width="33%"}
+**1. Homogéneos**
 
-- Mismo algoritmo base.
-- Datos diferentes por Bootstrapping.
-- Promedian para reducir **varianza**.
+- Mismo algoritmo, datos diferentes (Bootstrapping).
+- Promedian para reducir la **varianza**.
 
 → *Bagging, Random Forest*
 :::
 
 ::: {.column width="33%"}
-**Paralelos Heterogéneos**
+**2. Heterogéneos**
 
-- Algoritmos distintos en paralelo.
-- Se combinan sus predicciones.
-- Aprovechan fortalezas complementarias.
+- Distintos algoritmos entrenados en paralelo.
+- Combinan predicciones complementarias.
 
 → *Voting, Stacking*
 :::
 
-::: {.column width="33%"}
-**Secuenciales (Boosting)**
+::: {.column width="34%"}
+**3. Secuenciales**
 
-- Modelos en cascada.
-- Cada uno corrige al anterior.
-- Reducen **sesgo** progresivamente.
+- Modelos en cascada (cada uno corrige al anterior).
+- Reducen el **sesgo** progresivamente.
 
 → *AdaBoost, GBT, XGBoost*
 :::
 
 ::::
+:::
 
 
 ## Bibliografía del Módulo
