@@ -43,3 +43,9 @@
 **/*.pyo
 quarto/**/assets/
 
+# Recursos reproducibles de la presentacion de clustering
+!quarto/clustering/generate_figures.py
+!quarto/clustering/assets/
+quarto/clustering/assets/*
+!quarto/clustering/assets/generated/
+!quarto/clustering/assets/generated/**
