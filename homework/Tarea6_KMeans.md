@@ -111,10 +111,12 @@ Entrene modelos para cada valor de $K$ entre 2 y 8.
    - Tres países más cercanos a cada centroide.
 7. Identifique el clúster de Colombia y las variables que más influyen en su cercanía.
 8. Compare su distancia al centroide asignado con la distancia al segundo centroide más cercano.
+9. Encuentre el país más cercano a Colombia usando las nueve variables estandarizadas.
+10. Defina un subconjunto de variables para una pregunta concreta —por ejemplo, salud y demografía o macroeconomía y comercio— y repita la búsqueda. Justifique las variables y explique por qué puede cambiar el vecino.
 
-Responda: ¿la agrupación de Colombia tiene sentido según las variables utilizadas? ¿Qué información relevante del país no está representada en estos datos?
+Responda: ¿la agrupación de Colombia tiene sentido según las variables utilizadas? ¿Existe un país “más parecido” sin especificar el propósito? ¿Qué información relevante no está representada?
 
-**Producto esperado:** proyección PCA, tabla de perfiles y análisis de Colombia.
+**Producto esperado:** proyección PCA, tabla de perfiles, comparación de vecinos y análisis de Colombia.
 
 ---
 

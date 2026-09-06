@@ -26,9 +26,22 @@ bibliography: references.bib
 .reveal .compact { font-size: 0.82em; }
 .reveal .tiny-code pre code { font-size: 0.68em !important; line-height: 1.25; }
 .reveal .columns pre code { font-size: 0.62em !important; line-height: 1.22; }
+.reveal .activity-instructions { font-size: 0.68em; }
 </style>
 
 # Apertura
+
+## ¿Qué país se parece más a Colombia?
+
+::: {.compact}
+**Predicción inicial — 90 segundos**
+
+1. Escriba un país sin consultar los datos.
+2. Anote qué características sustentan su elección.
+3. Vote con la mano: ¿Latinoamérica, Europa, Asia u otra región?
+
+Guardaremos la respuesta: todavía no sabemos qué significa **parecido**.
+:::
 
 ## Sin etiquetas cambia la pregunta
 
@@ -59,28 +72,91 @@ bibliography: references.bib
 | 80–105 min | ¿Y si la geometría cambia? | DBSCAN y GMM |
 | 105–120 min | ¿Cómo explicamos los grupos? | Caso de países |
 
-## El capítulo amplía el mapa de ML
+## La similitud sirve para decidir
 
-Según [@geron2022hands], el aprendizaje no supervisado incluye:
-
-- **Clustering:** agrupar instancias similares.
-- **Detección de anomalías:** identificar casos inusuales.
-- **Estimación de densidad:** modelar dónde se concentran los datos.
-- **Reducción dimensional:** representar con menos variables.
-
-::: {.callout-note icon=false title="Idea guía"}
-Un clúster no es una clase descubierta: es una estructura propuesta por datos, variables y algoritmo.
+::: {style="font-size: 0.73em;"}
+| Pregunta | Uso | Decisión posible |
+|---|---|---|
+| ¿Qué empresas se parecen a mis mejores clientes? | Vecinos | Priorizar prospectos |
+| ¿Qué incidente técnico se parece a este? | Recuperación | Reutilizar soluciones |
+| ¿Qué contenido se parece a lo que consumo? | Recomendación | Ordenar opciones |
+| ¿Qué patrones aparecen en los usuarios? | Clustering | Diseñar servicio o campañas |
 :::
 
-## El problema empieza antes del algoritmo
+::: {style="font-size: 0.82em;"}
+La utilidad nace al conectar **representación → similitud → acción** [@provost2013data].
+:::
 
-Una entidad quiere segmentar países para priorizar programas de cooperación.
+## Referencias: Geron y Provost
 
-- ¿Qué significa que dos países sean “similares”?
-- ¿Pesan igual mortalidad, ingreso e inflación?
-- ¿Cuántos grupos deberían existir?
-- ¿Una visualización 2D representa las nueve variables?
-- ¿Cómo evitamos convertir un clúster en una etiqueta social?
+:::: {.columns}
+
+::: {.column width="50%"}
+![](assets/keras.jpeg){height="380px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+Capítulo 9 [@geron2022hands]
+:::
+:::
+
+::: {.column width="50%"}
+![](assets/DataScienceBusiness.jpg){height="380px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+Capítulo 6 [@provost2013data]
+:::
+:::
+
+::::
+
+## Tarea: Lecturas
+
+**Actividades a desarrollar:**
+
+1. **(Obligatorio)** Leer el **Capítulo 9** de *Hands-On Machine Learning* (Géron).
+2. **(Recomendado)** Repasar el **Capítulo 8** sobre reducción dimensional.
+3. **(Opcional)** Leer el **Capítulo 12** de *Introduction to Statistical Learning* (James et al.).
+
+## Tarea: NotebookLM
+
+::: {style="margin-top: 25px;"}
+**Actividades complementarias:**
+
+- Explorar el [Cuaderno de Google NotebookLM](https://notebook.google.com/notebook/e3bb0fa0-71fc-49af-ad7a-7b3a57cb6f82){target="_blank"}:
+  - Revisar la infografía.
+  - Realizar los quices incluidos.
+  - Escuchar el podcast.
+:::
+
+
+
+
+## Los mismos datos no implican similitud
+
+::: {style="font-size: 0.78em;"}
+:::: {.columns}
+::: {.column width="48%"}
+**Estudiante A**
+
+- 20 años · Bogotá · cuarto semestre
+- Vive cerca del campus
+- Estudia mejor temprano
+- Escucha electrónica
+:::
+::: {.column width="48%"}
+**Estudiante B**
+
+- 20 años · Bogotá · cuarto semestre
+- Viaja 90 minutos
+- Trabaja en la mañana
+- Escucha vallenato
+:::
+::::
+
+::: {.fragment}
+¿Usaría las mismas variables para recomendar música, planear movilidad y formar equipos? ¿Cuáles sería riesgoso usar?
+:::
+:::
 
 # PCA: hacer visible la estructura
 
@@ -105,7 +181,7 @@ Simulación uniforme reproducible. Generada con `generate_figures.py`.
 
 ## Escalar define qué significa “cerca”
 
-:::: {.columns}
+:::: {.columns .compact}
 ::: {.column width="39%"}
 ```python
 from sklearn.preprocessing import StandardScaler
@@ -115,9 +191,11 @@ X_scaled = StandardScaler().fit_transform(X)
 
 - Sin escalar, domina la variable de mayor magnitud.
 - Estandarizar no corrige outliers ni decisiones conceptuales.
+
+**Colombia:** República Dominicana → Turquía al estandarizar.
 :::
 ::: {.column width="61%"}
-![](assets/generated/scaling_effect.png){height="330px" fig-align="center"}
+![](assets/generated/scaling_effect.png){height="220px" fig-align="center"}
 :::
 ::::
 
@@ -154,15 +232,35 @@ X_hat = pca.inverse_transform(Z)
 :::
 ::::
 
-## PCA sirve como lente, no como veredicto
+## Actividad: proyecte los datos con PCA
 
+:::: {.columns}
+::: {.column width="63%"}
+[![](assets/generated/interactive_pca.png){height="335px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/reduccion_dimension/pca.html){target="_blank"}
+:::
+::: {.column .activity-instructions width="37%"}
+**Reto guiado — 7 min**
+
+1. Cambie la dirección de máxima varianza.
+2. Compare la proyección 2D y 1D.
+3. Identifique qué información se conserva.
+4. Explique qué se pierde al reducir.
+
+🔗 [Abrir interactividad PCA](https://oscar-bustos.github.io/javeriana-tallerml/reduccion_dimension/pca.html){target="_blank"}
+:::
+::::
+
+## PCA cambia la vista, no la pregunta
+
+::: {.compact}
 - **Visualización:** proyectar a 2D o 3D para explorar.
 - **Compresión:** reducir memoria y costo computacional.
-- **Ruido:** descartar direcciones de muy baja varianza.
-- **Preprocesamiento:** ayudar a modelos sensibles a dimensión.
+- En 9D, el vecino de Colombia es **Turquía**.
+- En PCA 2D, parece ser **Argentina**; vemos solo 63.1% de la varianza.
 
 ::: {.callout-warning icon=false title="Cuidado"}
-Una gráfica PCA 2D puede ocultar separaciones —o inventar solapamientos— presentes en más dimensiones.
+La proyección puede cambiar quién parece cercano; no reemplaza el espacio original.
+:::
 :::
 
 ## Reto 1: ¿escalar o reducir?
@@ -180,16 +278,17 @@ Tiempo sugerido: 3 minutos en parejas y 2 minutos de discusión.
 
 # K-Means: centros y particiones
 
-## Un clúster depende de la representación
+## Parecido siempre significa “¿para qué?”
 
-Clustering busca alta similitud interna y separación externa.
+Con Colombia y variables estandarizadas:
 
-- No existe una definición universal de “grupo”.
-- Las variables elegidas expresan una hipótesis.
-- La métrica convierte esa hipótesis en geometría.
-- El algoritmo favorece ciertas formas de clúster.
+- **Salud y demografía:** Barbados.
+- **Macroeconomía y comercio:** China.
+- **Las nueve variables:** Turquía.
 
-**Mismos objetos + otras variables = otros clústeres.**
+Las variables expresan una hipótesis; la métrica la convierte en geometría.
+
+**Mismos países + otro propósito = otra respuesta.**
 
 ## K-Means minimiza distancia a centroides
 
@@ -219,6 +318,24 @@ while not converged:
 :::
 ::: {.column width="65%"}
 ![](assets/generated/kmeans_iterations.png){height="300px" fig-align="center"}
+:::
+::::
+
+## Actividad: controle los centroides
+
+:::: {.columns}
+::: {.column width="63%"}
+[![](assets/generated/interactive_kmeans.png){height="335px" fig-align="center"}](https://oscar-bustos.github.io/javeriana-tallerml/clustering/kmeans.html){target="_blank"}
+:::
+::: {.column .activity-instructions width="37%"}
+**Reto guiado — 7 min**
+
+1. Cambie el número de clústeres.
+2. Reinicie los centroides.
+3. Observe asignación y movimiento.
+4. Compare iteraciones e inercia.
+
+🔗 [Abrir K-Means interactivo](https://oscar-bustos.github.io/javeriana-tallerml/clustering/kmeans.html){target="_blank"}
 :::
 ::::
 
@@ -337,13 +454,21 @@ $$
 - Cerca de $1$: asignación clara; cerca de $0$: frontera.
 - Valor negativo: otro clúster parece más cercano.
 
-## Una métrica interna no descubre la verdad
+## Un clúster útil cambia una decisión
 
-- Codo y silueta premian estructuras específicas.
-- Estabilidad ante remuestreo aporta otra evidencia.
-- El dominio determina si un grupo es útil.
-- Si existen etiquetas externas, sirven para evaluación.
-- El mejor $K$ estadístico puede no ser accionable.
+::: {.compact}
+Una entidad financiera agrupó clientes por uso, pagos y rentabilidad:
+
+1. El clustering reveló cinco comportamientos de crédito.
+2. La etiqueta no estaba disponible al aprobar un cliente nuevo.
+3. Un modelo supervisado aprendió a reconocerlos con datos de aprobación.
+
+El clustering creó una hipótesis; el modelo supervisado permitió actuar.
+
+::: {.source-note}
+Caso de Haimowitz y Schwarz, presentado en [@provost2013data].
+:::
+:::
 
 ## K-Means falla si el centro no representa
 
@@ -548,13 +673,35 @@ centroids_original = scaler.inverse_transform(
 - Reportar países centrales y casos fronterizos.
 - Evitar nombres valorativos como “buenos” o “malos”.
 
-## Colombia es observación, no conclusión
+## Colombia revela una respuesta condicional
 
-1. ¿Qué variables acercan Colombia a su centroide?
-2. ¿Qué tan lejos está del segundo centroide?
-3. ¿La asignación cambia con otra semilla o $K$ vecino?
-4. ¿La posición 2D coincide con el espacio completo?
-5. ¿Qué decisiones no deben basarse solo en el clúster?
+![](assets/generated/colombia_similarity.png){height="335px" fig-align="center"}
+
+::: {.source-note}
+Distancias euclidianas sobre el dataset de países. Generada con `generate_figures.py`.
+:::
+
+## Un vecino no es un clúster
+
+::: {style="font-size: 0.76em;"}
+:::: {.columns}
+::: {.column width="48%"}
+**Vecino**
+
+- Recupera el caso individual más próximo.
+- Colombia → Turquía en las nueve variables.
+:::
+::: {.column width="48%"}
+**Clúster**
+
+- Resume globalmente toda la colección.
+- Con *K* = 4, Colombia queda en un grupo de 88 países.
+- Vecinos: Turquía, Uruguay, Brasil, Ecuador y R. Dominicana.
+:::
+::::
+
+**Reto final:** defienda un país y complete “parecido respecto a ___ para decidir ___”.
+:::
 
 ## Un árbol explica fronteras aproximadas
 
@@ -605,15 +752,15 @@ MiniBatchKMeans(n_clusters=k, batch_size=1024,
 ```
 
 ::: {.source-note}
-Los tiempos dependen del equipo. Generada con `generate_figures.py`.
+El costo usa un proxy determinista de distancias evaluadas. Generada con `generate_figures.py`.
 :::
 
 ## Segmentar imágenes agrupa colores
 
-![](assets/generated/image_segmentation.png){height="390px" fig-align="center"}
+![](assets/generated/image_segmentation.png){height="345px" fig-align="center"}
 
 - Cada píxel es un vector RGB.
-- K-Means aprende una paleta de $K$ centroides.
+- K-Means aprende una paleta de *K* centroides.
 - Cada color se reemplaza por su centroide.
 
 ::: {.source-note}
@@ -716,6 +863,7 @@ $$
 | Algoritmos de clustering | MiniBatch, DBSCAN, GMM y comparación |
 | Reducción dimensional | Maldición dimensional, PCA y reconstrucción |
 | Capítulo 9 | Aplicaciones, densidad y anomalías |
+| *Data Science for Business*, cap. 6 | Representación, vecinos, utilidad y evaluación |
 
 Las capturas antiguas se sustituyeron por figuras reproducibles.
 

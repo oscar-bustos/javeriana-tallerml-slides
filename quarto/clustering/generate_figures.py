@@ -1,11 +1,13 @@
 """Genera las figuras reproducibles de la presentacion de clustering.
 
-Dependencias: numpy, pandas, matplotlib, scipy y scikit-learn.
+Dependencias: numpy, pandas, matplotlib, scipy y scikit-learn. La captura de
+interactividades requiere además Playwright y Google Chrome o Microsoft Edge.
 
 Uso desde ``quarto/clustering``::
 
     python generate_figures.py --all
     python generate_figures.py --figure k_selection
+    python generate_figures.py --figure colombia_similarity
 
 Las figuras se guardan en ``assets/generated``. Todas las simulaciones usan
 ``random_state=42``. El caso de paises usa una copia local en ``data/`` cuando
@@ -16,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import shutil
 import warnings
 from pathlib import Path
 from urllib.error import URLError
@@ -35,7 +38,7 @@ from sklearn.cluster import DBSCAN, KMeans, MiniBatchKMeans
 from sklearn.datasets import load_digits, load_sample_image, make_blobs, make_moons
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn.metrics import pairwise_distances, silhouette_samples, silhouette_score
 from sklearn.mixture import GaussianMixture
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -48,6 +51,16 @@ COUNTRY_URL = (
     "https://raw.githubusercontent.com/oscar-bustos/"
     "javeriana-analitica/main/countrydata/Country-data.csv"
 )
+INTERACTIVE_URLS = {
+    "interactive_pca": (
+        "https://oscar-bustos.github.io/javeriana-tallerml/"
+        "reduccion_dimension/pca.html"
+    ),
+    "interactive_kmeans": (
+        "https://oscar-bustos.github.io/javeriana-tallerml/"
+        "clustering/kmeans.html"
+    ),
+}
 BLUE = "#003576"
 TEAL = "#00A6A6"
 ORANGE = "#F28E2B"
@@ -340,9 +353,7 @@ def gmm_density() -> None:
 
 
 def minibatch_tradeoff() -> None:
-    """Compara inercia y tiempo aproximado de K-Means y MiniBatch."""
-    import time
-
+    """Compara inercia y un proxy reproducible del trabajo computacional."""
     x, _ = make_blobs(n_samples=30_000, centers=8, n_features=12, random_state=SEED)
     ks = [4, 6, 8, 10, 12]
     results = {"K-Means": ([], []), "MiniBatch": ([], [])}
@@ -351,16 +362,20 @@ def minibatch_tradeoff() -> None:
             ("K-Means", KMeans(k, n_init=5, random_state=SEED)),
             ("MiniBatch", MiniBatchKMeans(k, n_init=5, batch_size=1024, random_state=SEED)),
         ):
-            start = time.perf_counter()
             estimator.fit(x)
             results[name][0].append(estimator.inertia_)
-            results[name][1].append(time.perf_counter() - start)
+            if name == "K-Means":
+                work = len(x) * k * estimator.n_iter_
+            else:
+                work = estimator.batch_size * k * estimator.n_steps_
+            results[name][1].append(work)
     fig, axes = plt.subplots(1, 2, figsize=(9.5, 3.6))
     for name, color in (("K-Means", BLUE), ("MiniBatch", ORANGE)):
         axes[0].plot(ks, results[name][0], "o-", color=color, label=name)
         axes[1].plot(ks, results[name][1], "o-", color=color, label=name)
     axes[0].set(title="Calidad: inercia", xlabel="k", ylabel="Inercia")
-    axes[1].set(title="Costo: tiempo en este equipo", xlabel="k", ylabel="Segundos")
+    axes[1].set(title="Costo: trabajo aproximado", xlabel="k",
+                ylabel="Distancias evaluadas (proxy)", yscale="log")
     for ax in axes:
         ax.grid(True)
         ax.legend(frameon=False)
@@ -450,6 +465,169 @@ def countries() -> None:
     _save(fig, "countries_profiles")
 
 
+def colombia_similarity() -> None:
+    """Compara los vecinos de Colombia bajo distintas representaciones."""
+    data = _load_countries()
+    country_col = "country"
+    all_features = [column for column in data.columns if column != country_col]
+    health_features = ["child_mort", "health", "life_expec", "total_fer"]
+    macro_features = ["exports", "imports", "income", "inflation", "gdpp"]
+    country_names = data[country_col].astype(str).str.strip()
+    colombia_matches = country_names.str.casefold() == "colombia"
+    if colombia_matches.sum() != 1:
+        raise ValueError("El dataset debe contener exactamente una fila para Colombia.")
+    colombia_idx = int(np.flatnonzero(colombia_matches)[0])
+
+    def nearest(features: list[str], standardize: bool = True) -> list[tuple[str, float]]:
+        values = SimpleImputer(strategy="median").fit_transform(data[features])
+        if standardize:
+            values = StandardScaler().fit_transform(values)
+        distances = pairwise_distances(values[[colombia_idx]], values)[0]
+        order = np.argsort(distances)
+        return [
+            (country_names.iloc[index], float(distances[index]))
+            for index in order
+            if index != colombia_idx
+        ]
+
+    raw = nearest(all_features, standardize=False)
+    standardized = nearest(all_features)
+    health = nearest(health_features)
+    macro = nearest(macro_features)
+
+    values = SimpleImputer(strategy="median").fit_transform(data[all_features])
+    scaled = StandardScaler().fit_transform(values)
+    pca = PCA(n_components=2, random_state=SEED)
+    projection = pca.fit_transform(scaled)
+    pca_distances = pairwise_distances(projection[[colombia_idx]], projection)[0]
+    pca_order = [index for index in np.argsort(pca_distances) if index != colombia_idx]
+    pca_neighbor = country_names.iloc[pca_order[0]]
+    explained = float(pca.explained_variance_ratio_.sum())
+
+    expected = {
+        "sin escalar": (raw[0][0], "Dominican Republic"),
+        "estandarizado": (standardized[0][0], "Turkey"),
+        "salud y demografia": (health[0][0], "Barbados"),
+        "macroeconomia y comercio": (macro[0][0], "China"),
+        "PCA 2D": (pca_neighbor, "Argentina"),
+    }
+    mismatches = [
+        f"{label}: se obtuvo {actual!r}, se esperaba {wanted!r}"
+        for label, (actual, wanted) in expected.items()
+        if actual != wanted
+    ]
+    if mismatches:
+        raise AssertionError("Cambió el dataset o el pipeline:\n" + "\n".join(mismatches))
+
+    display_names = {
+        "Dominican Republic": "República Dominicana",
+        "Maldives": "Maldivas",
+        "St. Vincent and the Grenadines": "San Vicente y las Granadinas",
+        "Turkey": "Turquía",
+    }
+
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4.25))
+
+    def ranking_panel(ax: plt.Axes, title: str, groups: list[tuple[str, list[tuple[str, float]], str]]) -> None:
+        ax.axis("off")
+        ax.set_title(title, pad=12)
+        y = 0.88
+        for group_name, ranking, color in groups:
+            ax.text(0.02, y, group_name, color=color, fontweight="bold", transform=ax.transAxes)
+            y -= 0.10
+            for rank, (name, _) in enumerate(ranking[:3], start=1):
+                weight = "bold" if rank == 1 else "normal"
+                shown_name = display_names.get(name, name)
+                ax.text(0.07, y, f"{rank}. {shown_name}", fontweight=weight,
+                        color="#0F172A", transform=ax.transAxes)
+                y -= 0.085
+            y -= 0.055
+
+    ranking_panel(
+        axes[0],
+        "La escala cambia el vecino",
+        [("Sin escalar", raw, RED), ("9 variables estandarizadas", standardized, BLUE)],
+    )
+    ranking_panel(
+        axes[1],
+        "El propósito cambia el vecino",
+        [("Salud y demografía", health, TEAL), ("Macro y comercio", macro, ORANGE)],
+    )
+
+    axes[2].axis("off")
+    axes[2].set_title("La proyección cambia la vista", pad=12)
+    axes[2].text(0.5, 0.79, "Distancia completa · 9D", ha="center", color=BLUE,
+                 fontweight="bold", transform=axes[2].transAxes)
+    axes[2].text(0.5, 0.67, "Colombia  →  Turquía", ha="center", fontsize=14,
+                 fontweight="bold", transform=axes[2].transAxes)
+    axes[2].annotate("", xy=(0.5, 0.49), xytext=(0.5, 0.59), xycoords="axes fraction",
+                     arrowprops={"arrowstyle": "->", "color": "#64748B", "lw": 1.8})
+    axes[2].text(0.5, 0.39, "PCA · 2D", ha="center", color=PURPLE,
+                 fontweight="bold", transform=axes[2].transAxes)
+    axes[2].text(0.5, 0.27, "Colombia  →  Argentina", ha="center", fontsize=14,
+                 fontweight="bold", transform=axes[2].transAxes)
+    axes[2].text(0.5, 0.10, f"Varianza visible: {explained:.1%}", ha="center",
+                 color="#475569", transform=axes[2].transAxes)
+
+    fig.suptitle("¿Qué país se parece más a Colombia? Depende de la representación",
+                 color=BLUE, fontsize=15, fontweight="bold", y=1.02)
+    fig.tight_layout()
+    _save(fig, "colombia_similarity")
+
+
+def _find_browser() -> str:
+    """Localiza un navegador Chromium para capturas reproducibles."""
+    candidates = [
+        shutil.which("google-chrome"),
+        shutil.which("chromium"),
+        shutil.which("msedge"),
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/usr/bin/google-chrome",
+        "/usr/bin/chromium",
+    ]
+    for candidate in candidates:
+        if candidate and Path(candidate).exists():
+            return str(candidate)
+    raise RuntimeError(
+        "No se encontró Chrome/Chromium/Edge. Instale un navegador Chromium "
+        "para regenerar las capturas de las interactividades."
+    )
+
+
+def interactive_previews() -> None:
+    """Captura las interactividades públicas de PCA y K-Means."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError as exc:
+        raise RuntimeError(
+            "Instale Playwright con 'pip install playwright' para regenerar "
+            "las capturas interactivas."
+        ) from exc
+
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    browser_path = _find_browser()
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(
+            executable_path=browser_path,
+            headless=True,
+            args=["--allow-file-access-from-files"],
+        )
+        page = browser.new_page(viewport={"width": 1280, "height": 720})
+        for name, url in INTERACTIVE_URLS.items():
+            try:
+                page.goto(url, wait_until="load", timeout=30_000)
+                page.wait_for_timeout(1_500)
+                page.screenshot(path=str(OUTPUT / f"{name}.png"), full_page=False)
+            except Exception as exc:
+                raise RuntimeError(
+                    f"No se pudo capturar {url}. Verifique la conexión a internet."
+                ) from exc
+            print(f"[ok] {name}.png")
+        browser.close()
+
+
 FIGURES = {
     "distance_concentration": distance_concentration,
     "pca_digits": pca_digits,
@@ -462,6 +640,8 @@ FIGURES = {
     "minibatch_tradeoff": minibatch_tradeoff,
     "image_segmentation": image_segmentation,
     "countries": countries,
+    "colombia_similarity": colombia_similarity,
+    "interactive_previews": interactive_previews,
 }
 
 
