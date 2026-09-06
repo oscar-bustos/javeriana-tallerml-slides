@@ -1,0 +1,9 @@
+pregunta,respuesta,distancia,detalle
+PIB y mortalidad sin escalar,San Vicente y las Granadinas,20.109947787013862,"gdpp, child_mort"
+PIB y mortalidad con log + estándar,Irán,0.04334822561010349,"StandardScaler(log10(gdpp), log10(child_mort))"
+Salud y demografía,Barbados,0.23578689278363132,"child_mort, health, life_expec, total_fer"
+Macroeconomía y comercio,China,0.5323512318180466,"exports, imports, income, inflation, gdpp"
+Nueve variables estandarizadas,Turquía,0.7485190081056272,"child_mort, exports, health, imports, income, inflation, life_expec, total_fer, gdpp"
+PCA 2D de nueve variables,Argentina,0.0992722915109332,varianza explicada=0.631334
+K-Means K=4,Grupo de 88 países,1.7356142623255175,ajustado en las nueve variables; PCA solo visualiza
+GMM K=4,responsabilidad máxima=0.999769,0.00023079618565302606,covarianza full; ajustado en las nueve variables

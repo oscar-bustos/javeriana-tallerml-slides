@@ -112,7 +112,6 @@ def distance_concentration() -> None:
     axes[0].plot(dimensions, cv, "o-", color=BLUE, lw=2.5, label="Variacion relativa")
     axes[0].plot(dimensions, contrast, "s--", color=ORANGE, lw=2, label="Contraste P95-P05")
     axes[0].set(xlabel="Numero de dimensiones", ylabel="Contraste normalizado", xscale="log")
-    axes[0].set_title("Las distancias se concentran")
     axes[0].grid(True)
     axes[0].legend(frameon=False)
     for dimension, color in zip((2, 20, 200), (BLUE, ORANGE, TEAL)):
@@ -122,7 +121,6 @@ def distance_concentration() -> None:
         )
     axes[1].axvline(1, color="#475569", ls=":")
     axes[1].set(xlabel="Distancia / distancia media", ylabel="Densidad")
-    axes[1].set_title("En alta dimension, casi todo queda igual de lejos")
     axes[1].legend(frameon=False)
     _save(fig, "distance_concentration")
 
@@ -146,7 +144,6 @@ def pca_digits() -> None:
     ax.annotate(f"{d95} componentes", (d95, 0.95), xytext=(d95 + 7, 0.78),
                 arrowprops={"arrowstyle": "->", "color": RED})
     ax.set(xlabel="Componentes", ylabel="Varianza explicada acumulada", ylim=(0, 1.02))
-    ax.set_title("PCA conserva informacion, no etiquetas")
     ax.grid(True)
 
     images = [("Original (64D)", x[sample_idx].reshape(8, 8))]
@@ -175,11 +172,9 @@ def scaling_effect() -> None:
 
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     axes[0].scatter(age, income / 1000, c=raw, cmap=ListedColormap(COLORS[:2]), s=26)
-    axes[0].set_title("Sin escalar: ingreso decide casi todo")
     axes[0].set(xlabel="Edad", ylabel="Ingreso (miles)")
     axes[1].scatter(scaled_x[:, 0], scaled_x[:, 1], c=scaled,
                     cmap=ListedColormap(COLORS[:2]), s=26)
-    axes[1].set_title("Estandarizado: ambas variables cuentan")
     axes[1].set(xlabel="Edad estandarizada", ylabel="Ingreso estandarizado")
     for ax in axes:
         ax.grid(True)
@@ -205,8 +200,6 @@ def kmeans_iterations() -> None:
                    edgecolor="#111827", linewidth=1.5)
         ax.set_title("Inicio" if idx == 0 else f"Iteracion {idx}")
         ax.grid(True)
-    fig.suptitle("K-Means alterna asignar puntos y mover centroides", color=BLUE,
-                 fontsize=15, fontweight="bold")
     _save(fig, "kmeans_iterations")
 
 
@@ -227,10 +220,10 @@ def k_selection() -> None:
 
     fig, axes = plt.subplots(1, 3, figsize=(12, 3.8))
     axes[0].plot(list(ks), inertias, "o-", color=BLUE, lw=2.5)
-    axes[0].set(title="Codo", xlabel="k", ylabel="Inercia")
+    axes[0].set(xlabel="k", ylabel="Inercia")
     axes[1].plot(list(ks), scores, "o-", color=ORANGE, lw=2.5)
     axes[1].axvline(best_k, color=RED, ls="--")
-    axes[1].set(title=f"Silueta media: k={best_k}", xlabel="k", ylabel="Silueta media", ylim=(0, 1))
+    axes[1].set(xlabel="k", ylabel="Silueta media", ylim=(0, 1))
     y_lower = 10
     for cluster in range(best_k):
         cluster_values = np.sort(values[model.labels_ == cluster])
@@ -239,7 +232,7 @@ def k_selection() -> None:
                               color=COLORS[cluster], alpha=0.8)
         y_lower = y_upper + 10
     axes[2].axvline(scores[best_k - 2], color=RED, ls="--")
-    axes[2].set(title="Distribución por clúster", xlabel="Coeficiente de silueta",
+    axes[2].set(xlabel="Coeficiente de silueta",
                 ylabel="Instancias ordenadas", xlim=(-0.2, 1), yticks=[])
     for ax in axes[:2]:
         ax.grid(True)
@@ -275,8 +268,6 @@ def algorithm_comparison() -> None:
             ax.set(xticks=[], yticks=[])
     for col, title in enumerate(["Datos", "K-Means", "DBSCAN", "GMM"]):
         axes[0, col].set_title(title)
-    fig.suptitle("La geometria de los datos determina el algoritmo", color=BLUE,
-                 fontsize=15, fontweight="bold")
     _save(fig, "algorithm_comparison")
 
 
@@ -297,11 +288,9 @@ def dbscan_roles() -> None:
     axes[0].scatter(x[noise, 0], x[noise, 1], c=RED, marker="x", s=38, label="Ruido")
     chosen = model.core_sample_indices_[len(model.core_sample_indices_) // 2]
     axes[0].add_patch(Circle(x[chosen], eps, fill=False, lw=2, ls="--", color=RED))
-    axes[0].set_title(r"$eps$ define la vecindad local")
     axes[0].legend(frameon=False)
     axes[1].scatter(x[:, 0], x[:, 1], c=model.labels_, cmap=ListedColormap(COLORS), s=24)
     axes[1].scatter(x[noise, 0], x[noise, 1], c=RED, marker="x", s=38)
-    axes[1].set_title("La conectividad forma clústeres no convexos")
     for ax in axes:
         ax.set(xticks=[], yticks=[])
     _save(fig, "dbscan_roles")
@@ -336,14 +325,11 @@ def gmm_density() -> None:
     rgb = responsibilities @ np.array([matplotlib.colors.to_rgb(c) for c in COLORS[:3]])
     axes[0].scatter(x[:, 0], x[:, 1], c=rgb, s=12)
     _draw_gmm_ellipses(axes[0], model)
-    axes[0].set_title("Responsabilidades suaves", fontsize=11)
     scatter = axes[1].scatter(x[:, 0], x[:, 1], c=density, cmap="viridis", s=12)
     axes[1].scatter(x[anomalies, 0], x[anomalies, 1], facecolors="none", edgecolors=RED, s=60, lw=1.5)
-    axes[1].set_title("Baja densidad = posible anomalía", fontsize=11)
     fig.colorbar(scatter, ax=axes[1], fraction=0.046, label="log densidad")
     axes[2].plot(list(ks), [m.bic(x) for m in models], "o-", color=BLUE, label="BIC")
     axes[2].plot(list(ks), [m.aic(x) for m in models], "s--", color=ORANGE, label="AIC")
-    axes[2].set_title("AIC/BIC penalizan complejidad", fontsize=11)
     axes[2].set(xlabel="Componentes", ylabel="Criterio")
     axes[2].grid(True)
     axes[2].legend(frameon=False)
@@ -373,8 +359,8 @@ def minibatch_tradeoff() -> None:
     for name, color in (("K-Means", BLUE), ("MiniBatch", ORANGE)):
         axes[0].plot(ks, results[name][0], "o-", color=color, label=name)
         axes[1].plot(ks, results[name][1], "o-", color=color, label=name)
-    axes[0].set(title="Calidad: inercia", xlabel="k", ylabel="Inercia")
-    axes[1].set(title="Costo: trabajo aproximado", xlabel="k",
+    axes[0].set(xlabel="k", ylabel="Inercia")
+    axes[1].set(xlabel="k",
                 ylabel="Distancias evaluadas (proxy)", yscale="log")
     for ax in axes:
         ax.grid(True)
@@ -398,8 +384,6 @@ def image_segmentation() -> None:
         ax.imshow(output)
         ax.set_title(title)
         ax.axis("off")
-    fig.suptitle("Clustering de píxeles comprime la paleta", color=BLUE,
-                 fontsize=15, fontweight="bold")
     _save(fig, "image_segmentation")
 
 
@@ -438,7 +422,7 @@ def countries() -> None:
     fig, axes = plt.subplots(1, 2, figsize=(10.8, 4.2))
     axes[0].plot(list(ks), scores, "o-", color=BLUE, lw=2.5)
     axes[0].axvline(best_k, color=RED, ls="--")
-    axes[0].set(title=f"Silueta favorece k={best_k}", xlabel="k", ylabel="Silueta media", ylim=(0, 1))
+    axes[0].set(xlabel="k", ylabel="Silueta media", ylim=(0, 1))
     axes[0].grid(True)
     axes[1].scatter(projection[:, 0], projection[:, 1], c=model.labels_,
                     cmap=ListedColormap(COLORS), s=30, alpha=0.8)
@@ -447,7 +431,7 @@ def countries() -> None:
         point = projection[np.flatnonzero(colombia)[0]]
         axes[1].scatter(*point, marker="*", s=260, c=RED, edgecolor="white", lw=1.2)
         axes[1].annotate("Colombia", point, xytext=(8, 10), textcoords="offset points", fontweight="bold")
-    axes[1].set(title="PCA permite ver; K-Means usa todas las variables", xlabel="PC1", ylabel="PC2")
+    axes[1].set(xlabel="PC1", ylabel="PC2")
     axes[1].grid(True)
     _save(fig, "countries_pca")
 
@@ -459,7 +443,6 @@ def countries() -> None:
     ax.axhline(0, color="#64748B", lw=1)
     ax.set_xticks(x_axis, features, rotation=32, ha="right")
     ax.set_ylabel("Centroide estandarizado")
-    ax.set_title("Los centroides convierten grupos en perfiles comparables")
     ax.grid(True, axis="y")
     ax.legend(frameon=False, ncol=min(best_k, 4))
     _save(fig, "countries_profiles")
@@ -569,8 +552,6 @@ def colombia_similarity() -> None:
     axes[2].text(0.5, 0.10, f"Varianza visible: {explained:.1%}", ha="center",
                  color="#475569", transform=axes[2].transAxes)
 
-    fig.suptitle("¿Qué país se parece más a Colombia? Depende de la representación",
-                 color=BLUE, fontsize=15, fontweight="bold", y=1.02)
     fig.tight_layout()
     _save(fig, "colombia_similarity")
 

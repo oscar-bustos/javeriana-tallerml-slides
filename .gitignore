@@ -45,6 +45,10 @@ quarto/**/assets/
 
 # Recursos reproducibles de la presentacion de clustering
 !quarto/clustering/generate_figures.py
+!quarto/clustering/country_narrative.py
+!quarto/clustering/requirements.txt
+!quarto/clustering/data/
+!quarto/clustering/data/Country-data.csv
 !quarto/clustering/assets/
 quarto/clustering/assets/*
 !quarto/clustering/assets/generated/

@@ -1,6 +1,6 @@
 ---
 title: "Aprendizaje No Supervisado"
-subtitle: "De PCA a clustering y densidad"
+subtitle: "¿Qué país se parece más a Colombia?"
 author: "Oscar Bustos"
 lang: es
 format:
@@ -24,12 +24,14 @@ bibliography: references.bib
 .reveal figcaption { text-align: center !important; }
 .reveal .source-note { font-size: 0.48em; color: #64748b; text-align: center; }
 .reveal .compact { font-size: 0.82em; }
+.reveal .small { font-size: 0.72em; }
 .reveal .tiny-code pre code { font-size: 0.68em !important; line-height: 1.25; }
 .reveal .columns pre code { font-size: 0.62em !important; line-height: 1.22; }
 .reveal .activity-instructions { font-size: 0.68em; }
+.reveal .answer { color: #003576; font-size: 1.18em; font-weight: 700; text-align: center; }
 </style>
 
-# Apertura
+# Una pregunta difícil
 
 ## ¿Qué país se parece más a Colombia?
 
@@ -37,202 +39,201 @@ bibliography: references.bib
 **Predicción inicial — 90 segundos**
 
 1. Escriba un país sin consultar los datos.
-2. Anote qué características sustentan su elección.
-3. Vote con la mano: ¿Latinoamérica, Europa, Asia u otra región?
+2. Anote las características que sustentan su elección.
+3. Vote: ¿Ecuador, Perú, México, otro país?
 
-Guardaremos la respuesta: todavía no sabemos qué significa **parecido**.
+Guardaremos la respuesta. Todavía no sabemos qué significa **parecido**.
 :::
 
-## Sin etiquetas cambia la pregunta
+## La pregunta está incompleta
 
 :::: {.columns}
 ::: {.column width="48%"}
-**Aprendizaje supervisado**
+**¿Parecido respecto a qué?**
 
-- Tenemos características $X$ y objetivo $y$.
-- Aprendemos a predecir una respuesta conocida.
-- Evaluamos contra etiquetas reales.
+- Economía
+- Salud
+- Demografía
+- Comercio
 :::
 ::: {.column width="48%"}
-**Aprendizaje no supervisado**
+**¿Parecido para qué?**
 
-- Solo observamos las características $X$.
-- Buscamos estructura, densidad o anomalías.
-- La validación depende del propósito.
+- Diseñar una política
+- Comparar un mercado
+- Buscar un referente
+- Detectar una anomalía
 :::
 ::::
 
-## Una sesión, cinco decisiones
+## Toda respuesta necesita un propósito
 
-| Tiempo | Pregunta central | Herramienta |
-|---:|---|---|
-| 0–20 min | ¿La distancia aún informa? | Escalamiento y PCA |
-| 20–60 min | ¿Dónde están los centros? | K-Means |
-| 60–80 min | ¿El agrupamiento es creíble? | Codo y silueta |
-| 80–105 min | ¿Y si la geometría cambia? | DBSCAN y GMM |
-| 105–120 min | ¿Cómo explicamos los grupos? | Caso de países |
+::: {.answer}
+Colombia se parece a ______
 
-## La similitud sirve para decidir
+respecto a ______
 
-::: {style="font-size: 0.73em;"}
-| Pregunta | Uso | Decisión posible |
-|---|---|---|
-| ¿Qué empresas se parecen a mis mejores clientes? | Vecinos | Priorizar prospectos |
-| ¿Qué incidente técnico se parece a este? | Recuperación | Reutilizar soluciones |
-| ¿Qué contenido se parece a lo que consumo? | Recomendación | Ordenar opciones |
-| ¿Qué patrones aparecen en los usuarios? | Clustering | Diseñar servicio o campañas |
+para decidir ______.
 :::
-
-::: {style="font-size: 0.82em;"}
-La utilidad nace al conectar **representación → similitud → acción** [@provost2013data].
-:::
-
-## Referencias: Geron y Provost
-
-:::: {.columns}
-
-::: {.column width="50%"}
-![](assets/keras.jpeg){height="380px" fig-align="center"}
-
-::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
-Capítulo 9 [@geron2022hands]
-:::
-:::
-
-::: {.column width="50%"}
-![](assets/DataScienceBusiness.jpg){height="380px" fig-align="center"}
-
-::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
-Capítulo 6 [@provost2013data]
-:::
-:::
-
-::::
-
-## Tarea: Lecturas
-
-**Actividades a desarrollar:**
-
-1. **(Obligatorio)** Leer el **Capítulo 9** de *Hands-On Machine Learning* (Géron).
-2. **(Recomendado)** Repasar el **Capítulo 8** sobre reducción dimensional.
-3. **(Opcional)** Leer el **Capítulo 12** de *Introduction to Statistical Learning* (James et al.).
-
-## Tarea: NotebookLM
-
-::: {style="margin-top: 25px;"}
-**Actividades complementarias:**
-
-- Explorar el [Cuaderno de Google NotebookLM](https://notebook.google.com/notebook/e3bb0fa0-71fc-49af-ad7a-7b3a57cb6f82){target="_blank"}:
-  - Revisar la infografía.
-  - Realizar los quices incluidos.
-  - Escuchar el podcast.
-:::
-
-
-
-
-## Los mismos datos no implican similitud
-
-::: {style="font-size: 0.78em;"}
-:::: {.columns}
-::: {.column width="48%"}
-**Estudiante A**
-
-- 20 años · Bogotá · cuarto semestre
-- Vive cerca del campus
-- Estudia mejor temprano
-- Escucha electrónica
-:::
-::: {.column width="48%"}
-**Estudiante B**
-
-- 20 años · Bogotá · cuarto semestre
-- Viaja 90 minutos
-- Trabaja en la mañana
-- Escucha vallenato
-:::
-::::
 
 ::: {.fragment}
-¿Usaría las mismas variables para recomendar música, planear movilidad y formar equipos? ¿Cuáles sería riesgoso usar?
+Las variables expresan una hipótesis; la distancia la convierte en geometría.
 :::
+
+## Solo podemos comparar lo observado
+
+::: {style="font-size: 0.72em;"}
+| Dimensión | Variables disponibles |
+|---|---|
+| Salud | Mortalidad infantil, gasto en salud, esperanza de vida |
+| Demografía | Fertilidad total |
+| Ingreso | Ingreso por persona, PIB per cápita |
+| Comercio | Exportaciones e importaciones |
+| Estabilidad | Inflación |
 :::
 
-# PCA: hacer visible la estructura
+No observamos cultura, idioma, instituciones, desigualdad interna ni geografía.
 
-## Muchas dimensiones erosionan la distancia
+# Primera respuesta: dos variables
 
-- El volumen del espacio crece muy rápido.
-- Los datos ocupan una fracción cada vez menor.
-- Vecinos cercanos y lejanos se vuelven menos distinguibles.
-- Métodos basados en distancia pierden señal.
+## Dos variables permiten empezar
+
+Usaremos una representación deliberadamente simple:
 
 $$
-\text{contraste}=\frac{d_{95}-d_{5}}{\bar d}
+\mathbf{x}_{país}=(\text{PIB per cápita},\ \text{mortalidad infantil})
 $$
 
-## En alta dimensión todo parece igual de lejos
+**Pregunta:** ¿qué significa que dos países estén cerca en este plano?
 
-![](assets/generated/distance_concentration.png){height="420px" fig-align="center"}
+::: {.fragment}
+Que difieren poco en esas dos mediciones, según la escala y métrica elegidas.
+:::
+
+## ¿Sumar importa igual que multiplicar?
+
+![Unidades originales (PIB domina la distancia) frente a transformación logarítmica estandarizada.](assets/generated/countries_two_variables.png){height="410px" fig-align="center"}
 
 ::: {.source-note}
-Simulación uniforme reproducible. Generada con `generate_figures.py`.
+167 países. Cálculo reproducible en `country_narrative.py`.
 :::
 
-## Escalar define qué significa “cerca”
-
-:::: {.columns .compact}
-::: {.column width="39%"}
-```python
-from sklearn.preprocessing import StandardScaler
-
-X_scaled = StandardScaler().fit_transform(X)
-```
-
-- Sin escalar, domina la variable de mayor magnitud.
-- Estandarizar no corrige outliers ni decisiones conceptuales.
-
-**Colombia:** República Dominicana → Turquía al estandarizar.
-:::
-::: {.column width="61%"}
-![](assets/generated/scaling_effect.png){height="220px" fig-align="center"}
-:::
-::::
-
-## PCA rota los ejes hacia máxima varianza
-
-PCA busca direcciones ortogonales que retengan variación:
-
-$$
-\mathbf{z}_1=\mathbf{X}\mathbf{v}_1,
-\qquad
-\mathbf{v}_1=\arg\max_{\|\mathbf v\|=1}\operatorname{Var}(\mathbf X\mathbf v)
-$$
-
-- Cada componente combina variables originales.
-- Los componentes se ordenan por varianza explicada.
-- Conservar varianza no equivale a conservar clústeres.
-
-## El número de componentes es una decisión
+## La escala cambia el vecino
 
 :::: {.columns}
-::: {.column width="35%"}
-```python
-from sklearn.decomposition import PCA
+::: {.column width="48%"}
+**Unidades originales**
 
-pca = PCA(n_components=0.95)
-Z = pca.fit_transform(X_scaled)
-X_hat = pca.inverse_transform(Z)
-```
+PIB per cápita domina la distancia.
 
-`n_components=0.95` conserva al menos 95% de la varianza.
+Colombia → **San Vicente y las Granadinas**
 :::
-::: {.column width="65%"}
-![](assets/generated/pca_digits.png){height="350px" fig-align="center"}
+::: {.column width="48%"}
+**Logaritmo + estandarización**
+
+Primero compara cambios relativos; luego iguala dispersión.
+
+Colombia → **Irán**
 :::
 ::::
 
-## Actividad: proyecte los datos con PCA
+## Log + estándar define la geometría
+
+$$
+u_{ij}=\log_{10}(x_{ij}),
+\qquad z_{ij}=\frac{u_{ij}-\bar u_j}{s_{u_j}}
+$$
+
+- El logaritmo comprime colas derechas.
+- Diferencias logarítmicas representan razones.
+- Estandarizar vuelve comparables las dispersiones.
+- No demuestra que la distancia euclidiana sea adecuada.
+
+## Irán es una respuesta correcta…
+
+::: {.answer}
+Respecto a PIB per cápita y mortalidad infantil con log + estándar,
+
+el vecino de Colombia es Irán.
+:::
+
+::: {.fragment}
+**Objeción:** ¿qué ocurrió con las otras siete variables?
+:::
+
+# PCA: mirar nueve variables
+
+## Nueve dimensiones no caben en la pantalla
+
+- Con dos variables podemos dibujar un plano.
+- Con nueve variables podemos calcular distancias.
+- Pero no podemos observar directamente el vecindario.
+- Escoger dos columnas descartaría información por decisión humana.
+
+**¿Podemos construir dos ejes usando las nueve variables?**
+
+## PCA construye nuevas direcciones
+
+PCA busca ejes ortogonales de máxima varianza:
+
+$$
+\mathbf z_1=\mathbf X\mathbf v_1,
+\qquad
+\mathbf v_1=\arg\max_{\|\mathbf v\|=1}\operatorname{Var}(\mathbf X\mathbf v)
+$$
+
+Cada componente es una combinación de las variables originales.
+
+## PCA no selecciona dos columnas
+
+![Varianza explicada por componente (izquierda) y matriz de cargas sobre las nueve variables (derecha).](assets/generated/countries_pca_loadings.png){height="400px" fig-align="center"}
+
+::: {.source-note}
+PCA ajustado sobre las nueve variables estandarizadas.
+:::
+
+## El mapa conserva 63,1% de la variación
+
+![Proyección 2D del espacio de 9 dimensiones y vecinos más cercanos de Colombia.](assets/generated/countries_pca_neighborhood.png){height="415px" fig-align="center"}
+
+::: {.source-note}
+PC1 = 46,0%; PC2 = 17,2%. Colombia → Argentina en la proyección.
+:::
+
+## ¿PCA encontró el vecino verdadero?
+
+::: {style="font-size: 0.78em;"}
+| Espacio usado para medir | Vecino de Colombia |
+|---|---|
+| PIB y mortalidad con log + estándar | Irán |
+| Dos componentes principales | Argentina |
+| Nueve variables estandarizadas | Turquía |
+:::
+
+::: {.fragment}
+PCA 2D ocultó 36,9% de la varianza; el mapa cambió el vecindario.
+:::
+
+## PCA permite ver; no decide la verdad
+
+:::: {.columns}
+::: {.column width="48%"}
+**Para visualizar**
+
+- Proyectar países y modelos a 2D.
+- Explorar estructura y casos extremos.
+- Comunicar patrones.
+:::
+::: {.column width="48%"}
+**Para modelar**
+
+- Conservar más componentes si se requiere.
+- Validar qué información se pierde.
+- No confundir varianza con utilidad.
+:::
+::::
+
+## Actividad: construya una proyección
 
 :::: {.columns}
 ::: {.column width="63%"}
@@ -241,83 +242,66 @@ X_hat = pca.inverse_transform(Z)
 ::: {.column .activity-instructions width="37%"}
 **Reto guiado — 7 min**
 
-1. Cambie la dirección de máxima varianza.
-2. Compare la proyección 2D y 1D.
-3. Identifique qué información se conserva.
-4. Explique qué se pierde al reducir.
+1. Cambie la dirección proyectada.
+2. Compare la vista 2D y 1D.
+3. Identifique qué se conserva.
+4. Explique qué se pierde.
 
-🔗 [Abrir interactividad PCA](https://oscar-bustos.github.io/javeriana-tallerml/reduccion_dimension/pca.html){target="_blank"}
+🔗 [Abrir PCA](https://oscar-bustos.github.io/javeriana-tallerml/reduccion_dimension/pca.html){target="_blank"}
 :::
 ::::
 
-## PCA cambia la vista, no la pregunta
+# K-Means: de vecinos a perfiles
 
-::: {.compact}
-- **Visualización:** proyectar a 2D o 3D para explorar.
-- **Compresión:** reducir memoria y costo computacional.
-- En 9D, el vecino de Colombia es **Turquía**.
-- En PCA 2D, parece ser **Argentina**; vemos solo 63.1% de la varianza.
+## Un vecino responde una pregunta local
 
-::: {.callout-warning icon=false title="Cuidado"}
-La proyección puede cambiar quién parece cercano; no reemplaza el espacio original.
+:::: {.columns}
+::: {.column width="48%"}
+**Vecino más cercano**
+
+- Recupera un caso individual.
+- Depende de variables y distancia.
+- Colombia → Turquía en 9D.
 :::
+::: {.column width="48%"}
+**Clustering**
+
+- Resume toda la colección.
+- Busca perfiles globales.
+- Requiere supuestos adicionales.
 :::
+::::
 
-## Reto 1: ¿escalar o reducir?
+**¿Cómo resumiríamos 167 países con pocos prototipos?**
 
-Un dataset tiene edad, ingreso, número de compras y 300 embeddings.
+## K-Means representa cada grupo por su media
 
-1. ¿Qué ocurriría si aplicamos K-Means directamente?
-2. ¿Qué variables necesitan escalamiento?
-3. ¿Usaría PCA para entrenar, visualizar o ambas?
-4. ¿Qué información podría perderse?
-
-::: {.notes}
-Tiempo sugerido: 3 minutos en parejas y 2 minutos de discusión.
-:::
-
-# K-Means: centros y particiones
-
-## Parecido siempre significa “¿para qué?”
-
-Con Colombia y variables estandarizadas:
-
-- **Salud y demografía:** Barbados.
-- **Macroeconomía y comercio:** China.
-- **Las nueve variables:** Turquía.
-
-Las variables expresan una hipótesis; la métrica la convierte en geometría.
-
-**Mismos países + otro propósito = otra respuesta.**
-
-## K-Means minimiza distancia a centroides
-
-Para $K$ grupos $C_1,\dots,C_K$ y centroides $\boldsymbol\mu_k$:
+Para grupos $C_1,\dots,C_K$ y centroides $\boldsymbol\mu_k$:
 
 $$
 J=\sum_{k=1}^{K}\sum_{\mathbf x_i\in C_k}
 \|\mathbf x_i-\boldsymbol\mu_k\|_2^2
 $$
 
-- `inertia_` reporta este SSE dentro de los clústeres.
-- La media minimiza la suma de distancias cuadradas.
-- La geometría favorece grupos convexos y esféricos.
+La media minimiza la suma de distancias cuadradas dentro del grupo.
 
-## Lloyd alterna dos pasos simples
+## Lloyd alterna dos preguntas
 
 :::: {.columns}
 ::: {.column width="35%"}
 ```python
 while not converged:
-    labels = nearest(X, centroids)
-    centroids = means(X, labels)
+    labels = nearest(
+        X, centroids)
+    centroids = means(
+        X, labels)
 ```
 
-1. Asignar al centroide más cercano.
-2. Mover cada centroide a la media del grupo.
+1. ¿Cuál centro está más cerca?
+2. ¿Dónde queda la nueva media?
 :::
 ::: {.column width="65%"}
-![](assets/generated/kmeans_iterations.png){height="300px" fig-align="center"}
+![Cuatro pasos del algoritmo de Lloyd: asignación al centroide más cercano y reubicación del centroide.](assets/generated/kmeans_iterations.png){height="285px" fig-align="center"}
 :::
 ::::
 
@@ -330,118 +314,310 @@ while not converged:
 ::: {.column .activity-instructions width="37%"}
 **Reto guiado — 7 min**
 
-1. Cambie el número de clústeres.
+1. Cambie el número de grupos.
 2. Reinicie los centroides.
-3. Observe asignación y movimiento.
-4. Compare iteraciones e inercia.
+3. Observe las asignaciones.
+4. Compare inercia e iteraciones.
 
-🔗 [Abrir K-Means interactivo](https://oscar-bustos.github.io/javeriana-tallerml/clustering/kmeans.html){target="_blank"}
+🔗 [Abrir K-Means](https://oscar-bustos.github.io/javeriana-tallerml/clustering/kmeans.html){target="_blank"}
 :::
 ::::
+
+## ¿Cuántos perfiles debemos pedir?
+
+![Curva de inercia (codo) y coeficiente de silueta media para evaluar la partición en K grupos.](assets/generated/countries_k_selection.png){height="390px" fig-align="center"}
+
+::: {.source-note}
+Modelos K-Means sobre las nueve variables estandarizadas; 30 reinicios por K.
+:::
+
+## Las métricas no reemplazan el propósito
+
+- La inercia siempre disminuye al aumentar $K$.
+- La silueta compara cohesión y separación.
+- En estos datos, la silueta máxima ocurre en $K=4$.
+- Su valor es solo **0,302**: la separación no es fuerte.
+- También necesitamos estabilidad e interpretación.
+
+## K-Means agrupa en 9D
+
+![Clústeres (K=4) y centroides calculados en 9 dimensiones, visualizados mediante proyección PCA.](assets/generated/countries_kmeans_pca.png){height="410px" fig-align="center"}
+
+::: {.source-note}
+El modelo usa las nueve variables; PCA solo proyecta etiquetas y centroides.
+:::
+
+## Colombia comparte perfil con 87 países
+
+Para $K=4$:
+
+- Colombia pertenece a un grupo de **88 países**.
+- Turquía es su vecino más cercano dentro del espacio completo.
+- Uruguay, Brasil, Ecuador y R. Dominicana también están cerca.
+- El identificador del grupo es arbitrario.
+
+**¿Un grupo tan grande constituye una respuesta útil?**
+
+## Los centroides convierten grupos en perfiles
+
+![Coordenadas de los centroides estandarizados para cada uno de los cuatro clústeres.](assets/generated/countries_profiles.png){height="380px" fig-align="center"}
+
+::: {.source-note}
+Valores positivos superan el promedio global estandarizado.
+:::
+
+## K-Means siempre obliga a escoger
+
+:::: {.columns}
+::: {.column width="48%"}
+**País central**
+
+Está claramente cerca de un centroide.
+
+La etiqueta parece razonable.
+:::
+::: {.column width="48%"}
+**País fronterizo**
+
+Está casi a igual distancia de dos centroides.
+
+K-Means igualmente asigna una sola etiqueta.
+:::
+::::
+
+**¿Podemos conservar la incertidumbre?**
+
+# GMM: pertenencia probabilística
+
+## Una frontera puede ser gradual
+
+En lugar de una etiqueta única, buscamos:
+
+$$
+P(z_i=k\mid\mathbf x_i)
+$$
+
+**Pregunta:** ¿qué significaría que un país tenga 54% de afinidad con un perfil y 46% con otro?
+
+## GMM modela una mezcla de poblaciones
+
+$$
+p(\mathbf x)=\sum_{k=1}^{K}\pi_k\,
+\mathcal N(\mathbf x\mid\boldsymbol\mu_k,\boldsymbol\Sigma_k)
+$$
+
+- $\pi_k$: prevalencia del componente.
+- $\boldsymbol\mu_k$: centro.
+- $\boldsymbol\Sigma_k$: tamaño, forma y orientación.
+
+## GMM permite expresar duda
+
+![Responsabilidades posteriores por componente para países con mayor incertidumbre y Colombia.](assets/generated/countries_gmm_uncertainty.png){height="390px" fig-align="center"}
+
+::: {.source-note}
+GMM de cuatro componentes y covarianza completa, ajustado en 9D.
+:::
+
+## La incertidumbre también es un resultado
+
+- Ucrania queda aproximadamente 54% frente a 46%.
+- Eslovenia queda aproximadamente 65% frente a 35%.
+- Colombia tiene responsabilidad máxima de **99,98%**.
+- GMM permite pertenencia suave; no obliga a que exista duda.
+
+**¿Qué capacidad adicional aporta la covarianza?**
+
+## Las elipses resuelven la anisotropía
+
+![Comparación en datos anisotrópicos: K-Means (izquierda: distancia al centro) frente a GMM (derecha: covarianza completa).](assets/generated/kmeans_vs_gmm_anisotropy.png){height="390px" fig-align="center"}
+
+::: {.source-note}
+Simulación reproducible con grupos elipsoidales y orientaciones diferentes.
+:::
+
+## GMM cambia dos supuestos de K-Means
+
+::: {style="font-size: 0.78em;"}
+| Supuesto | K-Means | GMM con covarianza completa |
+|---|---|---|
+| Pertenencia | Una etiqueta | Probabilidades |
+| Geometría | Cercanía euclidiana al centro | Elipses orientadas |
+| Tamaño del grupo | Implícitamente similar | Puede variar |
+| Número de grupos | Requiere $K$ | Requiere componentes |
+:::
+
+## ¿Una galaxia es una elipse?
+
+Una sola gaussiana no representa bien:
+
+- Brazos espirales.
+- Anillos.
+- Medias lunas.
+- Corredores curvos.
+
+**¿Podemos definir un grupo mediante conectividad densa y no mediante un centro?**
+
+# DBSCAN: densidad y ruido
+
+## Un clúster no siempre tiene centro
+
+![Agrupamiento en formas no convexas con ruido: GMM por elipses (izquierda) frente a DBSCAN por densidad (derecha).](assets/generated/gmm_vs_dbscan_shapes.png){height="410px" fig-align="center"}
+
+::: {.source-note}
+Lunas con ruido: simulación determinista en `country_narrative.py`.
+:::
+
+## DBSCAN convierte vecindad en estructura
+
+- **Núcleo:** al menos `min_samples` puntos dentro de `eps`.
+- **Frontera:** vecino de un núcleo, sin densidad propia.
+- **Ruido:** no es núcleo ni frontera.
+- Los núcleos densamente alcanzables forman un clúster.
+
+**No exige $K$ y admite formas no convexas.**
+
+## Dos parámetros expresan una escala
+
+:::: {.columns}
+::: {.column width="42%"}
+```python
+from sklearn.cluster import DBSCAN
+
+model = DBSCAN(
+    eps=0.16,
+    min_samples=8,
+)
+labels = model.fit_predict(X)
+```
+:::
+::: {.column width="55%"}
+**Preguntas**
+
+- ¿Qué significa ser vecino?
+- ¿Cuánta evidencia crea un núcleo?
+- ¿Cuándo un punto debe ser ruido?
+:::
+::::
+
+## DBSCAN tampoco es una respuesta universal
+
+- `eps` pequeño fragmenta grupos.
+- `eps` grande conecta estructuras distintas.
+- Un único `eps` falla con densidades variables.
+- En alta dimensión reaparece la concentración de distancias.
+- Scikit-Learn no ofrece `predict()` para nuevos puntos.
+
+HDBSCAN puede extender la idea a densidades variables.
+
+# Resolver significa explicitar supuestos
+
+## Cada método repara una limitación
+
+::: {style="font-size: 0.72em;"}
+| Pregunta que queda abierta | Herramienta siguiente |
+|---|---|
+| ¿Cómo comparar unidades distintas? | Estandarización |
+| ¿Cómo mirar nueve variables? | PCA |
+| ¿Cómo pasar de vecinos a perfiles? | K-Means |
+| ¿Cómo representar duda y anisotropía? | GMM |
+| ¿Cómo encontrar formas sin centro y ruido? | DBSCAN |
+:::
+
+Ninguna herramienta elimina la necesidad de formular el propósito.
+
+## La respuesta cambia con “respecto a”
+
+::: {style="font-size: 0.70em;"}
+| Respecto a… | País más cercano a Colombia |
+|---|---|
+| PIB y mortalidad infantil, log + estándar | Irán |
+| Salud y demografía | Barbados |
+| Macroeconomía y comercio | China |
+| PCA 2D de las nueve variables | Argentina |
+| Nueve variables estandarizadas | Turquía |
+:::
+
+Todos los resultados provienen del mismo dataset.
+
+## ¿Cuál respuesta es correcta?
+
+::: {.answer}
+Todas pueden ser correctas bajo una definición particular.
+
+Ninguna es universal.
+:::
+
+::: {.fragment}
+El algoritmo no descubre qué significa “parecido”; nosotros lo declaramos.
+:::
+
+## Cierre: complete la afirmación
+
+::: {.answer}
+Para decidir __________,
+
+compararé a Colombia respecto a __________.
+
+Bajo esa representación, el país más parecido es __________.
+:::
+
+## Cuatro ideas para llevar
+
+1. **La representación manda:** variables y escala definen cercanía.
+2. **PCA es un mapa:** conserva varianza, pero pierde información.
+3. **Cada modelo supone una geometría:** centros, elipses o densidad.
+4. **Un clúster es una hipótesis:** debe ser útil, estable e interpretable.
+
+## Segmentar países exige cautela
+
+- Los grupos dependen de variables, año y algoritmo.
+- Promedios nacionales esconden desigualdad interna.
+- Los nombres valorativos convierten descripción en estigma.
+- Una similitud estadística no implica equivalencia histórica.
+- Toda decisión necesita revisión humana y contexto.
+
+**Use clustering para formular mejores preguntas, no para fabricar certezas.**
+
+## Tarea: defender una segmentación
+
+1. Auditar las nueve variables y justificar el preprocesamiento.
+2. Comparar $K=2,\ldots,8$ con inercia, silueta y estabilidad.
+3. Visualizar con PCA sin confundir proyección y entrenamiento.
+4. Interpretar perfiles en unidades originales.
+5. Completar “parecido respecto a ___ para decidir ___”.
+
+Consulte las instrucciones completas en `homework/Tarea6_KMeans.md`.
+
+## Tarea: lecturas y NotebookLM
+
+- **Obligatorio:** capítulo 9 de *Hands-On Machine Learning* [@geron2022hands].
+- **Recomendado:** capítulo 8 sobre reducción dimensional.
+- **Opcional:** capítulo 12 de *Introduction to Statistical Learning*.
+- [Cuaderno de NotebookLM](https://notebook.google.com/notebook/e3bb0fa0-71fc-49af-ad7a-7b3a57cb6f82){target="_blank"}: infografía, quices y podcast.
+
+# Anexos
+
+## Muchas dimensiones erosionan la distancia
+
+![Concentración de distancias en alta dimensión: caída del contraste relativo (izquierda) y convergencia a la media (derecha).](assets/generated/distance_concentration.png){height="390px" fig-align="center"}
+
+::: {.source-note}
+Simulación uniforme reproducible. Generada con `generate_figures.py`.
+:::
 
 ## Converger no implica el óptimo global
 
-- Cada paso nunca aumenta la inercia.
+- Cada paso de Lloyd nunca aumenta la inercia.
 - Hay un número finito de asignaciones posibles.
-- Por eso Lloyd termina, normalmente en pocas iteraciones.
-- Pero cada inicio puede producir otra solución.
-
-::: {.callout-note icon=false title="Consecuencia"}
-La calidad final debe considerar inicialización, estabilidad y múltiples reinicios.
-:::
-
-## K-Means++ dispersa los centros iniciales
+- El algoritmo termina en un óptimo local.
+- Distintos inicios pueden producir otras soluciones.
 
 ```python
-from sklearn.cluster import KMeans
-
-kmeans = KMeans(
-    n_clusters=4,
-    init="k-means++",
-    n_init=20,
-    random_state=42,
-)
-labels = kmeans.fit_predict(X_scaled)
+KMeans(n_clusters=4, init="k-means++",
+       n_init=30, random_state=42)
 ```
 
-`k-means++` favorece nuevos centros alejados de los ya escogidos.
-
-## Las etiquetas no tienen orden
-
-- Los identificadores `0, 1, 2...` son nombres arbitrarios.
-- Dos ejecuciones pueden permutar los números de clúster.
-- El clúster 2 no es “mayor” que el clúster 1.
-- La interpretación se construye desde los perfiles.
-
-::: {.callout-warning icon=false title="Comparación correcta"}
-Para estudiar estabilidad, use métricas invariantes a permutaciones o alinee las particiones.
-:::
-
-## Hard clustering asigna; afinidad aproxima
-
-:::: {.columns}
-::: {.column width="48%"}
-**Asignación dura**
-
-```python
-labels = kmeans.predict(X_new)
-```
-
-Cada instancia recibe un único clúster.
-:::
-::: {.column width="48%"}
-**Distancias a centroides**
-
-```python
-distances = kmeans.transform(X_new)
-```
-
-Cada instancia obtiene $K$ distancias.
-:::
-::::
-
-## K-Means también crea características
-
-Si existen $K$ centroides, `transform()` produce $K$ distancias:
-
-$$
-\mathbf x_i \longrightarrow (d_{i1},d_{i2},\ldots,d_{iK})
-$$
-
-- Puede resumir miles de variables en $K$ afinidades.
-- Puede añadir señales no lineales a un modelo supervisado.
-- Debe ajustarse solo con datos de entrenamiento.
-
-## Más clústeres siempre reducen la inercia
-
-- Con $K=1$, todos los puntos comparten centroide.
-- Al aumentar $K$, ningún punto queda obligado a alejarse.
-- Con $K=n$, la inercia puede llegar a cero.
-- Por tanto, minimizar inercia no selecciona por sí solo a $K$.
-
-**Buscamos rendimiento decreciente y separación.**
-
-## Codo y silueta responden cosas distintas
-
-:::: {.columns}
-::: {.column width="34%"}
-```python
-for k in range(2, 9):
-    model = KMeans(
-        k, n_init=20,
-        random_state=42)
-    labels = model.fit_predict(X)
-    inertia.append(model.inertia_)
-    silhouette.append(
-        silhouette_score(X, labels))
-```
-:::
-::: {.column width="66%"}
-![](assets/generated/k_selection.png){height="340px" fig-align="center"}
-:::
-::::
-
-## La silueta contrasta cohesión y separación
+## La silueta contrasta dos distancias
 
 Para la instancia $i$:
 
@@ -451,98 +627,44 @@ $$
 
 - $a(i)$: distancia media al propio clúster.
 - $b(i)$: menor distancia media a otro clúster.
-- Cerca de $1$: asignación clara; cerca de $0$: frontera.
-- Valor negativo: otro clúster parece más cercano.
+- Cerca de 1 indica una asignación clara.
 
-## Un clúster útil cambia una decisión
+## Las etiquetas no tienen orden
 
-::: {.compact}
-Una entidad financiera agrupó clientes por uso, pagos y rentabilidad:
+- Los identificadores `0, 1, 2...` son nombres arbitrarios.
+- Dos ejecuciones pueden permutar los números.
+- El grupo 2 no es “mayor” que el grupo 1.
+- Compare particiones con métricas invariantes a permutaciones.
+- Interprete los grupos desde sus perfiles, no desde su número.
 
-1. El clustering reveló cinco comportamientos de crédito.
-2. La etiqueta no estaba disponible al aprobar un cliente nuevo.
-3. Un modelo supervisado aprendió a reconocerlos con datos de aprobación.
+## K-Means también crea características
 
-El clustering creó una hipótesis; el modelo supervisado permitió actuar.
+Si existen $K$ centroides, `transform()` produce $K$ distancias:
 
-::: {.source-note}
-Caso de Haimowitz y Schwarz, presentado en [@provost2013data].
-:::
-:::
+$$
+\mathbf x_i \longrightarrow (d_{i1},d_{i2},\ldots,d_{iK})
+$$
 
-## K-Means falla si el centro no representa
+- Resume variables mediante afinidades.
+- Puede alimentar un modelo supervisado.
+- Debe ajustarse solo con datos de entrenamiento.
 
-![](assets/generated/algorithm_comparison.png){height="430px" fig-align="center"}
+## MiniBatch cambia precisión por velocidad
 
-::: {.source-note}
-Blobs, densidad variable, datos anisotrópicos y lunas. Generada con `generate_figures.py`.
-:::
+![Compromiso entre calidad (inercia similar, izquierda) y costo computacional (menor evaluación de distancias, derecha).](assets/generated/minibatch_tradeoff.png){height="350px" fig-align="center"}
 
-## Reto 2: defender un valor de K
-
-| Modelo | Inercia | Silueta | Interpretación |
-|---|---:|---:|---|
-| $K=3$ | 810 | 0.62 | Tres segmentos accionables |
-| $K=4$ | 690 | 0.64 | Divide un segmento en grupos pequeños |
-
-¿Cuál escogería y qué evidencia adicional pediría antes de actuar?
-
-# DBSCAN: densidad y ruido
-
-## DBSCAN conecta regiones densas
-
-- **Núcleo:** al menos `min_samples` dentro de `eps`.
-- **Frontera:** vecino de un núcleo, sin densidad propia.
-- **Ruido:** no es núcleo ni frontera.
-- Los núcleos alcanzables forman un clúster.
-
-**No exige $K$ y permite formas no convexas.**
-
-## Epsilon convierte vecindad en clúster
-
-:::: {.columns}
-::: {.column width="34%"}
 ```python
-from sklearn.cluster import DBSCAN
-
-dbscan = DBSCAN(
-    eps=0.22,
-    min_samples=8,
-)
-labels = dbscan.fit_predict(X_scaled)
+MiniBatchKMeans(n_clusters=k, batch_size=1024,
+                n_init=5, random_state=42)
 ```
 
-La etiqueta `-1` identifica ruido.
-:::
-::: {.column width="66%"}
-![](assets/generated/dbscan_roles.png){height="340px" fig-align="center"}
-:::
-::::
+## EM alterna responsabilidades y parámetros
 
-## DBSCAN cambia sensibilidad por flexibilidad
+1. **E-step:** estima $P(z_i=k\mid\mathbf x_i)$.
+2. **M-step:** actualiza pesos, medias y covarianzas.
+3. Repite hasta estabilizar la log-verosimilitud.
 
-- `eps` pequeño fragmenta grupos y produce ruido.
-- `eps` grande puede conectar grupos diferentes.
-- Densidades variables dificultan un único `eps`.
-- En alta dimensión, las distancias se concentran.
-- Scikit-Learn no ofrece `predict()` para nuevos puntos.
-
-::: {.callout-note icon=false title="Alternativa"}
-HDBSCAN extiende la idea a densidades variables y selecciona grupos persistentes.
-:::
-
-# GMM: pertenencia probabilística
-
-## GMM modela clústeres elipsoidales
-
-$$
-p(\mathbf x)=\sum_{k=1}^{K}\pi_k\,
-\mathcal N(\mathbf x\mid\boldsymbol\mu_k,\boldsymbol\Sigma_k)
-$$
-
-- $\pi_k$: peso del componente.
-- $\boldsymbol\mu_k$: centro.
-- $\boldsymbol\Sigma_k$: tamaño, forma y orientación.
+K-Means y GMM alternan asignar y actualizar; GMM conserva incertidumbre.
 
 ## La covarianza controla la geometría
 
@@ -555,247 +677,6 @@ $$
 
 Más flexibilidad implica más parámetros y riesgo de sobreajuste.
 
-## EM alterna responsabilidades y parámetros
-
-1. **E-step:** estima $P(z_i=k\mid \mathbf x_i)$.
-2. **M-step:** actualiza pesos, medias y covarianzas.
-3. Repite hasta estabilizar la log-verosimilitud.
-
-::: {.callout-note icon=false title="Relación con K-Means"}
-Ambos alternan asignar y actualizar; GMM conserva incertidumbre y aprende la forma de cada componente.
-:::
-
-## GMM une clustering, densidad y anomalías
-
-:::: {.columns}
-::: {.column width="32%"}
-```python
-from sklearn.mixture import GaussianMixture
-
-gmm = GaussianMixture(
-    n_components=3,
-    n_init=10,
-    random_state=42,
-).fit(X)
-
-proba = gmm.predict_proba(X)
-log_density = gmm.score_samples(X)
-```
-:::
-::: {.column width="68%"}
-![](assets/generated/gmm_density.png){height="335px" fig-align="center"}
-:::
-::::
-
-## Anomalía y novedad no son sinónimos
-
-- **Anomalías:** el entrenamiento puede contener outliers.
-- **Novedad:** el entrenamiento representa casos normales.
-- Un umbral de baja densidad convierte puntajes en alertas.
-- El umbral depende del costo de falsos positivos y negativos.
-
-**Una observación rara no es automáticamente error ni fraude.**
-
-## El algoritmo debe coincidir con la estructura
-
-| Pregunta | K-Means | DBSCAN | GMM |
-|---|:---:|:---:|:---:|
-| ¿Requiere $K$? | Sí | No | Sí |
-| ¿Tolera formas no convexas? | No | Sí | Parcial |
-| ¿Marca ruido? | No | Sí | Por densidad |
-| ¿Da probabilidades? | No | No | Sí |
-| ¿Escala a muchos datos? | Muy bien | Depende | Moderado |
-
-## Reto 3: diagnosticar geometrías
-
-Seleccione algoritmo y justifique:
-
-1. Antenas agrupadas en regiones compactas y masivas.
-2. Trayectorias GPS formando corredores curvos con ruido.
-3. Pacientes con perfiles elipsoidales solapados.
-4. Transacciones donde interesa una puntuación de rareza.
-
-# Caso integrador: países
-
-## La pregunta guía el pipeline
-
-**Propósito:** explorar perfiles socioeconómicos, no clasificar países.
-
-- Leer el diccionario antes de usar las columnas.
-- Auditar faltantes, escalas, asimetrías y outliers.
-- Imputar sin una variable objetivo.
-- Estandarizar las nueve variables numéricas.
-- Comparar $K=2,\ldots,8$ y documentar la decisión.
-
-## El pipeline explicita el preprocesamiento
-
-```python
-from sklearn.pipeline import make_pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
-
-model = make_pipeline(
-    SimpleImputer(strategy="median"),
-    StandardScaler(),
-    KMeans(n_clusters=k, n_init=30, random_state=42),
-)
-labels = model.fit_predict(X)
-```
-
-## PCA muestra la partición sin crearla
-
-![](assets/generated/countries_pca.png){height="410px" fig-align="center"}
-
-::: {.source-note}
-K-Means usa todas las variables; PCA solo proyecta. Datos: repositorio `javeriana-analitica`.
-:::
-
-## Los centroides se convierten en perfiles
-
-![](assets/generated/countries_profiles.png){height="400px" fig-align="center"}
-
-::: {.source-note}
-Valores sobre cero superan el promedio global estandarizado. Generada con `generate_figures.py`.
-:::
-
-## Interpretar exige unidades originales
-
-```python
-scaler = model.named_steps["standardscaler"]
-kmeans = model.named_steps["kmeans"]
-centroids_original = scaler.inverse_transform(
-    kmeans.cluster_centers_
-)
-```
-
-- Nombrar perfiles después de observar todas las variables.
-- Reportar países centrales y casos fronterizos.
-- Evitar nombres valorativos como “buenos” o “malos”.
-
-## Colombia revela una respuesta condicional
-
-![](assets/generated/colombia_similarity.png){height="335px" fig-align="center"}
-
-::: {.source-note}
-Distancias euclidianas sobre el dataset de países. Generada con `generate_figures.py`.
-:::
-
-## Un vecino no es un clúster
-
-::: {style="font-size: 0.76em;"}
-:::: {.columns}
-::: {.column width="48%"}
-**Vecino**
-
-- Recupera el caso individual más próximo.
-- Colombia → Turquía en las nueve variables.
-:::
-::: {.column width="48%"}
-**Clúster**
-
-- Resume globalmente toda la colección.
-- Con *K* = 4, Colombia queda en un grupo de 88 países.
-- Vecinos: Turquía, Uruguay, Brasil, Ecuador y R. Dominicana.
-:::
-::::
-
-**Reto final:** defienda un país y complete “parecido respecto a ___ para decidir ___”.
-:::
-
-## Un árbol explica fronteras aproximadas
-
-```python
-from sklearn.tree import DecisionTreeClassifier
-
-surrogate = DecisionTreeClassifier(
-    max_depth=3,
-    min_samples_leaf=8,
-    random_state=42,
-).fit(X_scaled, labels)
-
-fidelity = surrogate.score(X_scaled, labels)
-```
-
-El árbol aproxima K-Means; no descubre una etiqueta verdadera.
-
-## Segmentar países exige cautela
-
-- Los grupos dependen de variables, año y algoritmo.
-- Un nombre puede convertir descripción en estigma.
-- Promedios nacionales esconden desigualdad interna.
-- Clústeres pequeños pueden revelar casos sensibles.
-- Toda decisión necesita revisión humana y contexto.
-
-::: {.callout-warning icon=false title="Principio"}
-Use clustering para formular mejores preguntas, no para fabricar certezas.
-:::
-
-## Cierre: cuatro ideas para llevar
-
-1. **La representación manda:** escala y dimensión definen cercanía.
-2. **K-Means inicia:** es rápido, claro y geométricamente limitado.
-3. **Evaluar triangula:** métricas, estabilidad y utilidad de dominio.
-4. **DBSCAN y GMM cambian el supuesto:** densidad e incertidumbre.
-
-**Próximo paso:** Tarea 6 — defender una segmentación reproducible.
-
-# Anexos
-
-## MiniBatch cambia precisión por velocidad
-
-![](assets/generated/minibatch_tradeoff.png){height="390px" fig-align="center"}
-
-```python
-MiniBatchKMeans(n_clusters=k, batch_size=1024,
-                n_init=5, random_state=42)
-```
-
-::: {.source-note}
-El costo usa un proxy determinista de distancias evaluadas. Generada con `generate_figures.py`.
-:::
-
-## Segmentar imágenes agrupa colores
-
-![](assets/generated/image_segmentation.png){height="345px" fig-align="center"}
-
-- Cada píxel es un vector RGB.
-- K-Means aprende una paleta de *K* centroides.
-- Cada color se reemplaza por su centroide.
-
-::: {.source-note}
-Imagen incluida en Scikit-Learn. Generada con `generate_figures.py`.
-:::
-
-## Propagar etiquetas multiplica supervisión
-
-1. Agrupar todos los datos sin etiquetas.
-2. Elegir representantes cercanos a cada centroide.
-3. Pedir a una persona experta que los etiquete.
-4. Propagar la etiqueta a regiones confiables.
-5. Entrenar y validar un modelo supervisado.
-
-**Riesgo:** un clúster impuro propaga errores sistemáticos.
-
-## Aprendizaje activo pregunta donde duda
-
-1. Entrenar con las pocas etiquetas disponibles.
-2. Puntuar incertidumbre en datos sin etiquetar.
-3. Solicitar etiquetas para los casos más dudosos.
-4. Reentrenar y repetir hasta agotar presupuesto.
-
-Combinar representatividad e incertidumbre evita casos redundantes.
-
-## Otros algoritmos cubren otras estructuras
-
-| Algoritmo | Fortaleza principal |
-|---|---|
-| Aglomerativo | Jerarquía y dendrograma |
-| BIRCH | Flujos o datasets grandes |
-| Mean Shift | Modos de densidad sin fijar $K$ |
-| Affinity Propagation | Selección de ejemplares |
-| Spectral Clustering | Formas conectadas no convexas |
-
 ## AIC y BIC seleccionan componentes
 
 $$
@@ -804,44 +685,18 @@ $$
 \operatorname{BIC}=p\log n-2\log\hat L
 $$
 
-- Premian ajuste y penalizan parámetros.
+- Premian ajuste y penalizan complejidad.
 - BIC suele favorecer modelos más simples.
 - Compare también estabilidad e interpretación.
 
-## Bayesian GMM apaga componentes
+## Anomalía y novedad no son sinónimos
 
-```python
-from sklearn.mixture import BayesianGaussianMixture
+- **Anomalías:** el entrenamiento puede contener casos raros.
+- **Novedad:** el entrenamiento representa casos normales.
+- GMM entrega una densidad, no una decisión automática.
+- El umbral depende del costo de cada error.
 
-bgm = BayesianGaussianMixture(
-    n_components=10,
-    weight_concentration_prior=0.01,
-    n_init=10,
-    random_state=42,
-).fit(X)
-```
-
-Componentes con peso casi cero quedan inactivos.
-
-## Hay múltiples detectores de anomalías
-
-| Método | Intuición |
-|---|---|
-| Isolation Forest | Lo raro se aísla en pocos cortes |
-| Local Outlier Factor | Menor densidad que sus vecinos |
-| One-Class SVM | Frontera alrededor de lo normal |
-| PCA | Mayor error de reconstrucción |
-| GMM | Región de baja densidad |
-
-## Olivetti integra el capítulo completo
-
-Ejercicios de [@geron2022hands]:
-
-1. Agrupar y visualizar rostros por clúster.
-2. Usar afinidades K-Means como reducción.
-3. Generar rostros con GMM después de PCA.
-4. Detectar transformaciones como anomalías.
-5. Comparar densidad GMM y reconstrucción PCA.
+Una observación rara no es automáticamente error ni fraude.
 
 ## PCA también se obtiene mediante SVD
 
@@ -851,23 +706,21 @@ $$
 \mathbf X=\mathbf U\boldsymbol\Sigma\mathbf V^\top
 $$
 
-- $\mathbf V$ contiene direcciones principales.
-- $\boldsymbol\Sigma^2/(n-1)$ contiene varianzas.
-- Las primeras $d$ columnas dan una aproximación de rango $d$.
+- $\mathbf V$ contiene las direcciones principales.
+- $\boldsymbol\Sigma^2/(n-1)$ contiene sus varianzas.
+- Las primeras columnas dan una aproximación de rango bajo.
 
-## Trazabilidad de los materiales
+## Reproducir el caso de Colombia
 
-| Fuente anterior | Integración nueva |
-|---|---|
-| Introducción no supervisada | Distancia, K-Means, codo y silueta |
-| Algoritmos de clustering | MiniBatch, DBSCAN, GMM y comparación |
-| Reducción dimensional | Maldición dimensional, PCA y reconstrucción |
-| Capítulo 9 | Aplicaciones, densidad y anomalías |
-| *Data Science for Business*, cap. 6 | Representación, vecinos, utilidad y evaluación |
+Desde la raíz del repositorio:
 
-Las capturas antiguas se sustituyeron por figuras reproducibles.
+```bash
+python quarto/clustering/country_narrative.py --all
+```
 
-## Reproducir las figuras
+El script valida vecinos, modelos y varianza explicada, y genera un CSV auditable.
+
+## Reproducir las figuras complementarias
 
 Desde `quarto/clustering`:
 
@@ -875,13 +728,7 @@ Desde `quarto/clustering`:
 python generate_figures.py --all
 ```
 
-Una figura específica:
-
-```bash
-python generate_figures.py --figure k_selection
-```
-
-Requiere NumPy, pandas, Matplotlib, SciPy y Scikit-Learn.
+Dependencias declaradas en `quarto/clustering/requirements.txt`.
 
 ## Referencias
 
