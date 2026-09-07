@@ -87,7 +87,7 @@ Las variables expresan una hipótesis; la distancia la convierte en geometría.
 |---|---|
 | Salud | Mortalidad infantil, gasto en salud, esperanza de vida |
 | Demografía | Fertilidad total |
-| Ingreso | Ingreso por persona, PIB per cápita |
+| Ingreso | Ingreso por persona, PIB (Producto Interno Bruto) per cápita |
 | Comercio | Exportaciones e importaciones |
 | Estabilidad | Inflación |
 :::
@@ -95,6 +95,34 @@ Las variables expresan una hipótesis; la distancia la convierte en geometría.
 No observamos cultura, idioma, instituciones, desigualdad interna ni geografía.
 
 # Primera respuesta: dos variables
+
+## Conceptos y términos fundamentales
+
+::: {style="font-size: 0.72em;"}
+
+| Término / Sigla | Definición conceptual |
+|---|---|
+| **Instancia** | Caso u observación representado como vector de datos |
+| **Variable** | Atributo o medición numérica de una instancia |
+| **PIB** | Producto Interno Bruto: valor monetario por habitante |
+| **Distancia ($d$)** | Función que cuantifica la disimilitud entre dos puntos |
+| **Estandarización ($z$)** | Transformación lineal a media 0 y varianza unitaria |
+
+:::
+
+## Cada métrica define una geometría
+
+::: {style="font-size: 0.65em;"}
+
+| Métrica | Símbolo | Ecuación | Aplicación típica |
+|---|:---:|:---:|---|
+| **Euclidiana** | $L_2$ | $\sqrt{\sum_{j=1}^p (x_j - y_j)^2}$ | Variables continuas en escala comparable |
+| **Manhattan** | $L_1$ | $\sum_{j=1}^p \vert x_j - y_j \vert$ | Espacios en cuadrícula; robusta a atípicos |
+| **Chebyshev** | $L_\infty$ | $\max_j \vert x_j - y_j \vert$ | Peor caso o discrepancia límite tolerada |
+| **Jaccard** | $d_J$ | $1 - \frac{\vert A \cap B \vert}{\vert A \cup B \vert}$ | Presencia/ausencia en atributos binarios |
+| **Coseno** | $d_{\cos}$ | $1 - \frac{\mathbf{x} \cdot \mathbf{y}}{\|\mathbf{x}\|_2 \|\mathbf{y}\|_2}$ | Texto y embeddings (compara dirección) |
+
+:::
 
 ## Dos variables permiten empezar
 
@@ -151,14 +179,21 @@ $$
 
 ## Irán es una respuesta correcta…
 
-::: {.answer}
-Respecto a PIB per cápita y mortalidad infantil con log + estándar,
+::: {style="font-size: 0.72em;"}
 
-el vecino de Colombia es Irán.
+| País | PIB per cápita (USD) | Mortalidad (por 1.000) | Distancia $L_2$ (log + std) |
+|---|:---:|:---:|:---:|
+| **Colombia** (base) | 6 250 | 18,6 | — |
+| **Irán** | 6 530 | 19,3 | **0,043** |
+| San Vicente y Granadinas | 6 230 | 20,7 | 0,093 |
+| Perú | 5 020 | 20,3 | 0,165 |
+
 :::
 
+Distancia euclidiana sobre variables con logaritmo y estandarización.
+
 ::: {.fragment}
-**Objeción:** ¿qué ocurrió con las otras siete variables?
+**Objeción:** ¿qué ocurrió con las otras siete variables disponibles?
 :::
 
 # PCA: mirar nueve variables
@@ -174,7 +209,7 @@ el vecino de Colombia es Irán.
 
 ## PCA construye nuevas direcciones
 
-PCA busca ejes ortogonales de máxima varianza:
+El **Análisis de Componentes Principales (PCA)** busca ejes de máxima varianza:
 
 $$
 \mathbf z_1=\mathbf X\mathbf v_1,
@@ -197,22 +232,40 @@ PCA ajustado sobre las nueve variables estandarizadas.
 ![Proyección 2D del espacio de 9 dimensiones y vecinos más cercanos de Colombia.](assets/generated/countries_pca_neighborhood.png){height="415px" fig-align="center"}
 
 ::: {.source-note}
-PC1 = 46,0%; PC2 = 17,2%. Colombia → Argentina en la proyección.
+Componentes principales: PC1 = 46,0%; PC2 = 17,2%. Colombia → Argentina.
 :::
 
-## ¿PCA encontró el vecino verdadero?
+## Vecinos en la proyección PCA 2D
 
-::: {style="font-size: 0.78em;"}
-| Espacio usado para medir | Vecino de Colombia |
-|---|---|
-| PIB y mortalidad con log + estándar | Irán |
-| Dos componentes principales | Argentina |
-| Nueve variables estandarizadas | Turquía |
+::: {style="font-size: 0.72em;"}
+
+| País | PC1 (46,0%) | PC2 (17,2%) | Distancia $L_2$ (2D) |
+|---|:---:|:---:|:---:|
+| **Colombia** (base) | 0,12 | -1,77 | — |
+| **Argentina** | 0,02 | -1,78 | **0,099** |
+| Brasil | 0,14 | -2,15 | 0,383 |
+| Irán | -0,00 | -1,33 | 0,451 |
+| Turquía | 0,40 | -1,41 | 0,454 |
+
 :::
 
-::: {.fragment}
-PCA 2D ocultó 36,9% de la varianza; el mapa cambió el vecindario.
+En el plano proyectado, Colombia y Argentina son prácticamente indistinguibles.
+
+## Vecinos con 9 variables (PCA total)
+
+::: {style="font-size: 0.70em;"}
+
+| País | Distancia $L_2$ (9D) | Puesto en 9D | Puesto en PCA 2D |
+|---|:---:|:---:|:---:|
+| **Turquía** | **0,749** | 1.° | 4.° ($d=0,454$) |
+| **Uruguay** | **0,757** | 2.° | 6.° ($d=0,601$) |
+| **Brasil** | **0,862** | 3.° | 2.° ($d=0,383$) |
+| Ecuador | 0,965 | 4.° | 9.° ($d=0,732$) |
+| *Argentina* | 1,718 | **21.°** | **1.°** ($d=0,099$) |
+
 :::
+
+Al usar todas las variables, Argentina cae del 1.° al 21.° lugar ($d=1,718$).
 
 ## PCA permite ver; no decide la verdad
 
@@ -248,6 +301,34 @@ PCA 2D ocultó 36,9% de la varianza; el mapa cambió el vecindario.
 4. Explique qué se pierde.
 
 🔗 [Abrir PCA](https://oscar-bustos.github.io/javeriana-tallerml/reduccion_dimension/pca.html){target="_blank"}
+:::
+::::
+
+## Proyección no lineal con t-SNE
+
+:::: {.columns}
+::: {.column width="48%"}
+**t-SNE** (*t-Distributed Stochastic Neighbor Embedding*):
+
+```python
+from sklearn.manifold import TSNE
+
+tsne = TSNE(
+    n_components=2,
+    perplexity=30,
+    random_state=42,
+)
+Z = tsne.fit_transform(X)
+```
+
+**3 más cercanos en t-SNE:**
+
+1. **Turquía** ($d = 0,54$)
+2. **Brasil** ($d = 0,68$)
+3. **Ecuador** ($d = 0,92$)
+:::
+::: {.column width="52%"}
+![Proyección t-SNE 2D de las nueve variables estandarizadas.](assets/generated/countries_tsne.png){height="355px" fig-align="center"}
 :::
 ::::
 
@@ -366,6 +447,32 @@ Para $K=4$:
 Valores positivos superan el promedio global estandarizado.
 :::
 
+## Interpretar clústeres con un árbol
+
+Un **árbol sustituto** (*surrogate model*) entrena sobre las etiquetas de K-Means para extraer reglas legibles:
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+
+surrogate = DecisionTreeClassifier(
+    max_depth=3, min_samples_leaf=8, random_state=42
+).fit(X_scaled, kmeans.labels_)
+
+fidelity = surrogate.score(X_scaled, kmeans.labels_)  # 95,2%
+```
+
+- Traduce centroides 9D a umbrales directos de decisión.
+- Mide la **fidelidad**: qué tan bien el árbol reproduce a K-Means.
+- El árbol explica la partición; no prueba que los grupos sean naturales.
+
+## Reglas del árbol sustituto
+
+![Árbol de decisión (profundidad 3) que reproduce K-Means con 95,2% de fidelidad.](assets/generated/kmeans_surrogate_tree.png){height="400px" fig-align="center"}
+
+::: {.source-note}
+Mortalidad infantil y PIB dividen los grupos; salud y fertilidad afinan subgrupos.
+:::
+
 ## K-Means siempre obliga a escoger
 
 :::: {.columns}
@@ -400,6 +507,8 @@ $$
 **Pregunta:** ¿qué significaría que un país tenga 54% de afinidad con un perfil y 46% con otro?
 
 ## GMM modela una mezcla de poblaciones
+
+Los **Modelos de Mezcla Gaussiana (GMM)** suponen una combinación de normales:
 
 $$
 p(\mathbf x)=\sum_{k=1}^{K}\pi_k\,
@@ -469,6 +578,8 @@ Lunas con ruido: simulación determinista en `country_narrative.py`.
 
 ## DBSCAN convierte vecindad en estructura
 
+**DBSCAN** (*Density-Based Spatial Clustering*) agrupa por densidad:
+
 - **Núcleo:** al menos `min_samples` puntos dentro de `eps`.
 - **Frontera:** vecino de un núcleo, sin densidad propia.
 - **Ruido:** no es núcleo ni frontera.
@@ -507,7 +618,7 @@ labels = model.fit_predict(X)
 - En alta dimensión reaparece la concentración de distancias.
 - Scikit-Learn no ofrece `predict()` para nuevos puntos.
 
-HDBSCAN puede extender la idea a densidades variables.
+**HDBSCAN** (*Hierarchical DBSCAN*) extiende la idea a densidades variables.
 
 # Resolver significa explicitar supuestos
 
@@ -527,17 +638,19 @@ Ninguna herramienta elimina la necesidad de formular el propósito.
 
 ## La respuesta cambia con “respecto a”
 
-::: {style="font-size: 0.70em;"}
-| Respecto a… | País más cercano a Colombia |
-|---|---|
-| PIB y mortalidad infantil, log + estándar | Irán |
-| Salud y demografía | Barbados |
-| Macroeconomía y comercio | China |
-| PCA 2D de las nueve variables | Argentina |
-| Nueve variables estandarizadas | Turquía |
+::: {style="font-size: 0.68em;"}
+
+| Respecto a… | Más cercano | Distancia $L_2$ | Variables consideradas |
+|---|---|:---:|---|
+| PIB y mortalidad (log + estándar) | Irán | 0,043 | 2 variables transformadas |
+| Salud y demografía | Barbados | 0,405 | 4 variables estandarizadas |
+| Macroeconomía y comercio | China | 0,362 | 5 variables estandarizadas |
+| PCA 2D (visualización) | Argentina | 0,099 | 2 componentes principales |
+| Nueve variables (PCA total) | Turquía | 0,749 | Espacio 9D completo |
+
 :::
 
-Todos los resultados provienen del mismo dataset.
+Todos los resultados provienen del mismo conjunto de datos.
 
 ## ¿Cuál respuesta es correcta?
 
@@ -591,8 +704,9 @@ Consulte las instrucciones completas en `homework/Tarea6_KMeans.md`.
 ## Tarea: lecturas y NotebookLM
 
 - **Obligatorio:** capítulo 9 de *Hands-On Machine Learning* [@geron2022hands].
-- **Recomendado:** capítulo 8 sobre reducción dimensional.
-- **Opcional:** capítulo 12 de *Introduction to Statistical Learning*.
+- **Recomendado:** capítulo 8 sobre reducción dimensional [@geron2022hands].
+- **Opcional:** capítulo 12 de *Introduction to Statistical Learning* [@james2023introduction].
+- **Complementario:** capítulo 6 de *Data Science for Business* [@provost2013data].
 - [Cuaderno de NotebookLM](https://notebook.google.com/notebook/e3bb0fa0-71fc-49af-ad7a-7b3a57cb6f82){target="_blank"}: infografía, quices y podcast.
 
 # Anexos
@@ -660,6 +774,8 @@ MiniBatchKMeans(n_clusters=k, batch_size=1024,
 
 ## EM alterna responsabilidades y parámetros
 
+El algoritmo **Esperanza-Maximización (EM)** alterna:
+
 1. **E-step:** estima $P(z_i=k\mid\mathbf x_i)$.
 2. **M-step:** actualiza pesos, medias y covarianzas.
 3. Repite hasta estabilizar la log-verosimilitud.
@@ -678,6 +794,8 @@ K-Means y GMM alternan asignar y actualizar; GMM conserva incertidumbre.
 Más flexibilidad implica más parámetros y riesgo de sobreajuste.
 
 ## AIC y BIC seleccionan componentes
+
+Los criterios de información (**AIC** y **BIC**) penalizan la complejidad:
 
 $$
 \operatorname{AIC}=2p-2\log\hat L,
@@ -700,7 +818,7 @@ Una observación rara no es automáticamente error ni fraude.
 
 ## PCA también se obtiene mediante SVD
 
-Para datos centrados $\mathbf X$:
+La **Descomposición en Valores Singulares (SVD)** factoriza datos centrados $\mathbf X$:
 
 $$
 \mathbf X=\mathbf U\boldsymbol\Sigma\mathbf V^\top
