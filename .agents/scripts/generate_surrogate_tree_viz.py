@@ -52,10 +52,9 @@ def main():
     kmeans = KMeans(n_clusters=4, n_init=30, random_state=42).fit(X_scaled)
     labels = kmeans.labels_
 
-    # Ajustar árbol sustituto
+    # Ajustar árbol sustituto podado a K=4 hojas (una por grupo)
     surrogate = DecisionTreeClassifier(
-        max_depth=3,
-        min_samples_leaf=8,
+        max_leaf_nodes=4,
         random_state=42,
     ).fit(X_scaled, labels)
 

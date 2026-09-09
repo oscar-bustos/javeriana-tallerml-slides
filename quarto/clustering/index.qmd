@@ -455,10 +455,10 @@ Un **árbol sustituto** (*surrogate model*) entrena sobre las etiquetas de K-Mea
 from sklearn.tree import DecisionTreeClassifier
 
 surrogate = DecisionTreeClassifier(
-    max_depth=3, min_samples_leaf=8, random_state=42
+    max_leaf_nodes=4, random_state=42
 ).fit(X_scaled, kmeans.labels_)
 
-fidelity = surrogate.score(X_scaled, kmeans.labels_)  # 95,2%
+fidelity = surrogate.score(X_scaled, kmeans.labels_)  # 97,0%
 ```
 
 - Traduce centroides 9D a umbrales directos de decisión.
@@ -467,10 +467,10 @@ fidelity = surrogate.score(X_scaled, kmeans.labels_)  # 95,2%
 
 ## Reglas del árbol sustituto
 
-![Árbol de decisión (profundidad 3) que reproduce K-Means con 95,2% de fidelidad.](assets/generated/kmeans_surrogate_tree.png){height="400px" fig-align="center"}
+![Árbol podado (4 hojas) que reproduce K-Means con 97,0% de fidelidad.](assets/generated/kmeans_surrogate_tree.png){height="390px" fig-align="center"}
 
 ::: {.source-note}
-Mortalidad infantil y PIB dividen los grupos; salud y fertilidad afinan subgrupos.
+Mortalidad infantil y PIB dividen los grupos; importaciones aíslan los centros comerciales.
 :::
 
 ## K-Means siempre obliga a escoger
