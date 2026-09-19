@@ -1,7 +1,7 @@
 Generalidades Pedagógicas
 Aula Invertida
 Rol Docente como guia
-Aprendizaje asistido por la IA 
+Aprendizaje asistido por la IA
 Live Coding
 
 Crear forma de calificar automáticamente los talleres

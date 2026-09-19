@@ -1,16 +1,16 @@
-# Reglas del Proyecto
+# Reglas locales de `.agents/`
 
-## Presentaciones (Quarto / Reveal.js)
-- **Límite de líneas:** Cada slide debe tener como máximo 11 o 12 líneas de texto en total para evitar desbordamientos verticales/horizontales y mantener una estética limpia con la fuente elegida.
-- **Longitud de Títulos:** Evita subtítulos muy largos en la cabecera de la diapositiva (por ejemplo: `## Título: Subtítulo largo`). Si el título envuelve a 2 líneas, restará valioso espacio vertical. Mantenlos concisos (menos de 45 caracteres).
-- **Estilo de Títulos (Pedagogía):** Emplea preferiblemente el enfoque "Afirmación-Evidencia" (Assertion-Evidence). Usa oraciones breves y directas que reflejen la idea central o conclusión de la diapositiva, en lugar de títulos puramente temáticos o genéricos.
-- **Contenedores y Elementos Especiales (Callouts, Divs, Alerts):** Los bloques como `::: {.callout-...}` añaden márgenes, bordes, iconos y espaciado interno sustancial (equivalente a 3 o 4 líneas de texto). Al usarlos, el límite estricto de líneas de la diapositiva debe reducirse a **máximo 7 u 8 líneas de texto** en total.
-- **Concisión en Listas:** Cada viñeta de una lista debe ser una frase corta y directa, nunca un párrafo completo de múltiples oraciones. 
-- **Imágenes y Desbordamiento Vertical:** Para evitar que el contenido se salga de los márgenes inferiores (overflow), controla el tamaño de las imágenes. Si la imagen es vertical (portrait), no uses solo porcentajes de `width`. Fija su altura máxima con el atributo `height` (por ejemplo: `{height="350px" fig-align="center"}`). También puedes usar columnas (`::: {.columns}`) para colocar texto junto a la imagen.
-- **Fragmentos y Espacio:** Al usar fragmentos (`. . .`), recuerda que TODO el contenido (pregunta, respuesta e imagen) ocupa espacio en la misma pantalla. Si la suma del contenido es extensa, **NO uses fragmentos**. Divide el contenido en dos diapositivas distintas (una para la pregunta y otra nueva para la respuesta).
-- **Múltiples Listas y Bloques Mixtos:** Evita colocar varios bloques de texto, subencabezados y listas en la misma diapositiva. El espaciado vertical requerido para que rendericen correctamente suele causar desbordamientos. En estos casos, divide la diapositiva en pantallas secuenciales o distribúyelas de forma paralela usando columnas (`::: {.columns}`).
-- **Línea en blanco antes de listas (Pandoc/Quarto):** Pandoc requiere OBLIGATORIAMENTE una línea en blanco antes de comenzar una lista con viñetas (`-` o `*`). Si no se deja una línea en blanco tras un texto en negrita (ej. `**Título**`), subtítulo o div, Pandoc tratará los ítems como texto inline continuo y NO renderizará la lista de viñetas (`<ul><li>`).
-- **Tablas y Desbordamiento (Ajuste de Fuente):** Las tablas Markdown en Reveal.js pueden desbordarse fácilmente si tienen varias columnas o filas. Para prevenir desbordamientos horizontales/verticales y conservar la estética, envuelve las tablas en un contenedor div con tamaño de fuente reducido (por ejemplo: `::: {style="font-size: 0.75em;"}` o `::: {style="font-size: 0.7em;"}`).
+Primero aplica el [`AGENTS.md`](../AGENTS.md) de la raíz. Estas reglas adicionales
+rigen únicamente los scripts y skills de este directorio.
 
-## Scripts y Reproducibilidad (Python)
-- **No scripts inline (`python -c`):** Siempre que se requiera ejecutar código Python para análisis, cálculos o extracción de datos, debe crearse primero un archivo de script dentro del repositorio en una carpeta adecuada (por ejemplo, dentro de `.agents/scripts/` o en la carpeta correspondiente al tema, como `quarto/clustering/`). No ejecutes código inline (`python -c`), ya que dificulta la trazabilidad y no favorece la reproducibilidad.
+- Mantén los scripts pequeños, reproducibles y seguros para ejecutar desde la raíz.
+- Resuelve rutas desde `__file__`; no dependas del directorio actual salvo que se
+  documente explícitamente.
+- No uses código Python inline para análisis o transformaciones: crea un script.
+- Comprueba códigos de salida de procesos externos y propaga los fallos.
+- Evita rutas absolutas específicas de una máquina; si se conserva compatibilidad
+  heredada, añade también una ruta portátil mediante `PATH`.
+- Una skill debe describir con precisión su disparador, entradas, comandos y manejo
+  de errores. No dupliques en ella reglas generales del repositorio.
+- Si cambias una automatización de compilación, pruébala con una presentación antes
+  de usarla sobre todo el repositorio.

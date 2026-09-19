@@ -4,6 +4,8 @@
 # Permitir las carpetas que queremos versionar y su contenido
 !/.github/
 !/.github/**
+!/.cursor/
+!/.cursor/**
 !/docs/
 !/docs/**
 !/docs/assets/
@@ -12,6 +14,14 @@
 !/.agents/**
 !/homework/
 !/homework/**
+!/planning/
+!/planning/**
+
+# Inventarios versionados; los materiales internos continúan siendo locales
+!/reference/
+!/reference/README.md
+!/course-admin/
+!/course-admin/README.md
 
 # Permitir archivos de Quarto (.qmd, .bib, .scss, imágenes)
 !/quarto/
@@ -28,6 +38,11 @@
 !/.gitignore
 !/index.html
 !/README.md
+!/AGENTS.md
+!/CONTRIBUTING.md
+!/CLAUDE.md
+!/GEMINI.md
+!/llms.txt
 !/LICENSE
 
 # Ignorar archivos temporales y generados (al final para que tengan prioridad sobre los whitelists)

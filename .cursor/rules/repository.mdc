@@ -1,0 +1,17 @@
+---
+description: Reglas canónicas del repositorio de presentaciones de Machine Learning
+globs: "**/*"
+alwaysApply: true
+---
+
+# Contexto del repositorio
+
+Antes de modificar archivos, lee `/AGENTS.md` completo y usa `/README.md` como mapa
+del proyecto. `/AGENTS.md` prevalece sobre este adaptador.
+
+- Las fuentes son `quarto/<tema>/index.qmd`.
+- `docs/<tema>.html` es salida generada y publicable; no se edita a mano.
+- El contenido docente está en español y debe respetar los límites de densidad.
+- Las citas viven en el `references.bib` de cada tema.
+- Preserva cambios existentes, compila el tema afectado y revisa el resultado.
+- Reutiliza scripts reproducibles y evita ejecutar Python inline.

@@ -1,0 +1,37 @@
+# Taller de Machine Learning — Pontificia Universidad Javeriana
+
+> Repositorio de presentaciones docentes en español creadas con Quarto/Reveal.js,
+> tareas de aprendizaje automático y visualizaciones reproducibles en Python.
+
+## Documentación esencial
+
+- [README](README.md): propósito, mapa del curso, instalación y comandos.
+- [Guía canónica para agentes](AGENTS.md): reglas de edición, estilo y validación.
+- [Guía de contribución](CONTRIBUTING.md): flujo de trabajo y lista de revisión.
+- [Licencia](LICENSE): términos de uso del repositorio.
+
+## Fuentes principales
+
+- [Presentaciones](quarto/): un directorio por tema con `index.qmd` y
+  `references.bib`.
+- [Tema compartido](quarto/custom.scss): estilos Reveal.js del curso.
+- [Tareas](homework/): talleres, preguntas y notebooks para estudiantes.
+- [Planeación](planning/): pendientes e ideas todavía no publicables.
+- [Guía de referencias locales](reference/README.md): separación entre decks,
+  extractos privados y bibliografía citable.
+- [Administración del curso](course-admin/README.md): límites para datos privados.
+- [Sitio compilado](docs/): HTML autónomo y versionado; no editar manualmente.
+- [Automatización](.agents/scripts/): compilación, publicación y generación.
+- [Despliegue](.github/workflows/deploy.yml): publicación de `docs/` desde `main`.
+
+## Comandos mínimos
+
+- Una clase: `python3 .agents/scripts/compile_quarto.py quarto/<tema>/index.qmd`
+- Todas las clases: `python3 .agents/scripts/compile_quarto.py`
+- Figuras de clustering: `python3 quarto/clustering/generate_figures.py --all`
+- Validación básica: `git diff --check`
+
+## Reglas de precedencia
+
+`AGENTS.md` es la referencia autoritativa para asistentes. Los archivos específicos
+de cada herramienta son adaptadores y no deben duplicar ni reemplazar esa guía.
