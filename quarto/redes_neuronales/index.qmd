@@ -3,7 +3,6 @@ title: "Redes neuronales"
 subtitle: "Técnicas de Aprendizaje de Máquina"
 author: "Oscar Bustos"
 lang: es
-highlight-style: none
 format:
   revealjs:
     embed-resources: true
@@ -163,6 +162,22 @@ Si los datos son separables linealmente, el aprendizaje converge; cada salida co
 
 ::::
 
+## Perceptron aprende tres cortes en Iris
+
+```python
+from sklearn.datasets import load_iris
+from sklearn.linear_model import Perceptron
+
+X, y = load_iris(return_X_y=True)
+X = X[:, 2:4]  # largo y ancho del pétalo
+modelo = Perceptron(random_state=42)
+modelo.fit(X, y)
+print(modelo.coef_.shape, modelo.intercept_.shape)
+# (3, 2) (3,)
+```
+
+Cada fila de `coef_` guarda dos pesos para una clase; `intercept_` guarda sus sesgos. scikit-learn ajusta tres clasificadores, uno por clase [@geron2022hands; @scikitPerceptron].
+
 ## Logística ofrece probabilidades
 
 | Modelo | Salida | Frontera |
@@ -257,6 +272,23 @@ Desde la salida, aplica la regla de la cadena a cada capa hasta obtener sus grad
 
 Luego el optimizador actualiza los pesos, por ejemplo $w\leftarrow w-\eta\,\partial L/\partial w$.
 
+## El MLP ajusta pesos de ambas capas
+
+```python
+from sklearn.datasets import make_moons
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import StandardScaler
+
+X, y = make_moons(300, noise=0.2, random_state=42)
+X = StandardScaler().fit_transform(X)
+red = MLPClassifier(hidden_layer_sizes=(8,), activation="tanh",
+                    solver="sgd", max_iter=500, random_state=42)
+red.fit(X, y)
+print([w.shape for w in red.coefs_])  # [(2, 8), (8, 1)]
+```
+
+`fit` calcula gradientes por backpropagation y SGD actualiza las dos matrices de pesos [@geron2022hands; @scikitMLPGuide].
+
 ## Simulador: sigue una época
 
 [Abrir el simulador de backpropagation](https://oscar-bustos.github.io/javeriana-tallerml/redes_neuronales/backpropagation.html){target="_blank"} [@bustosBackpropSimulator]
@@ -317,6 +349,20 @@ X_test = X_test / 255.0
 ```
 
 El aplanamiento ocurre **dentro del modelo**, no al cargar los datos [@geron2022hands; @tensorflowFashionTutorial].
+
+## El mismo MLP tiene dos interfaces
+
+::: {.smaller-text}
+| Paso | scikit-learn: `MLPClassifier` | Keras: `Sequential` |
+|:--|:--|:--|
+| Entrada | `X_train.reshape(-1, 784)` | `X_train` y `Flatten()` |
+| Capa oculta | `hidden_layer_sizes=(64,)` | `Dense(64, activation="relu")` |
+| Salida multiclase | `softmax` implícita | `Dense(10, activation="softmax")` |
+| Entrenamiento | `mlp.fit(X_2d, y_train)` | `model.compile(...); model.fit(X_train, y_train)` |
+| Validación | `mlp.score(X_valid_2d, y_valid)` | `validation_data=(X_valid, y_valid)` |
+:::
+
+Ambos usan backpropagation; los hiperparámetros y el optimizador deben fijarse para compararlos experimentalmente [@geron2022hands; @scikitMLPGuide; @kerasTraining].
 
 ## Sequential expresa un flujo simple
 
