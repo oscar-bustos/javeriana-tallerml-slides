@@ -68,3 +68,12 @@ quarto/**/assets/
 quarto/clustering/assets/*
 !quarto/clustering/assets/generated/
 !quarto/clustering/assets/generated/**
+
+# Figuras y muestra reproducibles de redes neuronales
+!quarto/redes_neuronales/generate_figures.py
+!quarto/redes_neuronales/requirements.txt
+!quarto/redes_neuronales/data/
+!quarto/redes_neuronales/data/fashion_sample.json
+
+# Figuras del libro: uso local, no versionar copias de mls3
+quarto/redes_neuronales/figures/mls3_*.png

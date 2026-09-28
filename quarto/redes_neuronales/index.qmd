@@ -1,687 +1,460 @@
 ---
-title: "Redes Neuronales"
+title: "Redes neuronales"
 subtitle: "Técnicas de Aprendizaje de Máquina"
 author: "Oscar Bustos"
+lang: es
+highlight-style: none
 format:
   revealjs:
     embed-resources: true
     theme: [default, ../custom.scss]
-    logo: assets/logo_RGB.png
+    logo: logo_RGB.png
     slide-number: true
     show-slide-number: all
     transition: slide
     chalkboard: false
     width: 1050
     height: 700
+    margin: 0.05
 bibliography: references.bib
 ---
 
+<style>
+.reveal figcaption { text-align: center !important; }
+.smaller-text { font-size: 0.75em !important; }
+</style>
 
-
+<!-- Introducción: 0–8 minutos -->
 
 # Introducción
 
+## Tarea: lecturas y exploración
 
+**Antes o después de clase:**
 
-## Icebreaker: Ciencia Ficción
+1. **Obligatoria:** capítulo 10 de *Hands-On Machine Learning*, de Géron [@geron2022hands].
+2. **Complementaria:** [notebook oficial del capítulo 10](https://github.com/ageron/handson-ml3/blob/main/10_neural_nets_with_keras.ipynb), especialmente Playground y Fashion MNIST [@geronNotebook].
 
+**Durante la clase:** explicaremos las ideas con ejemplos propios y dos simuladores; no hace falta ejecutar TensorFlow en el computador.
 
-![](assets/exmachina.png){width="40%"}
+## Tarea: NotebookLM
 
+**Actividad complementaria:** abrir el [cuaderno de redes neuronales](https://notebook.google.com/notebook/7eb49a2f-ed6f-4ff8-9b5f-c1be83ddabd5){target="_blank"} [@notebookLMRedes].
 
-- ¿Cuéntanos cual es tu peli / serie favorita de ciencia ficción?
+- Pedir una explicación de XOR, backpropagation o Fashion MNIST.
+- Contrastar la respuesta con el capítulo 10 de Géron.
+- Traer a clase una duda o una discrepancia concreta.
 
+## Ensambles dejaron una pregunta abierta
 
+Bosques y boosting combinan decisiones de árboles. Ya vimos cómo pueden mejorar frente a un árbol aislado.
 
+**Problema nuevo:** ante píxeles, señales o relaciones muy complejas, ¿qué representación útil puede aprender el modelo a partir de las entradas?
 
-## Cronograma
+Hoy compararemos modelos y seguiremos cómo una red ajusta sus pesos para transformar esas entradas [@geron2022hands].
 
+<!-- Acto 1: 8–20 minutos -->
 
-![](assets/Cronograma.png){width="100%"}
+# Acto 1: ¿Cuál modelo elegir?
 
+## La frontera depende del problema
 
+En las figuras siguientes, **todos** reciben la misma partición y el mismo escalamiento. Comparamos SVM lineal, SVM RBF, bosque aleatorio y MLP [@scikitClassifierComparison].
 
+**Antes de verlas:** ¿esperas que el modelo más flexible gane siempre?
 
-## Capítulos sobre Deep Learning
+Los puntos opacos son de entrenamiento, los transparentes de prueba y el número es exactitud en prueba.
 
+## En medias lunas no basta una recta
 
+![](figures/comparison_moons.png){height="470px" fig-align="center"}
 
-:::: {.columns}
-
-
-::: {.column width="50%"}
-
-![](assets/IntroStatisticalLearning.png){width="60%"}<br>
-Capítulo 10
-
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+Fronteras sobre *moons*; figura generada para la clase a partir de [@scikitClassifierComparison].
 :::
 
-::: {.column width="50%"}
+## Con círculos cambia la evidencia
 
-![](assets/keras.jpeg){width="60%"}<br>
-Capítulo 10
+![](figures/comparison_circles.png){height="470px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 10px;"}
+Mismos cuatro métodos sobre *circles*; figura generada para la clase a partir de [@scikitClassifierComparison].
 :::
+
+## Ninguna frontera gana para siempre
+
+- Son ejemplos sintéticos con solo dos variables.
+- La exactitud cambia con los datos y la partición.
+- Una frontera flexible puede captar patrón o ruido.
+
+**Nueva pregunta:** si una red también puede trazar fronteras curvas, ¿qué hace cada una de sus unidades? [@scikitClassifierComparison; @geron2022hands]
+
+<!-- Acto 2: 20–35 minutos -->
+
+# Acto 2: ¿Qué puede hacer una neurona?
+
+## La biología inspiró el nombre
+
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="52%"}
+![](assets/mls3_1001.png){height="300px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Neurona biológica. Bruce Blaus, CC BY 3.0; reproducida en Géron, fig. 10-1 [@geron2022hands].
+:::
+:::
+
+::: {.column width="48%"}
+![](assets/mls3_1002.png){height="165px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Capas corticales. Ramón y Cajal, dominio público; reproducidas en Géron, fig. 10-2 [@geron2022hands].
+:::
+:::
+
+::::
+
+**Pregunta:** ¿qué conserva una unidad artificial de esta analogía y qué simplifica?
+
+## Unidades simples calculan lógica
+
+McCulloch y Pitts usaron unidades con entradas y salidas **binarias** para construir operaciones lógicas [@geron2022hands].
+
+![](assets/mls3_1003.png){height="245px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Identidad, AND, OR y AND-NOT en el modelo de McCulloch y Pitts. Géron, fig. 10-3 [@geron2022hands].
+:::
+
+**Reto:** ¿cómo combinarías $A\land\neg B$ y $\neg A\land B$ para obtener XOR?
+
+## El perceptrón aprende un corte recto
+
+Rosenblatt añadió **pesos** que podían aprenderse. Una unidad suma entradas ponderadas, añade un sesgo y aplica un escalón [@geron2022hands].
+
+![](assets/mls3_1004.png){height="335px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Unidad de umbral: $z=\mathbf{w}^{\mathsf T}\mathbf{x}+b$. Géron, fig. 10-4 [@geron2022hands].
+:::
+
+**Pregunta:** ¿cuáles números cambian durante el entrenamiento? ¿Qué frontera produce el escalón?
+
+## Una capa corrige varios pesos
+
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="45%"}
+![](assets/mls3_1005.png){height="330px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Un perceptrón con tres salidas. Géron, fig. 10-5 [@geron2022hands].
+:::
+:::
+
+::: {.column width="55%"}
+Cada salida predice y corrige sus conexiones según el error:
+
+$$w_i \leftarrow w_i+\eta(y-\hat y)x_i.$$
+
+Si los datos son separables linealmente, el aprendizaje converge; cada salida conserva una frontera lineal [@geron2022hands].
+:::
+
+::::
+
+## Logística ofrece probabilidades
+
+| Modelo | Salida | Frontera |
+|:--|:--|:--|
+| Perceptrón clásico | Escalón: clase | Lineal |
+| Regresión logística | Sigmoide: probabilidad | Lineal |
+
+La sigmoide permite una salida continua y derivable; el perceptrón clásico no da probabilidades ni regulariza por defecto [@geron2022hands].
+
+**Problema pendiente:** ninguno separa XOR con las entradas originales.
+
+## XOR expone el límite lineal
+
+![](figures/xor_pattern.png){height="370px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Datos de XOR recreados para la clase: ninguna recta separa las dos etiquetas [@geron2022hands].
+:::
+
+**Predicción:** ¿ayudaría combinar dos cortes antes de decidir?
+
+<!-- Acto 3: 35–63 minutos -->
+
+# Acto 3: ¿Cómo aprende la capa oculta?
+
+## Varias unidades resuelven XOR
+
+![](assets/mls3_1006.png){height="370px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Dos cortes se combinan en una red que representa XOR. Géron, fig. 10-6 [@geron2022hands].
+:::
+
+**Nueva pregunta:** ¿cómo aprenden los pesos de las unidades ocultas?
+
+## La activación cambia la frontera
+
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="45%"}
+![](assets/mls3_1007.png){height="355px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Entradas, capa oculta y salida. Géron, fig. 10-7 [@geron2022hands].
+:::
+:::
+
+::: {.column width="55%"}
+- **Escalón:** ilustra la estructura, pero no da un gradiente útil.
+- **Sigmoide / tanh:** son suaves y derivables.
+- **ReLU:** conserva positivos y anula negativos.
+
+Si todas las activaciones fueran lineales, apilar capas seguiría siendo lineal [@geron2022hands].
+:::
+
 ::::
 
 
+## Playground: prueba y predice
 
+[Abrir TensorFlow Playground](https://playground.tensorflow.org/){target="_blank"} [@tensorflowPlayground; @geron2022hands]
 
+1. Elige **clasificación** y el conjunto de **círculos**.
+2. Compara una capa con **2** y con **8** unidades; reinicia entre corridas.
+3. Cambia **tanh** por **ReLU**; observa frontera y pérdida de prueba.
 
-## Stacking
+**Antes de ejecutar:** ¿qué configuración esperas que subajuste? ¿Cuál podría sobreajustar?
 
+## La capacidad también plantea un riesgo
 
-Entrenando un modelo que usa como entrada las salidas de otro modelo
+Playground muestra que algunas unidades aprenden patrones simples y las siguientes los combinan [@geron2022hands; @tensorflowPlayground].
 
+**Con pocas unidades:** puede faltar capacidad para representar el patrón.
 
+**Con más unidades:** la pérdida de entrenamiento puede bajar sin que mejore la de prueba.
 
-![](assets/CH03_F12_Kunapuli.png){width="80%"}
+**Nueva pregunta:** ¿cómo se ajustan los pesos de las unidades ocultas?
 
+## Primero avanza una predicción
 
+Una pasada hacia adelante calcula salidas capa por capa:
 
+$$x \longrightarrow h_1 \longrightarrow \hat y \longrightarrow L(y,\hat y).$$
 
+La **pérdida** mide el desacuerdo entre predicción y etiqueta. Cambiar solo los pesos de salida dejaría sin aprender a la capa oculta [@geron2022hands].
 
-## Inspiración Biológica
+## Después retroceden los gradientes
 
+Backpropagation responde: **¿cuánto cambia la pérdida si cambia cada peso?**
 
-![](assets/mls3_1001.png){width="70%"}
+Desde la salida, aplica la regla de la cadena a cada capa hasta obtener sus gradientes, incluidos los de las unidades ocultas [@geron2022hands; @rumelhart1986learning].
 
+Luego el optimizador actualiza los pesos, por ejemplo $w\leftarrow w-\eta\,\partial L/\partial w$.
 
-Neurona Biológica
+## Simulador: sigue una época
 
+[Abrir el simulador de backpropagation](https://oscar-bustos.github.io/javeriana-tallerml/redes_neuronales/backpropagation.html){target="_blank"} [@bustosBackpropSimulator]
 
+1. Detente tras la **predicción** y anticipa el signo del error.
+2. Sigue los **gradientes** desde la salida hacia atrás.
+3. Observa la **actualización** y compara la nueva pérdida.
 
+**Pregunta:** ¿por qué se calculan gradientes antes de modificar pesos?
 
-## Inspiración Biológica
+## El ejemplo simplifica la activación
 
+El simulador usa **activación identidad** y una observación para hacer visible cada cálculo [@bustosBackpropSimulator].
 
-![](assets/What-are-the-different-types-of-neurons_.png){width="70%"}
+Para aprender XOR necesitamos activaciones no lineales. Sus derivadas entran en la misma cadena de gradientes [@geron2022hands].
 
+**Una época** recorre los ejemplos de entrenamiento; suele contener muchos lotes y actualizaciones.
 
+<!-- Acto 4: 63–93 minutos -->
 
+# Acto 4: ¿Cómo entra una imagen?
 
-## Inspiración Biológica
+## Una imagen es una matriz de datos
 
+![](figures/fashion_pixels.png){height="390px" fig-align="center"}
 
-![](assets/mls3_1002.png){width="80%"}
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Primera imagen de entrenamiento de Fashion MNIST: etiqueta 9, botín. Píxeles de 0 a 255; Zalando Research, licencia MIT [@fashionMNIST].
+:::
 
-Red Neuronal
+## 784 valores describen la imagen
 
+Fashion MNIST contiene imágenes en escala de grises de **28 × 28** píxeles y **10 clases** [@fashionMNIST; @geron2022hands].
 
+`Flatten` ordena los $28\times28=784$ valores para una capa densa. Dividir por **255** lleva las intensidades al intervalo **0–1**.
 
+**Pregunta:** si la clase es «botín», ¿esa palabra está dentro de la imagen?
 
-## Pioneros en Redes Neuronales Artificiales 
+## Validación no es prueba final
 
+| Partición del ejemplo del libro | Imágenes | Uso |
+|:--|--:|:--|
+| Entrenamiento | 55 000 | Ajustar pesos |
+| Validación | 5 000 | Elegir configuración |
+| Prueba | 10 000 | Evaluar una vez al final |
 
-![](assets/nobel.png){width="70%"}
+La etiqueta es un entero entre **0 y 9**; se mantiene separada de los píxeles [@geron2022hands; @fashionMNIST].
 
-Articulo de Interés: [@rumelhart1986learning]
+## Cargar y normalizar es el primer paso
 
-
-
-
-## Juguemos con las Redes Neuronales
-
-
-![](assets/tensorflow-Playground.png){width="70%"}
-
-[Understanding neural-networks with tensorflow-playground](https://cloud.google.com/blog/products/ai-machine-learning/understanding-neural-networks-with-tensorflow-playground)
-
-
-
-
-## Zoológico de Redes neuronales
-
-
-![](assets/zoo1.png){width="70%"}
-
-[The Neural Network Zoo](https://www.asimovinstitute.org/neural-network-zoo/)
-
-
-
-
-
-## Feed Forward Neural Networks (FFNN) y Perceptrones
-
-**Feed Forward Neural Networks**<br>
-Aplicación Ideal: Clasificación y regresión en problemas estructurados.
-- Reconocimiento de patrones en datos tabulares.
-- Modelado de funciones complejas.
-- Aplicaciones en finanzas y predicción de series temporales simples.
-**Radial Basis Function (RBF) Networks **<br>
-Aplicación Ideal: Problemas de interpolación y aproximación de funciones.
-- Control adaptativo.
-- Reconocimiento de caracteres y voz.
-
-
-
-
-## Recurrent Neural Networks (RNN)
-
-**Recurrent Neural Networks (RNN)**<br>
-Aplicación Ideal: Procesamiento de datos secuenciales.
-- Modelado de lenguaje natural.
-- Reconocimiento de voz.
-- Predicción de series temporales.
-**Long Short-Term Memory (LSTM) Networks**<br>
-Aplicación Ideal: Procesamiento de secuencias largas con dependencias temporales.
-- Traducción automática.
-- Generación de texto.
-- Análisis de sentimientos.
-
-
-
-
-## Recurrent Neural Networks (RNN)
-
-**Recurrent Neural Networks (RNN)**<br>
-Aplicación Ideal: Procesamiento de datos secuenciales.
-- Modelado de lenguaje natural.
-- Reconocimiento de voz.
-- Predicción de series temporales.
-**Long Short-Term Memory (LSTM) Networks**<br>
-Aplicación Ideal: Procesamiento de secuencias largas con dependencias temporales.
-- Traducción automática.
-- Generación de texto.
-- Análisis de sentimientos.
-
-
-
-
-## Autoencoders (AE)
-
-**Aplicación Ideal:** Reducción de dimensionalidad y detección de anomalías.
-- Compresión de datos.
-- Eliminación de ruido en imágenes y señales.
-- Detección de fraudes.
-
-
-
-
-
-## Zoológico de Redes neuronales
-
-
-![](assets/zoo2.png){width="90%"}
-
-[The Neural Network Zoo](https://www.asimovinstitute.org/neural-network-zoo/)
-
-
-
-
-## Convolutional Neural Networks (CNN)
-
-**Convolutional Neural Networks (CNN)**<br>
-Aplicación Ideal: Procesamiento de imágenes y visión por computadora.
-- Reconocimiento de objetos y rostros.
-- Detección de anomalías en imágenes médicas.
-- Aplicaciones en vehículos autónomos.
-
-**Generative Adversarial Networks (GAN)**<br>
-Aplicación Ideal: Generación de contenido realista.
-- Creación de imágenes sintéticas.
-- Restauración y mejora de imágenes.
-- Generación de música y texto artificial.
-
-
-
-
-## Zoológico de Redes neuronales
-
-
-![](assets/zoo3.png){width="90%"}
-
-[The Neural Network Zoo](https://www.asimovinstitute.org/neural-network-zoo/)
-
-
-
-
-## Attention Networks (AN)
-
-**Aplicación Ideal:** Modelado de dependencias a largo plazo en datos secuenciales.
-- Traducción automática con Transformers.
-- Generación de resúmenes automáticos.
-- Análisis de documentos extensos.
-- Base de los Large Language Models (LLM)
-
-
-
-
-
-
-# Perceptrón
-
-
-
-## Neurona Artificial
-
-
-![](assets/mls3_1003.png){width="90%"}
-
-
-Compuertas Lógicas con Neuronas Artificiales
-
-
-
-
-## Neurona Artificial
-
-
-![](assets/mls3_1004.png){width="50%"}
-
-Perceptron con tres entradas y una salida
-
-
-
-
-## Neurona Artificial
-
-
-![](assets/mls3_1005.png){width="50%"}
-
-Perceptron con dos entradas y tres salidas
-
-
-
-
-## Neurona Artificial
-
-
-![](assets/mls3_1005.png){width="50%"}
-
-Perceptron con dos entradas y tres salidas
-
-
-
-
-## Modelo Matemático
-
-
-
-La Unidad Lógica de Umbral (TLU por sus siglas en inglés *threshold logic unit*) primero calcula una función lineal de sus entradas:
-\begin{equation}
-z = \bm{w}^\top \bm{x} + b
-\end{equation}
-donde:
-- $\bm{x}$ es el vector de características de entrada.
-- $\bm{w}$ es el vector de pesos.
-- $b$ es el término de sesgo.
-Luego, se aplica una función escalón:
-\begin{equation}
-h_{\bm{w}}(\bm{x}) = \phi(z)
-\end{equation}
-donde:
-- $\phi(z)$ es la función de activación (función escalón para TLU).
-
-
-
-
-## Tipos de Umbrales
-
-
-![](assets/FuncionActivacion.png){width="40%"}
-
-
-
-
-
-## Regla de Aprendizaje del Perceptrón
-
-La regla de actualización de pesos para el Perceptrón está dada por:
-\begin{equation}
-w_{i,j} \leftarrow w_{i,j} + \eta (y_j - \hat{y}_j) x_i
-\end{equation}
-donde:
-- $w_{i,j}$ es el peso de conexión entre la $i$-ésima entrada y la $j$-ésima neurona.
-- $x_i$ es el valor de la $i$-ésima entrada de la instancia de entrenamiento actual.
-- $\hat{y}_j$ es la salida de la $j$-ésima neurona para la instancia de entrenamiento actual.
-- $y_j$ es la salida objetivo de la $j$-ésima neurona.
-- $\eta$ es la tasa de aprendizaje.
-
-
-
-
-## Regla de Aprendizaje del Perceptrón
-
-
-![](assets/FuncionActivacion.png){width="40%"}
-
-
-
-
-## Ejemplo de Código: Perceptrón
-
-\begin{lstlisting}[language=Python, style=mystyle]
-import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.linear_model import Perceptron
-
-iris = load_iris(as_frame=True)
-X = iris.data[["petal length (cm)", "petal width (cm)"]].values
-y = (iris.target == 0)
-
-per_clf = Perceptron(random_state=42)
-per_clf.fit(X, y)
-
-X_new = [[2, 0.5], [3, 1]]
-y_pred = per_clf.predict(X_new)
-\end{lstlisting}
-
-
-
-
-## Problema de optimización
-
-
-![](assets/mls3_0403.png){width="70%"}
-
-Problema con un mínimo global único (Concavo)
-
-
-
-
-## Problema de optimización
-
-
-![](assets/mls3_0404.png){width="70%"}
-
-Tasa de aprendizaje muy pequeña
-
-
-
-
-## Problema de optimización
-
-
-![](assets/mls3_0405.png){width="70%"}
-
-Tasa de aprendizaje muy grande
-
-
-
-
-## Problema de optimización
-
-
-![](assets/mls3_0406.png){width="70%"}
-
-Problema con múltiples mínimos locales y con valles
-
-
-
-
-## Problema de optimización
-
-
-![](assets/mls3_0407.png){width="70%"}
-
-Problema con escalamiento de variables
-
-
-
-
-## Limitaciones del Perceptrón
-
-
-![](assets/mls3_1006.png){width="50%"}
-
-Separación XOR
-
-
-
-
-# Perceptrón Multicapa
-
-
-
-## Regiones de decisión para Perceptrones Multicapa
-
-
-![](assets/NeuralNetworks.jpg){width="50%"}
-
-Dependiendo de la arquitectura del perceptron, se pueden resolver problemas convexos
-
-
-
-
-## Arquitectura de un MLP para regresión
-
-
-![](assets/mls3_1007.png){width="40%"}
-
-
-
-- Capa de entrada: recibe los datos de entrada.
-- Capas ocultas: transforman las entradas en representaciones más abstractas.
-- Capa de salida: produce la predicción final.
-
-
-
-
-## Arquitectura de un MLP para Clasificación
-
-
-![](assets/mls3_1009.png){width="40%"}
-
-
-
-- Capa de entrada: recibe los datos de entrada.
-- Capas ocultas: transforman las entradas en representaciones más abstractas.
-- Capa de salida: produce la predicción final.
-
-
-
-
-## Funcionamiento de un MLP
-
-1. **Propagación hacia adelante:** Las entradas se propagan a través de la red, capa por capa, hasta la capa de salida.
-1. **Cálculo del error:** Se compara la salida de la red con la salida deseada para calcular el error.
-1. **Retropropagación:** El error se propaga hacia atrás a través de la red para ajustar los pesos de las conexiones.
-1. **Actualización de pesos:** Se utilizan algoritmos de optimización (como el descenso del gradiente) para actualizar los pesos y minimizar el error.
-
-
-
-
-## Entrenamiento de un MLP
-
-- Se utiliza un conjunto de datos de entrenamiento para ajustar los pesos de la red.
-- El objetivo es minimizar una función de pérdida que mide la diferencia entre las predicciones de la red y las salidas reales.
-- Se utilizan algoritmos de optimización como el descenso del gradiente para encontrar los pesos óptimos.
-
-
-
-
-## Ilustración Retropropagación
-
-
-![](assets/bp_weights.png){width="70%"}
-
-Ejemplo con 1 capa oculta con dos neuronas, dos entradas y una salida
-
-
-
-
-## Ilustración Retropropagación
-
-
-![](assets/bp_forward.png){width="65%"}
-
-
-
-
-## Ilustración Retropropagación
-
-
-![](assets/bp_prediction_elements.png){width="65%"}
-
-
-
-
-## Ilustración Retropropagación
-
-
-![](assets/bp_error.png){width="90%"}
-
-
-
-
-## Ilustración Retropropagación
-
-
-![](assets/bp_update_formula.png){width="70%"}
-
-
-
-
-## Ilustración Retropropagación
-
-
-![](assets/bp_w6_update.png){width="70%"}
-
-
-
-
-## Ilustración Retropropagación
-
-
-![](assets/bp_error_function_partial_derivative_w6.png){width="100%"}
-
-
-
-
-## Ilustración Retropropagación
-
-
-![](assets/bp_update_all_weights.png){width="80%"}
-
-
-
-
-# Librerías
-
-
-
-## Seleccionando Algoritmos
-
-
-¿Cómo elijo el algoritmo más adecuado para mis datos?
-![](assets/selectingAlgo.png){width="80%"}
-
-
-
-
-## Comparación de Algoritmos
-
-
-Comparación de distintos algoritmos a la fecha
-
-![](assets/comparacionAlgoritmosANN.png){width="100%"}
-
-
-
-
-
-
-
-
-## Redes Neuronales en Python
-
-- **Multilayer Perceptron (MLP) en Scikit-Learn:**
-  - `sklearn.neural\_network.MLPClassifier`
-  - `sklearn.neural\_network.MLPRegressor`
-
-- **Redes Neuronales en Keras y TensorFlow:**
-  - `tensorflow.keras.models.Sequential`
-  - `tensorflow.keras.layers.Dense`
-
-
-
-
-## Multilayer Perceptron (MLP): Hiperparámetros Clave
-
-- `hidden\_layer\_sizes`: Tupla que define el número y tamaño de las capas ocultas (ej. `(100,)` para una capa de 100 neuronas).
-- `activation`: Función de activación en las capas ocultas (`'relu'`, `'logistic'`, `'tanh'`).
-- `solver`: Algoritmo de optimización (`'adam'`, `'sgd'`, `'lbfgs'`).
-- `alpha`: Término de regularización L2 para evitar sobreajuste.
-- `learning\_rate`: Controla la tasa de aprendizaje si se usa `sgd` como solver (`'constant'`, `'invscaling'`, `'adaptive'`).
-- `max\_iter`: Número máximo de iteraciones para el entrenamiento.
-- `random\_state`: Fija la semilla para reproducibilidad.
-
-
-
-
-## Término de Regularización - Alpha
-
-
-![](assets/sphx_glr_plot_mlp_alpha_001.png){width="80%"}
-
-Término de Regularización y su impacto en las predicciones
-
-
-
-
-## Ejemplo de Código: Perceptrón Multicapa - Regresión
-
-\begin{lstlisting}[language=Python, style=mystyle]
-from sklearn.neural_network import MLPRegressor
-from sklearn.datasets import make_regression
-from sklearn.model_selection import train_test_split
-X, y = make_regression(n_samples=200, n_features=20, random_state=1)
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-random_state=1)
-regr = MLPRegressor(random_state=1, max_iter=2000, tol=0.1)
-regr.fit(X_train, y_train)
-regr.predict(X_test[:2])
-regr.score(X_test, y_test)
-\end{lstlisting}
-
-
-
-
-## Ejemplo de Código: Perceptrón Multicapa - Clasificación
-
-\begin{lstlisting}[language=Python, style=mystyle]
-
-from sklearn.neural_network import MLPClassifier
-X = [[0., 0.], [1., 1.]]
-y = [0, 1]
-clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
-hidden_layer_sizes=(5, 2), random_state=1)
-clf.fit(X, y)
-
-\end{lstlisting}
-
-
-
-
-
-## Ejemplo de Código: Perceptrón Multicapa - Clasificación en Keras
-
-\begin{lstlisting}[language=Python, style=mystyle]
+```python
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-import numpy as np
-X = np.array([[0., 0.], [1., 1.]])
-y = np.array([0, 1])
-model = Sequential([
-Dense(5, activation='relu', input_shape=(2,)),
-Dense(2, activation='relu'),
-Dense(1, activation='sigmoid')  # Para clasificación binaria
+
+(X_full, y_full), (X_test, y_test) = tf.keras.datasets.fashion_mnist.load_data()
+X_valid, X_train = X_full[:5000] / 255.0, X_full[5000:] / 255.0
+y_valid, y_train = y_full[:5000], y_full[5000:]
+X_test = X_test / 255.0
+```
+
+El aplanamiento ocurre **dentro del modelo**, no al cargar los datos [@geron2022hands; @tensorflowFashionTutorial].
+
+## Sequential expresa un flujo simple
+
+```python
+model = tf.keras.Sequential([
+    tf.keras.layers.Input(shape=(28, 28)),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(64, activation="relu"),
+    tf.keras.layers.Dense(10, activation="softmax"),
 ])
-model.compile(optimizer='lbfgs', loss='binary_crossentropy', metrics=['accuracy'])
-model.fit(X, y, epochs=100, verbose=0)
-\end{lstlisting}
+```
 
+Diez salidas representan diez clases. Este MLP breve es una **adaptación didáctica** del ejemplo de Fashion MNIST [@geron2022hands].
 
+## La pérdida debe corresponder a la tarea
 
+```python
+model.compile(optimizer="sgd",
+              loss="sparse_categorical_crossentropy",
+              metrics=["accuracy"])
+history = model.fit(X_train, y_train, epochs=20,
+                    validation_data=(X_valid, y_valid))
+```
 
-\nocite{*}
+`softmax` produce diez probabilidades; la pérdida *sparse* acepta etiquetas enteras. `history` guarda métricas por época [@geron2022hands; @kerasTraining].
 
-## References
+## Las curvas detectan sobreajuste
 
-\AtNextBibliography{}
-\printbibliography
+![](figures/learning_curves_schematic.png){height="370px" fig-align="center"}
 
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+Esquema didáctico, **no** resultado de entrenar Fashion MNIST. Basado en la lectura de curvas de [@geron2022hands].
+:::
 
+**Pregunta:** si validación deja de mejorar, ¿qué época conservarías?
 
+## Evaluar y predecir cierran el ciclo
 
+```python
+test_loss, test_accuracy = model.evaluate(X_test, y_test)
+probabilidades = model.predict(X_test[:1])
+clase = probabilidades.argmax(axis=1)[0]
+```
+
+`evaluate` estima el desempeño final en prueba; `predict` devuelve probabilidades para nuevas imágenes. Aquí no suponemos un resultado numérico sin entrenar el modelo [@geron2022hands; @kerasTraining].
+
+<!-- Acto 5: 93–116 minutos; cierre: 116–120 minutos -->
+
+# Acto 5: ¿Qué falta para usarla bien?
+
+## La salida depende de la pregunta
+
+:::: {.columns style="align-items: center;"}
+
+::: {.column width="43%"}
+![](assets/mls3_1009.png){height="330px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+ReLU y softmax para tres clases; Fashion usa diez. Géron, fig. 10-9 [@geron2022hands].
+:::
+:::
+
+::: {.column width="57%"}
+::: {.smaller-text}
+| Tarea | Salida | Pérdida |
+|:--|:--|:--|
+| Regresión | Valor continuo | Cuadrática |
+| Binaria | Sigmoide | Entropía binaria |
+| Multiclase | Softmax | Entropía categórica |
+| Multietiqueta | Una sigmoide por clase | Entropía binaria |
+:::
+
+Fashion usa etiquetas enteras y la pérdida **sparse** [@geron2022hands].
+:::
+
+::::
+
+## Functional conecta varias entradas
+
+`Sequential` basta para una cadena. Como en el ejemplo *Wide & Deep* del libro, la API funcional conecta ramas. Aquí añadimos **metadatos hipotéticos** a los píxeles [@geron2022hands; @kerasFunctional].
+
+```python
+imagen = tf.keras.Input(shape=(28, 28))
+datos = tf.keras.Input(shape=(3,))
+pixeles = tf.keras.layers.Flatten()(imagen)
+juntos = tf.keras.layers.Concatenate()([pixeles, datos])
+salida = tf.keras.layers.Dense(10, activation="softmax")(juntos)
+modelo = tf.keras.Model([imagen, datos], salida)
+```
+
+## Subclasificar permite lógica dinámica
+
+La API de subclases define capas en `__init__` y el cálculo en `call` [@geron2022hands; @kerasFunctional].
+
+| API | Conviene cuando… |
+|:--|:--|
+| `Sequential` | Hay una cadena de capas |
+| Funcional | Hay ramas o varias entradas/salidas |
+| Subclases | El cálculo requiere condiciones o bucles |
+
+**Costo:** el flujo dinámico es menos fácil de inspeccionar y serializar.
+
+## Guardar y observar evita perder señales
+
+- `model.save("modelo.keras")` conserva un modelo para recuperarlo.
+- `ModelCheckpoint` guarda la mejor versión según validación.
+- `EarlyStopping` detiene épocas sin mejora.
+- `TensorBoard` permite examinar curvas y experimentos.
+
+Son herramientas para **seguir el entrenamiento**; ninguna reemplaza un conjunto de prueba reservado [@geron2022hands; @kerasTraining].
+
+## Regularizar cambia la frontera
+
+![](figures/alpha_moons.png){height="390px" fig-align="center"}
+
+::: {style="text-align: center; font-size: 0.65em; margin-top: 8px;"}
+En `MLPClassifier`, solo cambia $\alpha$, la penalización L2. Exactitud sobre validación; figura adaptada de [@scikitMLPAlpha].
+:::
+
+**Pregunta:** ¿qué extremo parece subajustar? ¿Cuál elegirías con estos datos?
+
+## Ajustar exige comparar en validación
+
+El capítulo propone considerar **tasa de aprendizaje**, tamaño de lote, unidades, capas y activación; `EarlyStopping` puede limitar el sobreajuste [@geron2022hands].
+
+`KerasTuner` compara configuraciones con búsqueda aleatoria, Hyperband o búsqueda bayesiana. Elegimos con **validación** y usamos **prueba** al final [@kerasTuner].
+
+El $\alpha$ anterior pertenece a scikit-learn: en Keras, L2 se especifica con `kernel_regularizer` [@kerasRegularizers].
+
+## Tres respuestas para salir
+
+1. ¿Qué números recibe el MLP cuando ve una imagen de Fashion MNIST?
+2. ¿Qué obtiene backpropagation **antes** de actualizar los pesos?
+3. ¿Qué evidencias usarías para elegir modelo y regularización?
+
+**Cierre:** una red aprende representaciones al ajustar pesos, pero su utilidad se decide con datos no vistos [@geron2022hands].
+
+## Referencias {.smaller .scrollable}
+
+::: {#refs}
+:::

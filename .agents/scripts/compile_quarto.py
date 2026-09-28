@@ -6,7 +6,7 @@ def find_quarto():
     """Locate the Quarto binary on the system."""
     # Check if quarto is in PATH
     try:
-        result = subprocess.run(["quarto", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        result = subprocess.run(["quarto", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=(os.name == "nt"))
         if result.returncode == 0:
             return "quarto"
     except Exception:
@@ -41,11 +41,11 @@ def compile_file(file_path, quarto_bin):
     
     try:
         # Run quarto render inside the directory of the qmd file so relative paths resolve correctly
-        # Use shell=True to support .cmd wrappers and PATH resolution on Windows
+        # Windows .cmd wrappers need a shell; on POSIX a shell drops list arguments.
         result = subprocess.run(
             [quarto_bin, "render", file_name],
             cwd=file_dir,
-            shell=True
+            shell=(os.name == "nt")
         )
         if result.returncode == 0:
             print("-> Successfully compiled.")
