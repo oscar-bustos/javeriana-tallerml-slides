@@ -10,110 +10,112 @@ format:
     logo: logo_RGB.png
     slide-number: true
     show-slide-number: all
-    transition: slide
+    transition: none
+    incremental: false
     chalkboard: false
     width: 1050
     height: 700
     margin: 0.05
-    syntax-highlighting: none
+    syntax-highlighting: github
+    # Paleta local: evita CSS con espacios finales generado por Pandoc.
+    variables:
+      highlighting-css: ""
+    code-line-numbers: false
+    code-copy: false
+    html-math-method: mathml
     include-in-header:
       text: |
         <style>
         .reveal .slides section { box-sizing: border-box; }
-        .reveal pre { font-size: 0.7em; }
+        .reveal pre { font-size: 0.72em; line-height: 1.4; }
+        .reveal pre code { font-size: 1em; max-height: none; }
+        .reveal pre code .kw,
+        .reveal pre code .cf,
+        .reveal pre code .im { color: #003576; font-weight: bold; }
+        .reveal pre code .st { color: #116329; }
+        .reveal pre code .dv,
+        .reveal pre code .fl,
+        .reveal pre code .cn { color: #953800; }
+        .reveal div.sourceCode { border: 0; box-shadow: none; }
+        .reveal .slides section .fragment { transition: none !important; }
+        .reveal .slides section img, .reveal img:hover {
+          transform: none !important; transition: none !important;
+          box-shadow: none !important; border-radius: 0 !important;
+        }
+        .reveal .cnn-source { font-size: 0.6em; color: #475569; }
+        .reveal th code { color: inherit; }
         .reveal .cnn-dimensions table { font-size: 1em; }
+        .reveal math { font-family: "STIX Two Math", "Cambria Math", math; }
+        .reveal math[display="block"] { margin: 0.6em 0; }
         </style>
 bibliography: references.bib
-# Sesión de 150 minutos: apertura 0–8; imágenes 8–38; MLP 38–53;
-# convolución 53–98; CNN 98–128; panorama 128–143; cierre 143–150.
-# 40 diapositivas de contenido, más portada y siete separadores.
+# Una sola sesión: el bloque de imágenes pendiente se explica desde cero.
+# Recorrido continuo: imágenes, MLP, filtros, pooling, CNN y aplicaciones.
+# Dos respuestas de cálculo usan fragmentos, sin transición visual.
 ---
 
-# Introducción
-
-## Tarea: lecturas y exploración
-
-1. **Obligatoria:** capítulo 14 de *Hands-On Machine Learning*, tercera edición [@geron2022hands].
-2. **Preparación:** bloque de Fashion MNIST del capítulo 10.
-3. **Complementaria:** [notebook oficial del capítulo 14](https://github.com/ageron/handson-ml3/blob/main/14_deep_computer_vision_with_cnns.ipynb){target="_blank"} [@geronNotebookCNN].
-
-**En clase:** ejemplos breves y un simulador; no hace falta instalar TensorFlow.
-
-::: {.notes}
-Recuperamos el bloque de imágenes pendiente de la clase introductoria. La lectura comprende el capítulo completo; profundizamos en fundamentos y dejamos los temas avanzados como panorama. El código se explica, no se entrena en clase. Para dos horas, abreviar el panorama; para tres, ampliar predicciones y discusión MLP–CNN.
-:::
-
-## Tarea: NotebookLM
-
-Abrir el [cuaderno de CNN](https://notebook.google.com/notebook/6888ff42-3d12-4f85-ac8b-298673d93cdc){target="_blank"} [@notebookLMCNN].
-
-- Pedir una explicación de filtros, padding o pooling.
-- Contrastar la respuesta con el capítulo 14.
-- Traer una duda o una discrepancia concreta.
-
-::: {.notes}
-Ejemplo: «¿padding same conserva siempre el tamaño? ¿Qué cambia con stride 2? Señala la fuente». Respuesta esperada: conserva el tamaño con stride 1. Error frecuente: confiar en una respuesta sin verificar la lectura. El acceso al cuaderno depende de sus permisos.
-:::
-
-## Reconocer exige una representación
-
-Una persona distingue una camiseta de un botín. **¿Qué recibe realmente una red?**
-
-::: {.fragment}
-Recibe números. Debe aprender patrones que permitan relacionarlos con una etiqueta.
-:::
-
-**Pregunta de la sesión:** ¿qué estructura de la imagen conviene aprovechar? [@geron2022hands]
-
-::: {.notes}
-Dar un minuto antes de revelar. Respuestas esperadas: intensidades, contornos y relaciones entre píxeles. Separar entrada de representación aprendida. Error frecuente: creer que la imagen contiene el nombre del objeto como entrada del clasificador.
-:::
-
-# Acto 1: ¿Cómo entra una imagen?
+# Acto 1: Imágenes y un primer MLP
 
 ## Una imagen es una matriz de datos
 
-![](../redes_neuronales/figures/fashion_pixels.png){height="350px" fig-align="center" alt="Botín de Fashion MNIST y detalle de sus intensidades de píxel"}
+![](../redes_neuronales/figures/fashion_pixels.png){height="350px" fig-align="center" alt="Botín de Fashion MNIST y ampliación de los valores de sus píxeles"}
 
-::: {style="text-align: center; font-size: 0.65em;"}
-Fashion MNIST: primera imagen de entrenamiento, etiqueta 9. Zalando Research, licencia MIT [@fashionMNIST].
+::: {.cnn-source style="text-align: center;"}
+Fashion MNIST: primera imagen de entrenamiento, etiqueta 9. Zalando Research, MIT [@fashionMNIST].
 :::
 
-**Antes de seguir:** ¿qué representa cada número de la matriz?
+Cada posición contiene una **intensidad**. La red recibe esos números.
 
 ::: {.notes}
-Respuesta esperada: intensidad en escala de grises, de 0 a 255. No es una coordenada ni una probabilidad. La figura reutiliza la muestra reproducible y versionada de redes neuronales. Señalar la correspondencia entre posición en la matriz y en la imagen.
+Este bloque recupera el contenido de imágenes que quedó pendiente en redes_neuronales. No se asume familiaridad con Fashion MNIST, Flatten, normalización ni el entrenamiento de un clasificador de imágenes. Señalar un píxel y su posición antes de introducir el arreglo completo.
+:::
+
+## Un píxel registra una intensidad
+
+Una imagen pequeña en escala de grises puede ser:
+
+$$X=\begin{bmatrix}0&128&255\\255&128&0\end{bmatrix}$$
+
+- **Fila y columna** indican dónde está el píxel.
+- **0** representa negro y **255** blanco, en esta escala de 8 bits.
+- Los valores intermedios representan tonos de gris.
+
+`X[0, 2] = 255` identifica el píxel superior derecho.
+
+::: {.notes}
+Ejemplo propio de dos filas y tres columnas. Los índices de Python comienzan en cero. Distinguir ubicación, intensidad y etiqueta: ninguno de estos seis números es la clase de la imagen. Fashion MNIST usa esta escala de intensidades. Hay otros formatos y profundidades de color.
+:::
+
+## Los canales describen cada píxel
+
+| Imagen | Forma por imagen | Valores en un píxel |
+|:--|:--|:--|
+| Escala de grises | Alto × ancho × 1 | Una intensidad |
+| RGB | Alto × ancho × 3 | Rojo, verde y azul |
+
+En RGB de 8 bits: **(255, 0, 0)** representa rojo.
+
+Fashion MNIST contiene **28 × 28 × 1** valores por imagen. Al cargarlo, el eje de longitud 1 viene omitido [@tensorflowFashionTutorial].
+
+::: {.notes}
+Canal no significa clase ni número de imágenes. Una imagen RGB de 28 × 28 tiene 2352 valores, no 784. Añadir un eje a una imagen gris no crea tres colores. Más adelante, los canales de salida serán mapas aprendidos, no colores.
 :::
 
 ## La etiqueta vive en otro arreglo
 
-Fashion MNIST contiene imágenes de **28 × 28**, en escala de grises, y **10 clases** [@fashionMNIST].
+| Entrada: `X[i]` | Objetivo: `y[i]` |
+|:--|:--|
+| Matriz de 28 × 28 intensidades | Un entero entre 0 y 9 |
+| Un canal, escala de grises | Una de diez clases de prendas |
+| 784 valores por imagen | La clase 9 significa «botín» |
 
-**Pregunta:** ¿la palabra «botín» aparece entre los 784 píxeles?
-
-::: {.fragment}
-`X[i]` contiene la imagen; `y[i]` contiene la etiqueta entera. La clase **9** corresponde a «botín».
-:::
+La red aprende a relacionar **píxeles con clases** [@fashionMNIST].
 
 ::: {.notes}
 Respuesta: no; X e y están alineados por índice, pero separados. Los valores 0–9 de y son categorías, no intensidades ni un orden entre prendas. Error frecuente: incluir la etiqueta entre los píxeles o normalizarla junto con X.
 :::
 
-## Normalizar cambia la escala
-
-**Pregunta:** ¿qué ocurre con un píxel de valor 255 al dividirlo por 255?
-
-$$0/255=0,\qquad 128/255\approx0.502,\qquad 255/255=1$$
-
-::: {.fragment}
-Las intensidades quedan entre **0 y 1**. Las posiciones y las etiquetas se conservan [@tensorflowFashionTutorial].
-:::
-
-::: {.notes}
-Pedir extremos y valor intermedio. Error frecuente: confundir normalización con un umbral de blanco y negro. Esta escala sirve para Fashion MNIST; un modelo preentrenado puede requerir otro preprocesamiento.
-:::
-
-## Validación decide; prueba evalúa
+## Cada partición cumple una función
 
 | Partición del ejemplo | Imágenes | Uso |
 |:--|--:|:--|
@@ -131,129 +133,249 @@ Respuesta: validación. El conjunto distribuye 60 000 imágenes para entrenamien
 
 ```python
 import tensorflow as tf
-datos = tf.keras.datasets.fashion_mnist.load_data()
-(X_full, y_full), (X_test, y_test) = datos
-X_full = X_full.astype("float32") / 255.0
-X_test = X_test.astype("float32") / 255.0
+from tensorflow.keras import layers as L
+
+(X_full, y_full), (X_test, y_test) = (
+    tf.keras.datasets.fashion_mnist.load_data()
+)
 X_valid, X_train = X_full[:5000], X_full[5000:]
 y_valid, y_train = y_full[:5000], y_full[5000:]
 ```
 
-**Pregunta:** ¿qué forma tiene `X_train`? [@geron2022hands; @tensorflowFashionTutorial]
+`X_train.shape` es **(55000, 28, 28)**. Cada imagen tiene su etiqueta en `y_train`.
+
+::: {.cnn-source}
+Datos y carga: [@fashionMNIST; @tensorflowFashionTutorial].
+:::
 
 ::: {.notes}
-Respuesta: (55000, 28, 28); y_train tiene forma (55000,). Todavía no aplanamos ni añadimos canales. La carga descarga datos si no están en caché; el bloque es explicativo. Error frecuente: interpretar el número de imágenes como dimensión espacial.
+Se reservan 5000 imágenes de las 60000 del conjunto de entrenamiento original. Las 10000 de prueba permanecen separadas. Mostrar que X e y se cortan por los mismos índices. Los bloques de código de esta sección se leen y ejecutan en orden si se reproducen fuera de clase. L es solo un alias de tf.keras.layers. La carga requiere red si los datos no están en caché.
+:::
+
+## El primer eje enumera las imágenes
+
+| Arreglo | Forma | Qué selecciona el primer índice |
+|:--|:--|:--|
+| `X_train` | (55000, 28, 28) | Una imagen |
+| `y_train` | (55000,) | Su etiqueta |
+| Un lote gris para CNN | (32, 28, 28, 1) | Una de 32 imágenes |
+
+La CNN usa **(lote, alto, ancho, canales)** [@kerasConv2D].
+
+`Input(shape=(28, 28, 1))` describe **una imagen**, sin el eje de lote.
+
+::: {.notes}
+Presentar después de la carga y antes del código de modelos. N es el número de ejemplos, no una dimensión espacial. Tensor es aquí un arreglo con varios ejes. El conjunto completo y un minilote tienen el mismo tipo de ejes pero distinto tamaño en el primero. El tamaño del lote no determina los parámetros de las capas.
+:::
+
+## Normalizar cambia la escala
+
+```python
+X_train = X_train.astype("float32") / 255.0
+X_valid = X_valid.astype("float32") / 255.0
+X_test = X_test.astype("float32") / 255.0
+```
+
+$$0\mapsto0,\qquad128\mapsto0.502,\qquad255\mapsto1$$
+
+Las intensidades quedan entre **0 y 1**. Conservamos posiciones y etiquetas [@tensorflowFashionTutorial].
+
+::: {.notes}
+Pedir extremos y valor intermedio. Error frecuente: confundir normalización con un umbral de blanco y negro. Esta escala sirve para Fashion MNIST; un modelo preentrenado puede requerir otro preprocesamiento.
+:::
+
+## Aplanar conserva los valores
+
+$$\begin{bmatrix}a&b\\c&d\end{bmatrix}\quad\longmapsto\quad[a,b,c,d]$$
+
+`Flatten` conserva los valores y su orden.
+
+Una capa densa conecta **todos los píxeles** con cada unidad. Aprende las relaciones espaciales sin imponer vecindarios [@geron2022hands].
+
+::: {.notes}
+Respuesta: no se pierde información numérica; con la forma original se reconstruye la matriz. a y c son vecinos verticales aunque no sean consecutivos en el vector. La limitación es el sesgo arquitectónico. Error frecuente: decir que Flatten destruye la información o que un MLP no puede clasificar imágenes.
+:::
+
+## El mismo MLP tiene dos interfaces
+
+::: {.cnn-dimensions style="font-size: 0.7em;"}
+| Decisión | scikit-learn | Keras |
+|:--|:--|:--|
+| Entrada | `reshape(-1, 784)` | `Flatten()` dentro del modelo |
+| Capa oculta | `hidden_layer_sizes=(64,)` | `Dense(64, activation="relu")` |
+| Diez clases | Softmax implícita | `Dense(10, activation="softmax")` |
+| Entrenamiento | `fit(X_2d, y_train)` | `compile(...)` y `fit(...)` |
+| Validación | Evaluar el conjunto reservado | `validation_data=(X_valid, y_valid)` |
+:::
+
+Ambos usan backpropagation. Aquí continuamos con **Keras** [@scikitMLPGuide; @kerasTraining].
+
+::: {.notes}
+Contenido recuperado del bloque de imágenes de redes_neuronales. En scikit-learn, el estimador es MLPClassifier; X_train.reshape(-1, 784) deja una fila por imagen. Para comparar bibliotecas habría que alinear optimizador, regularización y demás hiperparámetros. Igual número de unidades no implica igual entrenamiento ni resultados. No se pide entrenar un segundo MLP en scikit-learn durante esta clase.
 :::
 
 ## El MLP recibe 784 valores por imagen
 
 ```python
 mlp = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(28, 28)),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(64, activation="relu"),
-    tf.keras.layers.Dense(10, activation="softmax"),
+    L.Input(shape=(28, 28)),
+    L.Flatten(),
+    L.Dense(64, activation="relu"),
+    L.Dense(10, activation="softmax"),
 ])
 ```
 
-**Pregunta:** ¿por qué la última capa tiene diez unidades? [@geron2022hands]
+**Modelo de referencia:** 784 entradas, una capa oculta y diez probabilidades de salida [@geron2022hands].
 
 ::: {.notes}
 Respuesta: una por clase; softmax produce diez probabilidades que suman 1. Flatten no tiene parámetros. Es la adaptación breve del capítulo 10 usada en la clase introductoria. Error frecuente: usar 784 salidas porque hay 784 píxeles, aunque clasificamos la imagen completa.
 :::
 
+## El bias desplaza la suma ponderada
+
+Cada neurona densa aprende pesos $w_i$ y un **sesgo o bias** $b$:
+
+$$z=\sum_i w_i x_i+b,\qquad a=\max(0,z)$$
+
+Si la suma ponderada vale **3**:
+
+| Bias | $z$ | Salida ReLU |
+|--:|--:|--:|
+| 0 | 3 | 3 |
+| −4 | −1 | 0 |
+
+El bias cambia el punto de activación y **se aprende** [@geron2022hands].
+
+::: {.notes}
+El sesgo es un parámetro aditivo, no un píxel añadido al arreglo. Dense(64) tiene 64 sesgos, uno por unidad. Se ajustan con gradientes igual que los pesos. Un sesgo permite cambiar el umbral sin depender de que la suma de entradas sea distinta de cero. Más adelante contrastar con el sesgo compartido por filtro en Conv2D.
+:::
+
+## Softmax asigna probabilidades
+
+El MLP produce **diez números no negativos que suman 1**.
+
+| Clases | Probabilidad ilustrativa |
+|:--|--:|
+| Botín, clase 9 | 0.70 |
+| Zapatilla, clase 7 | 0.20 |
+| Las otras ocho, en conjunto | 0.10 |
+
+`argmax` elegiría **9**. Una probabilidad alta no garantiza acierto [@geron2022hands].
+
+::: {.notes}
+Ejemplo numérico inventado para explicar la salida, no una predicción medida. Softmax transforma diez logits en probabilidades relativas. La etiqueta real sigue siendo un entero separado. En Fashion MNIST la clase 7 corresponde a sneaker, traducida como zapatilla. El modelo no devuelve el nombre de la clase directamente.
+:::
+
 ## La pérdida conecta salida y etiqueta
 
 ```python
-mlp.compile(optimizer="adam",
-            loss="sparse_categorical_crossentropy",
-            metrics=["accuracy"])
-history_mlp = mlp.fit(X_train, y_train, epochs=20,
-                      validation_data=(X_valid, y_valid))
+mlp.compile(
+    optimizer="adam",
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"],
+)
 ```
 
-**Pregunta:** ¿qué aporta validación si no ajusta los pesos? [@kerasTraining]
+**Sparse** acepta etiquetas enteras. La pérdida penaliza una probabilidad baja para la clase correcta [@kerasTraining].
+
+Accuracy cuenta aciertos. **La pérdida guía los gradientes.**
 
 ::: {.notes}
-Respuesta: observar generalización y seleccionar configuración o época. sparse acepta etiquetas enteras, sin one-hot. Adam usa los gradientes de backpropagation. Veinte épocas son un presupuesto ilustrativo. Si entrenamiento mejora y validación empeora, discutir sobreajuste; no asumir que toda bajada de accuracy es suficiente para diagnosticarlo.
+Esta primera compilación se presenta después de construir el MLP, sin asumir que el alumno ya vio Keras con imágenes. La salida es softmax, por eso la pérdida recibe probabilidades. Para un ejemplo con clase correcta 9, la pérdida es -log(p9). Adam actualiza los pesos y sesgos usando los gradientes. La exactitud no es la función que se deriva para entrenar.
 :::
 
-## Predecir devuelve diez probabilidades
+## Entrenar recorre imágenes por lotes
 
 ```python
-loss_mlp, acc_mlp = mlp.evaluate(X_test, y_test)
-probabilidades = mlp.predict(X_test[:1])
+history_mlp = mlp.fit(
+    X_train, y_train, epochs=20, batch_size=32,
+    validation_data=(X_valid, y_valid),
+)
+```
+
+- Un **lote** aporta ejemplos para una actualización de parámetros.
+- Una **época** recorre el conjunto de entrenamiento.
+- Validación mide desempeño sin actualizar los pesos [@kerasTraining].
+
+::: {.notes}
+En este ejemplo fit usa minibatches, con un lote final posiblemente menor que 32. Veinte épocas son un presupuesto ilustrativo. history_mlp.history guarda loss, accuracy, val_loss y val_accuracy por época. Mostrar que batch_size no cambia los ejes espaciales ni el número de clases. No entrenamos durante el render de Quarto.
+:::
+
+## Las curvas orientan la selección
+
+![](../redes_neuronales/figures/learning_curves_schematic.png){height="360px" fig-align="center" alt="Curvas esquemáticas de pérdida en entrenamiento y validación a lo largo de las épocas"}
+
+::: {.cnn-source style="text-align: center;"}
+Esquema didáctico, no resultado de entrenar Fashion MNIST. Lectura de curvas: [@geron2022hands].
+:::
+
+Si la pérdida de validación deja de mejorar, entrenar más puede aumentar el sobreajuste.
+
+::: {.notes}
+Figura recuperada de redes_neuronales y generada por su script versionado. Pedir señalar la región de mejor pérdida de validación. Para conservar esa época se deben guardar o restaurar sus pesos: History guarda métricas, no copias del modelo. EarlyStopping con restore_best_weights o un checkpoint pueden hacerlo. La última época no es necesariamente la mejor. Una oscilación aislada no basta para diagnosticar sobreajuste.
+:::
+
+## Argmax elige la clase predicha
+
+```python
+probabilidades = mlp.predict(X_valid[:1])
 clase = probabilidades.argmax(axis=1)[0]
 ```
 
-**Antes de revelar:** ¿`predict` devuelve directamente «botín»?
+`probabilidades.shape` es **(1, 10)**: una imagen y diez clases.
 
-::: {.fragment}
-Devuelve un arreglo de forma **(1, 10)**; `argmax` elige el índice de mayor probabilidad [@kerasTraining].
-:::
+`argmax` selecciona un índice. La clase **9** se interpreta como «botín» [@kerasTraining].
 
-::: {.notes}
-Respuesta: hay que convertir el índice a nombre de clase. No suponer que esta imagen se clasificará bien: no se entrenó aquí. evaluate cierra el ciclo después de elegir la configuración; al comparar MLP y CNN, aplazar ambas evaluaciones de test hasta terminar la selección con validación. Una probabilidad alta no garantiza acierto.
-:::
-
-# Acto 2: ¿Qué aporta la estructura?
-
-## Aplanar conserva los valores
-
-$$\begin{bmatrix}a&b\\c&d\end{bmatrix}\quad\longmapsto\quad[a,b,c,d]$$
-
-**Pregunta:** ¿se perdió algún número? ¿La capa densa conoce qué píxeles eran vecinos?
-
-::: {.fragment}
-`Flatten` conserva los valores y su orden. La capa densa debe aprender relaciones espaciales sin conexiones locales impuestas [@geron2022hands].
-:::
+Aquí usamos validación. **Prueba se reserva para el final.**
 
 ::: {.notes}
-Respuesta: no se pierde información numérica; con la forma original se reconstruye la matriz. a y c son vecinos verticales aunque no sean consecutivos en el vector. La limitación es el sesgo arquitectónico. Error frecuente: decir que Flatten destruye la información o que un MLP no puede clasificar imágenes.
+Recupera el cierre del bloque pendiente de imágenes. No se afirma que la primera imagen de validación se prediga correctamente. Explicar axis=1: buscar entre las diez columnas de cada imagen. evaluate devuelve métricas para un conjunto con etiquetas; predict devuelve salidas por imagen. Al terminar de seleccionar MLP y CNN mostraremos ambas evaluaciones de prueba.
+:::
+
+# Acto 2: ¿Por qué convoluciones?
+
+## Mover el botín no cambia su clase
+
+Ya podemos entrenar un MLP con los **784 píxeles** de cada imagen.
+
+Ahora imaginemos el mismo botín desplazado dos posiciones.
+
+- Su clase debería seguir siendo **botín**.
+- Sus intensidades ahora ocupan **otras coordenadas**.
+
+**¿Cómo reutilizar un detector de contornos en distintas posiciones?** [@geron2022hands]
+
+::: {.notes}
+Puente entre el bloque completo de imágenes con MLP y las CNN. Suponer que el desplazamiento no recorta el objeto. No se afirma que un MLP sea incapaz de reconocerlo: la cuestión es qué regularidad podemos incorporar en su arquitectura.
 :::
 
 ## Conectar todo hace crecer los pesos
 
-**Pregunta:** ¿cuántos parámetros tiene la primera capa `Dense(64)`?
+Una capa densa con **64 unidades** aprende un peso por entrada y un sesgo por unidad.
+
+¿Cuántos parámetros necesita con los 784 píxeles de Fashion MNIST?
 
 ::: {.fragment}
-Para Fashion MNIST: $(784+1)\times64=\mathbf{50\,240}$.
+$$(784+1)\times64=\mathbf{50\,240}$$
 
-Para RGB de 100 × 100: $(30\,000+1)\times64=\mathbf{1\,920\,064}$.
+Con RGB de 100 × 100 serían **1 920 064** [@geron2022hands].
 :::
-
-El **+1** cuenta un sesgo por unidad; falta el resto del modelo [@geron2022hands].
 
 ::: {.notes}
 Calcular entradas antes de revelar: RGB contiene 100 × 100 × 3 valores. Ambos ejemplos tienen 64 unidades; no se afirma igual capacidad o desempeño. Error frecuente: olvidar canales o sesgos. Se cuentan parámetros de una capa, no memoria total de entrenamiento.
 :::
 
-## Un borde puede cambiar de posición
+## Un detector sirve en varias posiciones
 
-Imaginemos el mismo botín desplazado dos píxeles.
+Una convolución incorpora dos decisiones de diseño:
 
-**Pregunta:** ¿deberíamos aprender de nuevo su contorno para cada posición?
+- **Conexión local:** cada cálculo observa un parche de la imagen.
+- **Pesos compartidos:** el mismo detector recorre distintas posiciones.
 
-::: {.fragment}
-Podemos aplicar **el mismo detector local** en distintas posiciones. Compartir pesos aprovecha esa regularidad [@geron2022hands].
-:::
+Así podemos buscar un contorno sin aprender un detector nuevo para cada lugar [@geron2022hands].
 
 ::: {.notes}
 Respuesta: reutilizar un detector. El MLP puede aprender regularidades, pero sus pesos para distintas posiciones no se comparten explícitamente. Error frecuente: concluir que toda la CNN es invariante a cualquier desplazamiento; las activaciones pueden desplazarse con la imagen.
-:::
-
-## Las capas amplían el campo receptivo
-
-![](figures/mls3_1402.png){height="330px" fig-align="center" alt="Dos capas convolucionales conectan regiones locales y amplían el campo receptivo"}
-
-::: {style="text-align: center; font-size: 0.65em;"}
-Géron, figura 14-2 [@geron2022hands].
-:::
-
-**Pregunta:** ¿cómo combina la segunda capa información de una región mayor?
-
-::: {.notes}
-Respuesta: reúne activaciones que ya reúnen píxeles vecinos. Dos convoluciones 3 × 3, stride 1 y sin dilatación, alcanzan un campo receptivo teórico 5 × 5. La corteza visual inspiró conexiones locales y jerarquías; una CNN no reproduce el cerebro. Error frecuente: pensar que cada unidad ve la imagen entera desde la primera capa.
 :::
 
 # Acto 3: ¿Qué calcula un filtro?
@@ -263,35 +385,60 @@ Respuesta: reúne activaciones que ya reúnen píxeles vecinos. Dos convolucione
 $$X_{\text{parche}}=\begin{bmatrix}0&0&1\\0&0&1\\0&0&1\end{bmatrix},\qquad
 K=\begin{bmatrix}-1&0&1\\-1&0&1\\-1&0&1\end{bmatrix}$$
 
-**Pregunta:** con sesgo cero, ¿cuánto vale $z=\sum_{u,v}X_{u,v}K_{u,v}$?
+**1. Multiplicar valores en la misma posición:**
 
-::: {.fragment}
-Solo contribuye la columna derecha: $z=1+1+1=\mathbf{3}$.
-:::
+$$P=X_{\text{parche}}\odot K=
+\begin{bmatrix}0&0&1\\0&0&1\\0&0&1\end{bmatrix}$$
 
-::: {.notes}
-Ejemplo propio, inspirado en el capítulo 14. Multiplicación elemento a elemento, no producto matricial. Un parche constante daría cero; invertir la transición produce un valor negativo. Conv2D y el simulador usan correlación cruzada, sin invertir el kernel; se suele llamar convolución en aprendizaje profundo. Omitimos sesgo y activación para aislar el cálculo.
-:::
+**2. Sumar los nueve productos:** $z=1+1+1=\mathbf{3}$.
 
-## Deslizar produce un mapa
-
-Aplicamos **el mismo kernel y sesgo** a cada parche de la imagen.
-
-**Pregunta:** con entrada de 5 × 5 y kernel de 3 × 3, ¿cuántas posiciones caben sin padding, con stride 1?
-
-::: {.fragment}
-Caben **3 × 3** posiciones. Cada suma ocupa una posición del **mapa de características** [@geron2022hands; @kerasConv2D].
-:::
+**Resultado con bias cero: una celda con valor 3.**
 
 ::: {.notes}
-Respuesta: tres posiciones por eje; 5 − 3 + 1 = 3. Cada parche produce un escalar, no una nueva imagen 3 × 3. Error frecuente: calcular 5/3 o aprender un kernel distinto en cada posición. El mapa antes de la activación puede tener valores negativos.
+Ejemplo propio, inspirado en el capítulo 14. Recorrer un producto concreto: arriba a la izquierda, 0 por -1 da 0; arriba a la derecha, 1 por 1 da 1. El símbolo de círculo con punto indica producto elemento a elemento, no producto matricial. P es una matriz intermedia de productos: sus nueve entradas se suman para obtener un escalar. Que P coincida aquí con el parche es una particularidad de estos números, no una propiedad general del filtro. Conv2D usa correlación cruzada, sin invertir el kernel. Omitimos bias y activación para aislar el cálculo. En la siguiente diapositiva ubicamos ese 3 en el mapa completo.
+:::
+
+## Deslizar produce una matriz de salida
+
+Mismo kernel, **stride 1**, sin padding y con **bias cero**:
+
+$$X=\begin{bmatrix}
+0&0&1&1&1\\
+0&0&1&1&1\\
+0&0&1&1&1\\
+0&0&1&1&1\\
+0&0&1&1&1
+\end{bmatrix}
+\quad\longmapsto\quad
+Z=\begin{bmatrix}\mathbf{3}&3&0\\3&3&0\\3&3&0\end{bmatrix}$$
+
+El **3 superior izquierdo** viene del parche de la diapositiva anterior.
+
+Al mover el filtro, repetimos los productos y la suma. **Nueve posiciones producen nueve valores** [@geron2022hands].
+
+::: {.notes}
+Ejemplo propio, continuación exacta del anterior. El primer parche son las primeras tres filas y columnas. Al mover una columna a la derecha, cada fila del parche es [0,1,1] y aporta 0 por -1 más 1 por 0 más 1 por 1, igual a 1: total 3. En la tercera posición, cada fila es [1,1,1] y aporta -1+0+1=0: total 0. Como todas las filas de X son iguales, se repite [3,3,0] en las tres filas de salida. Caben 5-3+1=3 posiciones por eje. Distinguir P, los productos de un solo parche, de Z, el mapa de sumas de todos los parches. Aquí ambas matrices tienen casualmente forma 3 por 3, pero cumplen funciones diferentes. No se aplica ReLU en este ejemplo.
+:::
+
+## Cada filtro comparte un bias
+
+El filtro aplica la misma operación en cada posición $(i,j)$:
+
+$$z_{i,j}=\sum_{u,v,c}X_{i+u,j+v,c}\,K_{u,v,c}+b$$
+
+Si el producto y suma del parche da **3**, un bias de **−4** produce $z=-1$.
+
+**Un bias por filtro**, compartido en todo su mapa. Una capa con 32 filtros aprende 32 sesgos [@kerasConv2D].
+
+::: {.notes}
+Fórmula para stride 1, un filtro y posiciones válidas, omitiendo padding para aislar el sesgo. En la suma c recorre canales. Los pesos dependen de la posición dentro del kernel; el bias es un solo escalar por filtro. No hay un sesgo por píxel de salida ni uno por canal de entrada. Por defecto use_bias=True. El bias no añade un borde de ceros ni modifica la forma del tensor. Retomar el mapa anterior: con bias -4, cada fila [3,3,0] pasa a [-1,-1,-4] antes de aplicar una activación.
 :::
 
 ## Cada filtro resalta un patrón
 
 ![](figures/mls3_1405.png){height="380px" fig-align="center" alt="Filtros vertical y horizontal producen mapas diferentes de una misma fotografía"}
 
-::: {style="text-align: center; font-size: 0.65em;"}
+::: {.cnn-source style="text-align: center;"}
 Géron, figura 14-5: filtros manuales ilustrativos [@geron2022hands].
 :::
 
@@ -301,63 +448,16 @@ Géron, figura 14-5: filtros manuales ilustrativos [@geron2022hands].
 Respuesta: pesos diferentes destacan distintas orientaciones. La figura usa filtros de líneas, no Sobel: estos suman intensidades orientadas; Sobel calcula diferencias. Error frecuente: llamar detector de bordes a cualquier filtro o interpretar el mapa como probabilidad final de clase.
 :::
 
-## Un filtro abarca todos los canales
-
-![](figures/mls3_1406.png){height="420px" fig-align="center" alt="Una imagen RGB entra a capas con varios filtros y un mapa de salida por filtro"}
-
-::: {style="text-align: center; font-size: 0.65em;"}
-Géron, figura 14-6 [@geron2022hands].
-:::
-
-**Pregunta:** un filtro 3 × 3 sobre RGB, ¿tiene 9 o 27 pesos?
-
-::: {.notes}
-Respuesta: 3 × 3 × 3 = 27, más un sesgo. Un filtro suma sobre todos los canales y produce un mapa, no tres. Fashion tiene un canal. En capas siguientes, los canales son mapas aprendidos, no colores. filters determina los mapas de salida; el canal no es dimensión espacial.
-:::
-
-## Padding permite incluir los bordes
-
-![](figures/mls3_1403.png){height="305px" fig-align="center" alt="Ceros alrededor de la imagen permiten llevar un campo receptivo de 3 por 3 hasta los bordes"}
-
-::: {style="text-align: center; font-size: 0.65em;"}
-Géron, figura 14-3 [@geron2022hands].
-:::
-
-**Pregunta:** para 28 × 28, kernel 3 y stride 1, ¿qué cambia entre `valid` y `same`?
-
-::: {.notes}
-Respuesta: valid no añade padding y produce 26 × 26; same añade un píxel de ceros a cada lado y produce 28 × 28 con stride 1. Los ceros no son observaciones ni pesos. Error frecuente: confundir valid con validación o creer que same conserva siempre dimensiones.
-:::
-
-## Stride controla el paso del filtro
-
-![](figures/mls3_1404.png){height="280px" fig-align="center" alt="Stride dos separa las posiciones de los campos receptivos y reduce la salida"}
-
-::: {style="text-align: center; font-size: 0.65em;"}
-Géron, figura 14-4 [@geron2022hands].
-:::
-
-Para entrada **28 × 28** y kernel **3 × 3**:
-
-| Padding | Stride 1 | Stride 2 |
-|:--|:--|:--|
-| `valid` | 26 × 26 | 13 × 13 |
-| `same` | 28 × 28 | 14 × 14 |
-
-::: {.notes}
-Pedir la columna de stride 2 antes de explicar sus cifras. Por eje y sin dilatación: valid = floor((n − k)/s) + 1; same = ceil(n/s). Keras puede usar padding asimétrico. Error frecuente: asumir un borde fijo de un píxel con cualquier stride o que el submuestreo conserva todas las posiciones. Ver kerasConv2D.
-:::
-
 ## Simulador: predice y contrasta
 
 [Abrir el simulador de convolución](https://oscar-bustos.github.io/javeriana-tallerml/redes_neuronales/convolucion.html){target="_blank"} [@bustosConvolucion].
 
-1. Usa **la misma imagen** durante toda la comparación.
-2. Predice el resultado de **Identidad** y **Box Blur**; aplícalos.
-3. Anticipa qué bordes resaltarán **Sobel X** y **Sobel Y**.
-4. Cambia un peso del kernel y explica el efecto observado.
+1. Mantén **la misma imagen** en todas las pruebas.
+2. Predice y aplica **Identidad** y **Box Blur**.
+3. Compara los bordes con **Sobel X** y **Sobel Y**.
+4. Cambia un peso y explica el efecto.
 
-**Pregunta:** ¿qué filtros elegirías para reconocer una prenda?
+**Discusión:** ¿quién debería elegir los pesos para clasificar prendas?
 
 ::: {.notes}
 Reservar 8–10 minutos. Identidad copia el interior; Box Blur promedia 3 × 3; Sobel X resalta cambios izquierda–derecha, Sobel Y arriba–abajo. Si la imagen remota no carga, usar el selector para una imagen local disponible; mantenerla entre filtros. El simulador convierte a grises, pinta el borde negro, toma valor absoluto para detectores de bordes y recorta a 0–255. No representa todos los valores internos de una CNN ni ofrece controles de stride/padding. La actividad usa un enlace externo, sin iframe, y requiere conexión.
@@ -365,57 +465,332 @@ Reservar 8–10 minutos. Identidad copia el interior; Box Blur promedia 3 × 3; 
 
 ## La red aprende los pesos del filtro
 
-En el simulador escogemos los pesos; en una CNN, **backpropagation calcula sus gradientes** [@geron2022hands].
+En el simulador escogemos los pesos. La CNN aprende **kernel y bias** mediante backpropagation.
 
-**Pregunta:** ¿cuántos parámetros tiene `Conv2D(32, 3)` sobre una imagen de un canal?
+Después de sumar productos y bias, aplicamos **ReLU**:
 
-::: {.fragment}
-$(3\times3\times1+1)\times32=\mathbf{320}$, independientemente del alto y el ancho.
-:::
+$$a=\max(0,z),\qquad -1\mapsto0,\quad 3\mapsto3$$
 
-Después de cada suma y sesgo, **ReLU** aporta no linealidad.
+ReLU cambia los valores y aporta no linealidad. **Conserva la forma del mapa** [@geron2022hands].
 
 ::: {.notes}
-Respuesta: 288 pesos y 32 sesgos. Se acumulan gradientes desde distintas posiciones para cada peso compartido. Número y tamaño de filtros son hiperparámetros; sus pesos se aprenden. Los 320 parámetros y los 50 240 de Dense(64) producen salidas distintas: 28 × 28 × 32 con same frente a 64 valores. No prueban que toda CNN use menos memoria. ReLU = max(0,z), diferente del absoluto del simulador. Ver kerasConv2D.
+Conectar con el ejemplo anterior: suma 3, bias -4, z=-1 y salida ReLU cero. Aprendemos K y b, no parámetros de ReLU. La pérdida final propaga gradientes hasta estos parámetros y acumula contribuciones de las posiciones donde se reutilizan. El valor absoluto del simulador de bordes es distinto de ReLU.
+:::
+
+## Un filtro abarca todos los canales
+
+![](figures/mls3_1406.png){height="350px" fig-align="center" alt="Una imagen RGB entra a capas con varios filtros y un mapa de salida por filtro"}
+
+::: {.cnn-source style="text-align: center;"}
+Géron, figura 14-6 [@geron2022hands].
+:::
+
+Sobre RGB, un filtro **3 × 3 × 3** combina los tres canales y produce **un mapa**. Con 32 filtros obtenemos 32 mapas.
+
+::: {.notes}
+Respuesta: 3 × 3 × 3 = 27, más un sesgo. Un filtro suma sobre todos los canales y produce un mapa, no tres. Fashion tiene un canal. En capas siguientes, los canales son mapas aprendidos, no colores. filters determina los mapas de salida; el canal no es dimensión espacial.
+:::
+
+## Compartir pesos limita los parámetros
+
+Un filtro usa $k_h k_w C_{\text{in}}$ pesos y un sesgo.
+
+**Calcula:** 32 filtros de 3 × 3 sobre una imagen de un canal.
+
+::: {.fragment}
+$$(3\times3\times1+1)\times32=\mathbf{320}$$
+
+El alto y el ancho cambian el tamaño del mapa, **no el número de pesos** [@kerasConv2D].
+:::
+
+::: {.notes}
+288 pesos y 32 sesgos. Fórmula general, con groups=1: (kh × kw × Cin + 1) × Cout. Un filtro RGB tiene 27 pesos y un sesgo. No confundir pesos con activaciones: los mapas sí crecen con alto y ancho. La capa Dense(64) del comienzo y Conv2D(32,3) tienen salidas distintas, así que no se concluye igual capacidad ni menor memoria total.
+:::
+
+## Padding permite incluir los bordes
+
+![](figures/mls3_1403.png){height="305px" fig-align="center" alt="Ceros alrededor de la imagen permiten llevar un campo receptivo de 3 por 3 hasta los bordes"}
+
+::: {.cnn-source style="text-align: center;"}
+Géron, figura 14-3 [@geron2022hands].
+:::
+
+Entrada **28 × 28**, kernel 3 y stride 1: `valid` produce **26 × 26**. Con `same`, un borde de ceros permite conservar **28 × 28**.
+
+::: {.notes}
+Respuesta: valid no añade padding y produce 26 × 26; same añade un píxel de ceros a cada lado y produce 28 × 28 con stride 1. Los ceros no son observaciones ni pesos. Error frecuente: confundir valid con validación o creer que same conserva siempre dimensiones.
+:::
+
+## Los ceros amplían el área de cálculo
+
+Con padding de **un píxel por lado**, una entrada 3 × 3 queda rodeada de ceros:
+
+$$\begin{bmatrix}
+0&0&0&0&0\\
+0&1&2&3&0\\
+0&4&5&6&0\\
+0&7&8&9&0\\
+0&0&0&0&0
+\end{bmatrix}$$
+
+Un kernel 3 × 3 con stride 1 produce **3 × 3** salidas. Sin padding produciría **1 × 1** [@geron2022hands].
+
+::: {.notes}
+Ejemplo propio. Identificar los nueve valores originales y el borde añadido. Los ceros son un relleno fijo, no observaciones nuevas ni parámetros aprendidos. El padding evita que la salida se reduzca en este caso. No equivale al bias: padding cambia dónde calculamos y bias cambia el valor de cada suma.
+:::
+
+## Stride controla el paso del filtro
+
+![](figures/mls3_1404.png){height="300px" fig-align="center" alt="Stride dos separa las posiciones donde comienza cada campo receptivo"}
+
+::: {.cnn-source style="text-align: center;"}
+Géron, figura 14-4 [@geron2022hands].
+:::
+
+**Stride** es el paso entre ventanas: con 1 avanzamos una posición; con 2 avanzamos dos.
+
+Un paso mayor evalúa menos posiciones y suele reducir la resolución de salida.
+
+::: {.notes}
+El tamaño del kernel no cambia al cambiar stride. Stride 2 con kernel 3 todavía permite ventanas superpuestas. Stride se define en cada eje; aquí usamos el mismo valor horizontal y vertical. No equivale a insertar huecos dentro del kernel, operación que se conoce como dilatación y queda fuera de este ejemplo.
+:::
+
+## Stride cambia las posiciones visitadas
+
+Una fila tiene **7 posiciones**. Usamos una ventana de **3**, sin padding.
+
+| Stride | Inicios de ventana, contando desde 1 | Salidas por fila |
+|:--|:--|--:|
+| 1 | 1, 2, 3, 4, 5 | 5 |
+| 2 | 1, 3, 5 | 3 |
+
+Con stride 2 visitamos **[1,2,3]**, **[3,4,5]** y **[5,6,7]**.
+
+En una imagen **7 × 7**, las salidas serían **5 × 5** o **3 × 3** [@geron2022hands].
+
+::: {.notes}
+Ejemplo propio de posiciones, no de intensidades. Señalar que 3 y 5 participan en dos ventanas incluso con stride 2. No contar una ventana que sobresalga de la entrada. La misma cuenta se hace independientemente en alto y ancho.
+:::
+
+## La forma de salida se puede calcular
+
+Por eje, con padding simétrico y sin dilatación:
+
+$$n_{\text{salida}}=\left\lfloor\frac{n+2p-k}{s}\right\rfloor+1$$
+
+$n$: entrada; $k$: kernel; $p$: ceros por lado; $s$: stride.
+
+**Ejemplo:** $n=6$, $k=3$, $p=0$, $s=2$.
+
+$$n_{\text{salida}}=\left\lfloor\frac{6-3}{2}\right\rfloor+1=2$$
+
+El piso descarta una ventana que no cabe completa [@geron2022hands].
+
+::: {.notes}
+Calcular después de enumerar ventanas. En el ejemplo solo caben las que empiezan en las posiciones 1 y 3 si se cuenta desde 1. La que empezaría en 5 termina en 7 y no cabe. Para padding asimétrico se reemplaza 2p por la suma del padding de ambos lados. Aplicar por separado a alto y ancho. Canales de salida dependen del número de filtros, no de esta fórmula.
+:::
+
+## Same depende también del stride
+
+Entrada **28 × 28**, kernel **3 × 3**:
+
+| Padding | Stride 1 | Stride 2 |
+|:--|:--|:--|
+| `valid`: sin relleno | 26 × 26 | 13 × 13 |
+| `same`: relleno automático | 28 × 28 | 14 × 14 |
+
+Con `same`, cada eje de salida mide $\lceil n/s\rceil$.
+
+**Solo con stride 1** conserva el tamaño espacial de entrada [@kerasConv2D].
+
+::: {.notes}
+Keras elige cuánto padding añadir. Para entrada 28, kernel 3 y stride 2 basta un cero total por eje, de modo que el relleno puede ser asimétrico. No asumir siempre un cero a cada lado ni confundir valid con el conjunto de validación. Verificar los cuatro casos con la fórmula o enumerando inicios.
+:::
+
+# Acto 4: Capas y pooling
+
+## Las capas amplían el campo receptivo
+
+![](figures/mls3_1402.png){height="330px" fig-align="center" alt="Dos capas convolucionales conectan regiones locales y amplían el campo receptivo"}
+
+::: {.cnn-source style="text-align: center;"}
+Géron, figura 14-2 [@geron2022hands].
+:::
+
+Dos capas **3 × 3**, con stride 1, alcanzan una región **5 × 5** de la entrada. Cada capa combina patrones de la anterior.
+
+::: {.notes}
+Respuesta: reúne activaciones que ya reúnen píxeles vecinos. Dos convoluciones 3 × 3, stride 1 y sin dilatación, alcanzan un campo receptivo teórico 5 × 5. La corteza visual inspiró conexiones locales y jerarquías; una CNN no reproduce el cerebro. Error frecuente: pensar que cada unidad ve la imagen entera desde la primera capa.
 :::
 
 ## Pooling resume una región
 
 ![](figures/mls3_1409.png){height="300px" fig-align="center" alt="Max pooling conserva el máximo de cada región de 2 por 2 y reduce su tamaño espacial"}
 
-::: {style="text-align: center; font-size: 0.65em;"}
+::: {.cnn-source style="text-align: center;"}
 Géron, figura 14-9 [@geron2022hands; @kerasMaxPool].
 :::
 
-**Pregunta:** en $\begin{bmatrix}1&5\\3&2\end{bmatrix}$, ¿qué conserva max pooling? ¿Qué pierde?
+Max pooling conserva el **máximo de cada ventana** por canal. Reduce resolución, pierde detalle y **no aprende pesos**.
 
 ::: {.notes}
 Respuesta: conserva 5; pierde los demás valores y su distribución espacial exacta. MaxPool2D(2) usa stride 2 y valid por defecto: 28 × 28 pasa a 14 × 14, por canal. No tiene pesos. Error frecuente: decir que reduce canales o elimina pesos de una convolución ya creada. Sí puede reducir entradas de capas posteriores. Ver kerasMaxPool.
+:::
+
+## Max pooling conserva el máximo
+
+Ventanas **2 × 2**, stride **2**, sin padding, sobre un canal:
+
+$$\begin{bmatrix}
+1&5&2&0\\3&2&4&1\\0&1&7&2\\2&3&1&6
+\end{bmatrix}
+\quad\longmapsto\quad
+\begin{bmatrix}5&4\\3&7\end{bmatrix}$$
+
+La primera ventana contiene **1, 5, 3 y 2**: su máximo es **5**.
+
+La salida pasa de **4 × 4** a **2 × 2**, sin pesos ni bias [@kerasMaxPool].
+
+::: {.notes}
+Ejemplo propio. Señalar los cuatro cuadrantes, sin mezclar canales ni tomar un único máximo de toda la imagen. Los otros máximos son 4 arriba a la derecha, 3 abajo a la izquierda y 7 abajo a la derecha. Perdemos los demás valores y la posición exacta del máximo dentro de cada ventana. Aunque no haya parámetros, los gradientes pueden pasar hacia capas anteriores a través de los máximos seleccionados.
+:::
+
+## Max y average resumen distinto
+
+Sobre la misma ventana:
+
+$$\begin{bmatrix}1&5\\3&2\end{bmatrix}$$
+
+| Operación | Cálculo | Resultado |
+|:--|:--|--:|
+| Max pooling | $\max(1,5,3,2)$ | 5 |
+| Average pooling | $(1+5+3+2)/4$ | 2.75 |
+
+Max conserva la respuesta más alta. Average conserva el nivel medio [@kerasMaxPool; @kerasAveragePool].
+
+::: {.notes}
+Ambos son resúmenes fijos por canal y ninguno aprende pesos o sesgos. Elegirlos es una decisión arquitectónica que debe validarse. En este ejemplo no hay padding, por lo que el promedio es inequívocamente sobre cuatro valores. Max puede destacar una activación fuerte aunque las otras sean pequeñas; average refleja todas las activaciones de la ventana.
+:::
+
+## La ventana y el paso son independientes
+
+Sobre un mapa **4 × 4**, sin padding:
+
+| Pool size | Stride | Ventanas | Salida |
+|:--|:--|:--|:--|
+| 2 × 2 | 1 | Se superponen | 3 × 3 |
+| 2 × 2 | 2 | No se superponen | 2 × 2 |
+
+```python
+pool = L.MaxPool2D(pool_size=2, strides=2)
+```
+
+`MaxPool2D(2)` usa también stride 2 por defecto [@kerasMaxPool].
+
+::: {.notes}
+Pool size indica qué región resumimos; stride indica cuánto avanzamos. La variable pool solo ilustra la configuración, no modifica aún el modelo. Aplicar la fórmula anterior usando k=pool_size. El pooling habitual reduce resolución porque usa stride mayor que 1, no porque la operación máximo obligue a reducir a la mitad.
+:::
+
+## Pooling conserva los canales
+
+Aplicamos max pooling **por separado en cada mapa**.
+
+$$28\times28\times32\quad\longmapsto\quad14\times14\times32$$
+
+Para ventanas 2 × 2 y stride 2:
+
+- Alto y ancho se reducen a la mitad en este ejemplo.
+- Los **32 canales** y el tamaño del lote se conservan.
+- La capa añade **cero parámetros** [@kerasMaxPool].
+
+::: {.notes}
+Números correspondientes a la primera capa convolucional de la CNN que construiremos. 32 indica patrones distintos, no 32 imágenes. Una activación grande en un canal no compite con las de otro. La reducción a la mitad depende del tamaño, stride y padding concretos; no es una regla para cualquier configuración.
 :::
 
 ## Los desplazamientos aún importan
 
 ![](figures/mls3_1410.png){height="300px" fig-align="center" alt="Max pooling produce la misma salida para algunos desplazamientos y una distinta para otros"}
 
-::: {style="text-align: center; font-size: 0.65em;"}
+::: {.cnn-source style="text-align: center;"}
 Géron, figura 14-10 [@geron2022hands].
 :::
 
-**Pregunta:** ¿por qué A y B coinciden, pero C cambia?
+A y B conservan los máximos en las mismas ventanas. En C, el desplazamiento cambia su distribución.
 
-::: {.fragment}
 Pooling aporta **tolerancia limitada**; no garantiza invariancia a cualquier traslación.
-:::
 
 ::: {.notes}
 Respuesta: el máximo puede quedar en la misma ventana o pasar a otra. Con stride 1, convolución es equivariante a traslaciones en el interior: el mapa se desplaza con la entrada. Bordes y submuestreo pueden romper esa correspondencia; no implica invariancia de toda la CNN. En segmentación queremos que la localización siga a la imagen. GlobalAveragePooling2D resume cada mapa en un promedio, perdiendo detalle espacial.
 :::
 
-# Acto 4: ¿Cómo armamos la CNN?
+## Varias operaciones reducen resolución
+
+| Operación | Qué calcula | ¿Aprende parámetros? |
+|:--|:--|:--|
+| Conv2D, stride 2 | Suma ponderada y bias | Sí |
+| Max pooling, stride 2 | Máximo por ventana y canal | No |
+| Average pooling, stride 2 | Media por ventana y canal | No |
+
+Las tres pueden reducir resolución. **Solo la convolución aprende cómo combinar las entradas** [@geron2022hands].
+
+::: {.notes}
+Aquí Conv2D usa bias y grupos=1. Una convolución también puede cambiar canales mediante filters; el pooling local mantiene los canales. No toda CNN necesita pooling: puede usar convoluciones con stride para submuestrear. Todas pueden perder detalle, relevante en segmentación. No afirmar que iguales formas de salida impliquen iguales valores o capacidades.
+:::
+
+## El promedio global resume cada mapa
+
+Average pooling local resume ventanas. **Global average pooling** promedia cada mapa completo:
+
+$$7\times7\times64\quad\longmapsto\quad64$$
+
+```python
+gap = L.GlobalAveragePooling2D()
+```
+
+Puede sustituir a `Flatten` antes del clasificador: reduce entradas, pero descarta localización espacial [@geron2022hands].
+
+::: {.notes}
+Ampliación del concepto de pooling. La operación produce un promedio por canal y conserva el eje del lote: (N,7,7,64) pasa a (N,64). No tiene parámetros. Nuestra CNN didáctica mantiene Flatten para poder comparar con el MLP. Si se reemplazara por GAP, Dense(64) recibiría 64 valores, no 3136, y tendría muchos menos pesos. Es un cambio arquitectónico que debe validarse, no una mejora asegurada.
+:::
+
+## Cada decisión controla algo distinto
+
+::: {.cnn-dimensions style="font-size: 0.72em;"}
+| Concepto | Qué controla | ¿Se aprende? |
+|:--|:--|:--|
+| Pesos del kernel | Cómo se combinan entradas locales | Sí |
+| Bias | Desplazamiento de cada suma | Sí |
+| Kernel size | Tamaño de la ventana convolucional | No |
+| Filters | Cantidad de mapas de salida | No |
+| Stride y padding | Posiciones y tamaño espacial de salida | No |
+| Pool size | Región que se resume en pooling | No |
+:::
+
+El entrenamiento ajusta **parámetros**. Elegimos los **hiperparámetros** con validación [@geron2022hands].
+
+::: {.notes}
+Cierre de fundamentos antes de programar la CNN. También elegimos tipo de pooling y activación. No quiere decir que hiperparámetros nunca puedan buscarse automáticamente, sino que no los ajusta la backpropagation habitual de este modelo. Preguntar por qué cambiar bias no cambia el tamaño de salida y por qué cambiar stride no cambia los pesos del kernel.
+:::
+
+## Las capas combinan patrones locales
+
+![](figures/mls3_1412.png){width="900px" fig-align="center" alt="Una CNN alterna convoluciones y pooling antes de las capas densas de clasificación"}
+
+::: {.cnn-source style="text-align: center;"}
+Géron, figura 14-12 [@geron2022hands].
+:::
+
+Primero combinamos vecindarios. Al final, el clasificador usa los mapas aprendidos.
+
+**Ahora seguiremos una CNN completa sobre Fashion MNIST.**
+
+::: {.notes}
+Respuesta: mantener la organización espacial mientras se extraen características; después obtener un vector para Dense. La figura representa una familia, no nuestro modelo exacto ni una ejecución. Más profundidad no garantiza mejora. También puede usarse global average pooling como cabezal alternativo.
+:::
+
+# Acto 5: Construir y comparar la CNN
 
 ## La entrada necesita un eje de canal
-
-**Pregunta:** ¿cómo pasa Fashion MNIST de `(N, 28, 28)` a la entrada de `Conv2D`?
 
 ```python
 X_train_cnn = X_train[..., None]
@@ -423,49 +798,66 @@ X_valid_cnn = X_valid[..., None]
 X_test_cnn = X_test[..., None]
 ```
 
-La forma es **(lote, alto, ancho, canales)**: `(N, 28, 28, 1)` [@kerasConv2D].
+**(N, 28, 28)** pasa a **(N, 28, 28, 1)**.
+
+La CNN recibe **lote, alto, ancho y canales**. Añadir un eje no cambia las intensidades ni las etiquetas [@kerasConv2D].
 
 ::: {.notes}
 Respuesta: añadir un eje de longitud 1, sin convertir colores ni cambiar intensidades. No cambian las etiquetas. Error frecuente: añadirlo solo a entrenamiento o al principio. Conv2D describe dos dimensiones espaciales, aunque el tensor tenga cuatro ejes. Usamos channels_last, formato predeterminado de Keras.
 :::
 
-## Las capas combinan patrones locales
+## Conv2D configura el filtro
 
-![](figures/mls3_1412.png){width="900px" fig-align="center" alt="Una CNN alterna convoluciones y pooling antes de las capas densas de clasificación"}
+```python
+conv = L.Conv2D(
+    filters=32, kernel_size=3,
+    strides=1, padding="same",
+    use_bias=True, activation="relu",
+)
+```
 
-::: {style="text-align: center; font-size: 0.65em;"}
-Géron, figura 14-12 [@geron2022hands].
-:::
+Sobre **28 × 28 × 1**, produce **28 × 28 × 32**.
 
-**Pregunta:** ¿por qué aplanamos después de extraer patrones locales?
-
-::: {.fragment}
-Las convoluciones combinan vecindarios; las capas densas usan esas activaciones para clasificar.
-:::
+Aprende **288 pesos y 32 bias**. ReLU no añade parámetros [@kerasConv2D].
 
 ::: {.notes}
-Respuesta: mantener la organización espacial mientras se extraen características; después obtener un vector para Dense. La figura representa una familia, no nuestro modelo exacto ni una ejecución. Más profundidad no garantiza mejora. También puede usarse global average pooling como cabezal alternativo.
+La variable conv ilustra la configuración de una capa aislada, aún no conectada. Keras crea sus pesos cuando conoce los canales de entrada. kernel_size=3 significa 3 × 3 y strides=1 significa (1,1). filters cuenta mapas de salida. use_bias=True y strides=1 son los valores por defecto usados en el modelo breve siguiente.
 :::
 
-## Una CNN breve sirve como ejemplo
+## Dos bloques extraen características
 
 ```python
 cnn = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(28, 28, 1)),
-    tf.keras.layers.Conv2D(32, 3, padding="same", activation="relu"),
-    tf.keras.layers.MaxPool2D(2),
-    tf.keras.layers.Conv2D(64, 3, padding="same", activation="relu"),
-    tf.keras.layers.MaxPool2D(2),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(64, activation="relu"),
-    tf.keras.layers.Dense(10, activation="softmax"),
+    L.Input(shape=(28, 28, 1)),
+    L.Conv2D(32, 3, padding="same",
+             activation="relu"),
+    L.MaxPool2D(2),
+    L.Conv2D(64, 3, padding="same",
+             activation="relu"),
+    L.MaxPool2D(2),
 ])
 ```
 
-Adaptación didáctica del capítulo 14; no replica su modelo completo [@geron2022hands].
+Los bloques reducen la resolución y producen **7 × 7 × 64** activaciones por imagen [@geron2022hands].
 
 ::: {.notes}
-Preguntar qué capas aprenden: Conv2D y Dense sí, MaxPool2D y Flatten no. Convoluciones con stride 1. Omitimos bloques adicionales y dropout del libro; no trasladar su exactitud a este ejemplo. Código Python estático, sin ejecución durante Quarto.
+Primer bloque: 28 × 28 × 32 tras convolución y 14 × 14 × 32 tras pooling. Segundo bloque: 14 × 14 × 64 y 7 × 7 × 64. Preguntar qué operaciones aprenden pesos. El modelo todavía no clasifica: agregamos el cabezal en la siguiente diapositiva. Adaptación didáctica del capítulo 14, no réplica de su modelo completo ni de sus resultados.
+:::
+
+## Los mapas alimentan al clasificador
+
+```python
+cnn.add(L.Flatten())
+cnn.add(L.Dense(64, activation="relu"))
+cnn.add(L.Dense(10, activation="softmax"))
+```
+
+`Flatten` convierte **7 × 7 × 64** activaciones en **3136** valores.
+
+El clasificador combina esos valores para producir **diez probabilidades** [@geron2022hands].
+
+::: {.notes}
+Continuación del mismo objeto cnn, no otro modelo. El cabezal aprende sobre mapas de características, mientras que el MLP original aprende directamente sobre píxeles. Flatten no tiene parámetros. Alternativa para discutir si sobra tiempo: global average pooling produce un valor por canal y permite reducir el tamaño del cabezal, con pérdida de detalle espacial.
 :::
 
 ## Cada capa tiene una forma predecible
@@ -492,37 +884,69 @@ Respuesta: Dense(64). Conv2 = (3 × 3 × 32 + 1) × 64 = 18 496; Flatten = 7 × 
 ## Entrenar conserva el mismo ciclo
 
 ```python
-cnn.compile(optimizer="adam",
-            loss="sparse_categorical_crossentropy",
-            metrics=["accuracy"])
-history_cnn = cnn.fit(X_train_cnn, y_train, epochs=20,
-                      validation_data=(X_valid_cnn, y_valid))
+cnn.compile(
+    optimizer="adam",
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"],
+)
+history_cnn = cnn.fit(
+    X_train_cnn, y_train, epochs=20, batch_size=32,
+    validation_data=(X_valid_cnn, y_valid),
+)
 ```
 
-**Pregunta:** ¿qué cambia frente al MLP y qué se mantiene? [@kerasTraining]
+Conservamos pérdida, optimizador y presupuesto del MLP [@kerasTraining].
 
 ::: {.notes}
-Respuesta: cambian capas, entrada y pesos; se mantienen etiquetas, tarea, pérdida, optimizador y particiones. Mismo presupuesto inicial: veinte épocas y batch size predeterminado 32. Observar las curvas de validación. Un estudio riguroso fijaría semillas y repetiría ensayos. Si se añade early stopping, aplicar la misma regla de validación a ambos.
+La CNN se construye después de entrenar el MLP del bloque inicial. Se mantienen particiones, escalamiento, etiquetas y veinte épocas con lotes de 32. Guardar History para revisar loss y val_loss como se explicó antes. Un estudio riguroso fijaría semillas, repetiría ensayos y aplicaría la misma regla de selección a ambos. No volver a entrenar aquí el MLP ni usar test para elegir arquitectura.
 :::
 
 ## La comparación exige datos no vistos
 
-| Modelo del ejemplo | Parámetros totales | Selección |
+| Modelo del ejemplo | Parámetros | Evidencia para elegir |
 |:--|--:|:--|
 | MLP | 50 890 | Pérdida y exactitud en validación |
 | CNN | 220 234 | Pérdida y exactitud en validación |
 
-**Pregunta:** ¿tener convoluciones asegura menos parámetros o mejor exactitud?
+**Esta CNN tiene más parámetros.** Su capa densa concentra la mayoría.
 
-::: {.fragment}
-No basta contar pesos. Comparamos desempeño, sobreajuste y costo; **prueba se reserva para el final** [@geron2022hands].
-:::
+La arquitectura se justifica con **desempeño y costo medidos**. Contar pesos no basta para elegir [@geron2022hands].
 
 ::: {.notes}
 Respuesta: no. MLP = 50 240 + 650; CNN incluye una capa densa grande. Parámetros no equivalen a memoria de activaciones ni operaciones. Seleccionar con mismas particiones, preprocesamiento, optimizador y presupuesto. Después evaluar con cnn.evaluate(X_test_cnn, y_test) y mlp.evaluate(X_test, y_test), sin seguir ajustando por test. No hay exactitudes medidas en este deck.
 :::
 
-# Acto 5: ¿Qué más permite una CNN?
+## Prueba se usa después de elegir
+
+```python
+loss_mlp, acc_mlp = mlp.evaluate(X_test, y_test)
+loss_cnn, acc_cnn = cnn.evaluate(X_test_cnn, y_test)
+```
+
+Evaluamos las configuraciones fijadas con validación.
+
+Usar estos resultados para seguir ajustando convertiría **prueba en datos de selección** [@kerasTraining].
+
+::: {.notes}
+Se muestran ambas evaluaciones para documentar la comparación final. Antes de llegar aquí deben estar cerradas arquitectura y época con validación. La salida real depende del entrenamiento y no se inventa ninguna métrica. Parámetros, tiempo y memoria también importan.
+:::
+
+## Predecir devuelve diez probabilidades
+
+```python
+probabilidades = cnn.predict(X_test_cnn[:1])
+clase = probabilidades.argmax(axis=1)[0]
+```
+
+`probabilidades` tiene forma **(1, 10)**.
+
+`argmax` elige el índice de mayor probabilidad. Solo si devuelve **9**, la clase predicha será «botín» [@kerasTraining].
+
+::: {.notes}
+Distinguir evaluate, que calcula métricas usando etiquetas, de predict, que produce salidas por imagen. El código no garantiza que se prediga la clase correcta. Una probabilidad alta no asegura acierto. La tabla de nombres permite traducir el índice al nombre de prenda.
+:::
+
+# Acto 6: Otras arquitecturas y tareas
 
 ## Las arquitecturas cambian el diseño
 
@@ -547,9 +971,7 @@ $$h(x)=x+F(x)$$
 
 **Pregunta:** si conviene mantener la entrada, ¿qué tendría que aprender $F(x)$?
 
-::: {.fragment}
 Una corrección cercana a **cero**. El atajo facilita optimizar redes profundas [@geron2022hands].
-:::
 
 ::: {.notes}
 Respuesta: F(x) ≈ 0 conserva x en este esquema, antes de posibles activaciones posteriores. Sumar requiere formas compatibles; puede usarse proyección 1 × 1 al cambiar canales o tamaño. Error frecuente: afirmar que los atajos resuelven cualquier problema de gradientes o eliminan el entrenamiento.
@@ -569,46 +991,70 @@ La entrada debe respetar el **preprocesamiento del modelo** [@kerasTransfer; @ge
 Respuesta: transferir puede ayudar si la representación es pertinente; validarlo. Congelar evita actualizar pesos, no evita calcular activaciones. Ajuste fino opcional después del cabezal; recompilar al cambiar trainable. Global average pooling puede preceder al clasificador. Error frecuente: aplicar siempre división por 255 o alimentar una base RGB directamente con Fashion de 28 × 28 × 1. No se introduce otra implementación completa.
 :::
 
-## Detectar añade la localización
+## La tarea determina la salida
 
-Clasificar responde **qué hay**. Detectar responde **qué hay y dónde**, para varios objetos.
+| Tarea | Salida | Ejemplo |
+|:--|:--|:--|
+| Clasificación | Una clase por imagen | «Hay un botín» |
+| Detección | Cajas, clases y puntuaciones | «Hay dos botines, aquí y aquí» |
+| Segmentación semántica | Una clase por píxel | Contorno de la región «botín» |
 
-**Pregunta:** ¿qué salida adicional necesitamos además de la clase?
-
-::: {.fragment}
-Cajas delimitadoras y puntuaciones para las detecciones. **IoU** mide solapamiento; **mAP** evalúa detecciones según un protocolo [@geron2022hands].
-:::
-
-::: {.notes}
-Respuesta: coordenadas de cajas, clase y confianza por detección. IoU = intersección / unión de cajas, no accuracy ni mAP. YOLO es una familia de detectores en una pasada; evitar detalles de versiones actuales o velocidades universales. Este bloque es un panorama conceptual.
-:::
-
-## Segmentar asigna una clase por píxel
-
-**Pregunta:** para delimitar una carretera, ¿alcanza con una caja?
-
-::: {.fragment}
-La segmentación semántica produce un **mapa de clases por píxel**. Debe recuperar detalle espacial que el submuestreo reduce [@geron2022hands].
-:::
-
-Las conexiones de salto pueden combinar detalle de capas tempranas con representaciones profundas.
+La pregunta define **qué debe producir la red** y cómo evaluarla [@geron2022hands].
 
 ::: {.notes}
-Respuesta: una caja no describe el contorno. Semántica no distingue instancias de igual clase. Interpolación o convolución transpuesta recuperan resolución, no automáticamente toda la información perdida. Los atajos incorporan detalle de mayor resolución. Relacionar pooling y equivarianza: si se desplaza la carretera, debe desplazarse la máscara.
+La clasificación de esta sesión supone una clase por imagen. Detección localiza varios objetos. IoU mide intersección sobre unión de cajas o regiones; mAP resume precisión de detecciones bajo un protocolo. Dejar estas métricas como ampliación, no exigirlas sin desarrollarlas. Segmentación semántica no distingue instancias de una misma clase.
+:::
+
+## Segmentar exige recuperar detalle
+
+Pooling reduce la resolución. Para delimitar una carretera necesitamos recuperar una **salida espacial**.
+
+- El decodificador aumenta la resolución de los mapas.
+- Las conexiones de salto aportan detalle de capas tempranas.
+
+Si la carretera se desplaza, **la máscara también debe desplazarse** [@geron2022hands].
+
+::: {.notes}
+Relacionar el cierre con la motivación inicial: para clasificar deseamos conservar la clase, para segmentar deseamos desplazar la salida espacial junto con la entrada. Interpolación o convolución transpuesta recuperan resolución, no toda la información perdida. Los atajos incorporan detalle de mayor resolución. No confundir las conexiones que combinan escalas en segmentación con la suma residual compatible de ResNet.
 :::
 
 # Cierre
 
 ## La estructura guía lo que se aprende
 
-- Los píxeles son entradas; las etiquetas son objetivos separados.
-- La convolución usa vecindarios y comparte pesos entre posiciones.
-- ReLU permite combinar patrones de forma no lineal.
-- Pooling reduce resolución y pierde detalle espacial.
-- Validación permite elegir; prueba permite evaluar [@geron2022hands].
+- La imagen aporta intensidades; la etiqueta define el objetivo.
+- Kernel y bias se aprenden y se reutilizan entre posiciones.
+- Padding y stride determinan dónde aplicamos el filtro.
+- Pooling resume regiones y reduce detalle espacial.
+- Validación orienta decisiones; prueba evalúa al final [@geron2022hands].
 
 ::: {.notes}
-Pedir un ejemplo por idea. Volver a la pregunta inicial: vecindarios y patrones repetidos son regularidades de la imagen que la arquitectura aprovecha. Error frecuente: sustituir evidencia en validación por la intuición de que CNN siempre gana.
+Recorrer el hilo completo: representar la imagen, entrenar un MLP, aprovechar localidad y pesos compartidos, combinar mapas, clasificar y comparar. ReLU aporta no linealidad sin cambiar dimensiones. Pedir distinguir qué se aprende, qué se elige y qué se pierde en cada operación.
+:::
+
+## Preguntas para salir
+
+1. ¿Qué significan los ejes de un lote **(32, 28, 28, 1)**?
+2. ¿Cuántos bias tiene una capa de **32 filtros** y dónde se usan?
+3. Para una entrada 7 × 7 y kernel 3, ¿qué salida dan stride 1 y 2, sin padding?
+4. ¿Qué resume pooling y qué información pierde?
+
+**Para decidir entre MLP y CNN:** ¿qué medirías en validación?
+
+::: {.notes}
+Respuestas: lote, alto, ancho, canales; 32 bias compartidos por filtro entre posiciones; salidas 5 × 5 o 3 × 3; max o promedio por ventana y canal, perdiendo detalle. Comparar pérdida, exactitud, curvas y costo en validación con protocolo común. Evaluar en prueba al final. Repartir preguntas entre grupos para no exigir cinco respuestas extensas a cada estudiante.
+:::
+
+## Lecturas para profundizar
+
+**Lectura:** capítulo 14 de *Hands-On Machine Learning*, tercera edición [@geron2022hands].
+
+**Para repasar la entrada y el MLP:** Fashion MNIST en el capítulo 10.
+
+**Para explorar:** [notebook oficial del capítulo 14](https://github.com/ageron/handson-ml3/blob/main/14_deep_computer_vision_with_cnns.ipynb){target="_blank"} [@geronNotebookCNN].
+
+::: {.notes}
+Se puede compartir esta diapositiva antes de la clase como preparación. El código de la sesión se explica sin entrenar en vivo. Para dos horas, abreviar el panorama final; para tres, ampliar el simulador y la discusión MLP–CNN.
 :::
 
 ## Tarea: justificar una comparación
@@ -623,17 +1069,6 @@ Contrastar una explicación del [cuaderno de NotebookLM](https://notebook.google
 
 ::: {.notes}
 Actividad complementaria sin obligación de instalar o ejecutar. Si ejecutan, registrar arquitectura, particiones, optimizador, épocas, curvas y costo. El notebook oficial usa una CNN mayor; no trasladar métricas a nuestro ejemplo. No se prescribe entrega ni fecha. Error frecuente: comparar métricas con particiones distintas o copiar una conclusión del cuaderno sin verificar su fuente.
-:::
-
-## Preguntas para salir
-
-1. ¿Dónde vive la etiqueta «botín» y qué números recibe la red?
-2. ¿Qué produce un filtro y por qué reutiliza sus pesos?
-3. ¿Qué pierde pooling y cuándo importa esa pérdida?
-4. ¿Qué evidencia necesitarías para preferir CNN al MLP?
-
-::: {.notes}
-Dos minutos individuales y discusión. Respuestas: y contiene categorías, X intensidades; un filtro produce un mapa reutilizando kernel y sesgo; pooling pierde detalle relevante en segmentación; seleccionar con validación bajo un protocolo comparable y evaluar al final en prueba, considerando costo. No pedir memorizar nombres de arquitecturas.
 :::
 
 ## Referencias {.smaller .scrollable}
