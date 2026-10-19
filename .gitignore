@@ -58,6 +58,16 @@
 **/*.pyo
 quarto/**/assets/
 
+# Recursos utilizados por la presentación de LLMs
+!quarto/llms/assets/
+quarto/llms/assets/*
+!quarto/llms/assets/logo_RGB.png
+!quarto/llms/assets/veda_0104.png
+!quarto/llms/assets/veda_0105.png
+!quarto/llms/assets/veda_0108.png
+!quarto/llms/assets/veda_0201.png
+!quarto/llms/assets/veda_0206.png
+
 # Recursos reproducibles de la presentacion de clustering
 !quarto/clustering/generate_figures.py
 !quarto/clustering/country_narrative.py
