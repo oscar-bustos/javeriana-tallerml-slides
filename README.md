@@ -20,6 +20,16 @@ interactivas en Quarto/Reveal.js, talleres y recursos reproducibles en Python.
 
 El índice navegable de las clases compiladas está en [`docs/index.html`](docs/index.html).
 
+Presentación independiente: **Series de tiempo y redes recurrentes**
+([fuente Quarto](quarto/series_tiempo/index.qmd),
+[presentación compilada](docs/series_tiempo.html)). Clase de dos horas con demanda
+de bicicletas, variables temporales, ML clásico e introducción a RNN.
+Para compilarla y normalizar los espacios finales de las plantillas HTML de Quarto:
+`python3 .agents/scripts/compile_series_tiempo.py`.
+Sus figuras oficiales se verifican sin red con
+`python3 .agents/scripts/download_series_tiempo_assets.py --check`; para volver a
+descargarlas, ejecuta el mismo comando sin `--check`.
+
 ## Requisitos
 
 - [Quarto](https://quarto.org/docs/get-started/) disponible en `PATH`.
