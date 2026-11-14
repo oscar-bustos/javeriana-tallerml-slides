@@ -16,7 +16,8 @@ seguridad.
 - `homework/` contiene material entregable para estudiantes.
 - `reference/slides/` contiene decks externos de consulta, no fuentes editables.
 - `reference/book-excerpts/` contiene texto local de libros y nunca se publica.
-- `course-admin/private/` puede contener datos personales y está fuera de Git.
+- Los datos de estudiantes (listas, entregas, calificaciones, resúmenes) viven fuera
+  del repositorio, en una carpeta local por semestre; nunca se copian aquí.
 - `planning/` contiene ideas y estados de trabajo todavía no publicables.
 - `.agents/scripts/` contiene automatización; evita comandos ad hoc si ya existe
   un script reproducible.
@@ -79,8 +80,9 @@ referencia a un recurso que no pueda versionarse.
   pasajes extensos, no los redistribuyas y cita siempre la obra original.
 - Trata los decks de `reference/slides/` como fuentes externas: no los modifiques ni
   copies su contenido sin atribución.
-- No leas, expongas ni versionees datos de `course-admin/private/` salvo petición
-  explícita del usuario y necesidad directa para la tarea.
+- No leas, expongas ni versionees datos de estudiantes salvo petición explícita del
+  usuario y necesidad directa para la tarea. No publiques trabajos de estudiantes en
+  `docs/`.
 - No edites a mano archivos bajo `quarto/clustering/assets/generated/`: modifica el
   generador correspondiente y vuelve a producirlos.
 - No agregues archivos binarios grandes ni fuentes de datos nuevas sin necesidad.

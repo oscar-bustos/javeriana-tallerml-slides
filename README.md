@@ -61,7 +61,8 @@ python3 .agents/scripts/publish_docs.py
 
 > `publish_docs.py` invoca internamente el comando `python`. En sistemas que no
 > tengan ese alias, usa `compile_quarto.py` con `python3` y conserva el índice
-> existente, o configura el alias correspondiente.
+> existente, o configura el alias correspondiente. Para regenerar solo
+> `docs/index.html`, sin recompilar las clases, agrega `--solo-indice`.
 
 ## Regenerar las visualizaciones de clustering
 
@@ -109,8 +110,9 @@ Hay tres categorías distintas:
   privada. No se versionan ni se redistribuyen; las ideas se parafrasean y se cita
   siempre la obra original.
 
-El programa del curso y la lista de clase están separados en `course-admin/`. Esta
-última se considera información privada y permanece fuera de Git. Consulta
+El programa del curso se guarda localmente en `course-admin/`. Las listas de clase,
+entregas y calificaciones son información privada y se mantienen fuera del
+repositorio, en una carpeta local por semestre. Consulta
 [`reference/README.md`](reference/README.md) y
 [`course-admin/README.md`](course-admin/README.md) para más detalles.
 

@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import sys
 
 def main():
     # Obtener el directorio donde está este script (.agents/scripts/)
@@ -40,8 +41,10 @@ def main():
                 break
 
     # 1. Compile all presentations using compile_quarto.py
-    print("Compiling presentations...")
-    subprocess.run(["python", "compile_quarto.py"], cwd=script_dir)
+    # Con --solo-indice se regenera únicamente docs/index.html, sin recompilar las clases.
+    if '--solo-indice' not in sys.argv:
+        print("Compiling presentations...")
+        subprocess.run(["python", "compile_quarto.py"], cwd=script_dir)
 
     # 2. Compile step now automatically places HTML in docs/ and cleans up.
     print("\nOrganizing docs/ folder (already done by compiler)...")
@@ -184,7 +187,7 @@ def main():
                     <p class="card-text">{item["description"]}</p>
                 </div>
                 <div class="card-footer">
-                    <a href="{item["id"]}.html" class="btn" target="_blank">Ver Presentación</a>
+                    <a href="{item["id"]}.html" class="btn" target="_blank">{item.get("cta", "Ver Presentación")}</a>
                 </div>
             </div>"""
 

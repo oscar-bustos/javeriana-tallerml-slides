@@ -41,8 +41,8 @@ No cambies directamente `docs/<tema>.html`: Quarto sobrescribirá la edición.
 `reference/slides/` contiene decks externos y `reference/book-excerpts/` contiene
 copias locales de texto. Ninguno es fuente publicable ni debe agregarse a Git.
 Parafrasea las ideas necesarias y registra la obra original en el `references.bib`
-de la presentación. Los archivos de `course-admin/private/` contienen información
-administrativa y no deben utilizarse en contribuciones.
+de la presentación. Los datos de estudiantes se guardan fuera del repositorio
+y no deben utilizarse en contribuciones.
 
 ## Cambiar figuras o datos reproducibles
 
